@@ -1,0 +1,12 @@
+{
+    "id": "app.logger.debug.1475972837.525728",
+    "name": "app.logger.debug.1475972837.525728",
+    "func": "__main__:app.logger.debug",
+    "args": [],
+    "kwargs": {"msg": "APScheduler is working."},
+    "next_run_time": "2016-10-09T00:27:22.525728+00:00",
+    "misfire_grace_time": 1,
+    "max_instances": 1,
+    "run_date": "2016-10-09T00:27:22.525728+00:00",
+    "trigger": "date"
+}
