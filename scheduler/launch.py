@@ -66,18 +66,6 @@ def landing_page():
 def page_not_found(error):
     return render_template('404.html'), 404
 
-# construct test service
-from labpack.messaging.telegram import telegramBotClient
-def send_message_telegram(bot_settings, telegram_credentials, user_id, message_text):
-    telegram_client = telegramBotClient(
-        bot_settings=bot_settings,
-        telegram_credentials=telegram_credentials)
-    response = telegram_client.request(
-        bot_method='sendMessage',
-        chat_id=user_id,
-        text=message_text)
-    return response
-
 # initialize scheduler
 scheduler = APScheduler()
 scheduler.init_app(app)
