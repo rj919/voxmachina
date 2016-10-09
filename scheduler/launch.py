@@ -3,6 +3,7 @@ __created__ = '2015.10'
 __license__ = 'MIT'
 
 '''
+Dependencies
 pip install apscheduler
 pip install flask
 pip install gevent
@@ -20,7 +21,10 @@ https://apscheduler.readthedocs.io/en/latest/modules/triggers/cron.html
 https://apscheduler.readthedocs.io/en/latest/modules/triggers/interval.html
 
 Flask_APScheduler Documentation
+https://github.com/viniciuschiele/flask-apscheduler
 
+Flask Documentation
+http://flask.pocoo.org/docs/0.11/deploying/wsgi-standalone/#gevent
 '''
 
 # create init path to sibling folders

@@ -28,9 +28,8 @@ RUN pip3 install pycrypto
 RUN pip3 install flask
 RUN pip3 install gunicorn
 RUN pip3 install gevent
-RUN pip3 install jsonmodel
 RUN pip3 install apscheduler
-RUN pip3 isntall Flask-APScheduler
+RUN pip3 install Flask-APScheduler
 
 # Install Localtunnel
 RUN apk add nodejs@community
