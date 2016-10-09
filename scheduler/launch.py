@@ -5,6 +5,7 @@ __license__ = 'MIT'
 '''
 Dependencies
 pip install apscheduler
+pip install requests
 pip install flask
 pip install gevent
 pip install gunicorn

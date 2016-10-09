@@ -47,8 +47,8 @@ if __name__ == '__main__':
     job_func = 'launch:requests.post'
     telegram_url = 'https://api.telegram.org/bot%s/sendMessage' % telegramCredentials['access_token']
     telegram_json = { 'chat_id': telegramCredentials['admin_id'], 'text': 'text me again' }
-    assert get_info()['running']
-    new_job = add_job(job_func, { 'url': telegram_url, 'json': telegram_json })
+    # assert get_info()['running']
+    new_job = add_job(job_func, { 'url': telegram_url, 'json': telegram_json }, docker_ip)
     # job_list = get_jobs()
     # assert job_list[0]['func'] == job_func
     # print(job_list[0])

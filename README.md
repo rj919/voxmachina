@@ -12,11 +12,7 @@ _A Job Scheduler using Flask & APScheduler on Alpine & Gunicorn inside Docker_
 ## Dev Env
 - Docker (Provisioning)
 - BitBucket (Version Control)
-- LocalTunnel (Secure Tunnel)
-- Cassandra (Accounts Database)
-- AWS (Web Services)  
-    -- EC2 (Webhosting)  
-    -- S3 (Records Database)
+- MongoDB (JobStore Database)
 - PyCharm (IDE)
 - Dropbox (Sync, Backup)
 
@@ -25,12 +21,10 @@ _A Job Scheduler using Flask & APScheduler on Alpine & Gunicorn inside Docker_
 - Shell Script
 
 ## Features
-- Flask in a Container
-- Single-Page Client Experience
+- Flask APScheduler in a Container
+- REST API Client
 - Local Credential Controls
 - Lean Footprint
-- Tunnel Ready for Testing
-- EC2 Ready for Deployment
 
 ## Setup DevEnv
 1. Install Docker Toolbox on Local Device
@@ -39,16 +33,14 @@ _A Job Scheduler using Flask & APScheduler on Alpine & Gunicorn inside Docker_
 4. Create a /cred Folder in Root to Store Tokens
 5. **[Optional]** Create a New Private Remote Repository
 
-## Server Sub-Folders
--- _assets/_ (sub-folder for non-python code and project resources)   
+## Scheduler Sub-Folders 
 -- _data/_ (sub-folder for ephemeral data stored on image)  
--- _methods/_ (sub-folder for application specific python classes)  
 -- _models/_ (sub-folder for data object model declarations)  
 -- _static/_ (sub-folder for public accessible application content)  
 -- _templates/_ (sub-folder for html templates)
 
 ## Launch Commands
-**startServer.sh**  
+**startScheduler.sh**  
 _Creates container with required volumes and starts flask on a gunicorn server_  
 Requires:  
 
@@ -66,12 +58,6 @@ Requires:
 - Container Alias
 - Token from Docker Build Settings
 - Environment Variable File (in cred/)
-
-**tunnelMe.sh**  
-_Initiates a secure tunnel from local device to endpoint on localtunnel.me_  
-Requires:  
-
-- Container Alias
 
 ## Collaboration Notes
 _The Git and Docker repos contain all the configuration for deployment to AWS.  
