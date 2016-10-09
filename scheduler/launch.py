@@ -33,14 +33,19 @@ import sys
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 # construct job object class
+from time import time
+from datetime import datetime
+current_time = time()
 class JobConfig(object):
     JOBS = [
         {
             'id': 'apschedule_started_test',
-            'func': '__main__:app.logger.debug',
+            'func': 'launch:app.logger.debug',
             'kwargs': {
                 'msg': 'APScheduler started.'
-            }
+            },
+            'trigger': 'date',
+            'run_date': '%s+00:00' % datetime.utcfromtimestamp(current_time + 2).isoformat()
         }
     ]
 
@@ -48,7 +53,6 @@ class JobConfig(object):
 
 # construct flask app object
 from flask import Flask, request, session, jsonify, url_for, render_template
-from flask_apscheduler import APScheduler
 app = Flask(import_name=__name__)
 app.config.from_object(JobConfig())
 
@@ -71,7 +75,12 @@ def page_not_found(error):
     return render_template('404.html'), 404
 
 # initialize scheduler
-scheduler = APScheduler()
+from pytz import utc
+from flask_apscheduler import APScheduler
+from apscheduler.schedulers.gevent import GeventScheduler
+gsched = GeventScheduler()
+scheduler = APScheduler(scheduler=gsched)
+app.config['SCHEDULER_TIMEZONE'] = utc
 scheduler.init_app(app)
 scheduler.start()
 
