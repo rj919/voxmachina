@@ -16,8 +16,7 @@ _A Job Scheduler using Flask & APScheduler on Alpine & Gunicorn inside Docker_
 - Cassandra (Accounts Database)
 - AWS (Web Services)  
     -- EC2 (Webhosting)  
-    -- S3 (Records Database)  
-    -- Lambda (Scheduled Task Trigger)  
+    -- S3 (Records Database)
 - PyCharm (IDE)
 - Dropbox (Sync, Backup)
 
