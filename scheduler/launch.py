@@ -10,6 +10,8 @@ pip install flask
 pip install gevent
 pip install gunicorn
 pip install Flask-APScheduler
+pip install sqlalchemy
+pip install psycopg2
 '''
 
 '''
@@ -40,7 +42,7 @@ current_time = time()
 class JobConfig(object):
     JOBS = [
         {
-            'id': 'apschedule_started_test',
+            'id': 'apschedule_started_test_%s' % str(current_time),
             'func': 'launch:app.logger.debug',
             'kwargs': {
                 'msg': 'APScheduler started.'
@@ -82,11 +84,16 @@ import requests
 from pytz import utc
 from flask_apscheduler import APScheduler
 from apscheduler.schedulers.gevent import GeventScheduler
-gsched = GeventScheduler()
-scheduler = APScheduler(scheduler=gsched)
+from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore
+postgresql_store = SQLAlchemyJobStore(url='postgresql://postgres:happy@192.168.99.100:5432')
+jobstore_settings = { 'default': postgresql_store }
+gevent_scheduler = GeventScheduler()
+ap_scheduler = APScheduler(scheduler=gevent_scheduler)
 app.config['SCHEDULER_TIMEZONE'] = utc
-scheduler.init_app(app)
-scheduler.start()
+app.config['SCHEDULER_JOBSTORES'] = jobstore_settings
+app.config['SCHEDULER_JOB_DEFAULTS'] = { 'coalesce': True }
+ap_scheduler.init_app(app)
+ap_scheduler.start()
 
 # initialize the test wsgi localhost server
 if __name__ == '__main__':

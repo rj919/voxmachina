@@ -24,7 +24,7 @@ def add_job(function_name, function_kwargs, ip_address=''):
     current_time = time()
     json_kwargs = {
         'id': '%s_%s' % (function_name, str(current_time)),
-        'run_date': '%s+00:00' % datetime.utcfromtimestamp(current_time + 5).isoformat(),
+        'run_date': '%s+00:00' % datetime.utcfromtimestamp(current_time + 50).isoformat(),
         'kwargs': function_kwargs,
         'func': function_name,
         'trigger': 'date'
@@ -48,7 +48,7 @@ if __name__ == '__main__':
     telegram_url = 'https://api.telegram.org/bot%s/sendMessage' % telegramCredentials['access_token']
     telegram_json = { 'chat_id': telegramCredentials['admin_id'], 'text': 'text me again' }
     # assert get_info()['running']
-    new_job = add_job(job_func, { 'url': telegram_url, 'json': telegram_json }, docker_ip)
+    new_job = add_job(job_func, { 'url': telegram_url, 'json': telegram_json })
     # job_list = get_jobs()
     # assert job_list[0]['func'] == job_func
     # print(job_list[0])
