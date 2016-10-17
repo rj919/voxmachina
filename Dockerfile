@@ -29,6 +29,8 @@ RUN pip3 install apscheduler
 RUN pip3 install Flask-APScheduler
 RUN pip3 install SQLAlchemy
 RUN pip3 install psycopg2
+RUN pip3 install jsonmodel
+RUN pip3 install labpack
 
 # Install Localtunnel
 # RUN apk add nodejs@community

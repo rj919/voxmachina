@@ -1,12 +1,45 @@
 {
+  "schema": {
     "id": "app.logger.debug.1475972837.525728",
     "name": "app.logger.debug.1475972837.525728",
-    "func": "__main__:app.logger.debug",
+    "func": "launch:app.logger.debug",
     "args": [],
-    "kwargs": {"msg": "APScheduler is working."},
-    "next_run_time": "2016-10-09T00:27:22.525728+00:00",
+    "kwargs": {
+      "msg": "APScheduler is working."
+    },
     "misfire_grace_time": 1,
     "max_instances": 1,
+    "trigger": "date",
     "run_date": "2016-10-09T00:27:22.525728+00:00",
-    "trigger": "date"
+    "replace_existing": false,
+    "coalesce": false
+  },
+  "components": {
+    ".name": {
+      "required_field": false
+    },
+    ".kwargs": {
+      "extra_fields": true
+    },
+    ".kwargs.msg": {
+      "required_field": false
+    },
+    ".misfire_grace_time": {
+      "required_field": false,
+      "integer_data": true,
+      "min_value": 1
+    },
+    ".max_instances": {
+      "required_field": false,
+      "integer_data": true,
+      "min_value": 1
+    },
+    ".trigger": {
+      "required_field": false,
+      "discrete_values": [ "date", "interval", "cron" ]
+    },
+    ".run_date": {
+      "required_field": false
+    }
+  }
 }

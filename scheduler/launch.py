@@ -12,6 +12,8 @@ pip install gunicorn
 pip install Flask-APScheduler
 pip install sqlalchemy
 pip install psycopg2
+pip install jsonmodel
+pip install labpack
 '''
 
 '''
@@ -35,29 +37,9 @@ import os
 import sys
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
-# construct job object class
-from time import time
-from datetime import datetime
-current_time = time()
-class JobConfig(object):
-    JOBS = [
-        {
-            'id': 'apschedule_started_test_%s' % str(current_time),
-            'func': 'launch:app.logger.debug',
-            'kwargs': {
-                'msg': 'APScheduler started.'
-            },
-            'trigger': 'date',
-            'run_date': '%s+00:00' % datetime.utcfromtimestamp(current_time + 2).isoformat()
-        }
-    ]
-
-    SCHEDULER_VIEWS_ENABLED = True
-
 # construct flask app object
 from flask import Flask, request, session, jsonify, url_for, render_template
 app = Flask(import_name=__name__)
-app.config.from_object(JobConfig())
 
 # initialize logging and debugging
 import logging
@@ -65,12 +47,12 @@ app.logger.addHandler(logging.StreamHandler(sys.stdout))
 app.logger.setLevel(logging.DEBUG)
 app.config['ASSETS_DEBUG'] = False
 
-# construct the landing & dashboard for single-page sites
-import json
-api_model = json.loads(open('models/api_model.json').read())
+# construct the landing page
+from scheduler.utils import load_settings
+api_model = load_settings('models/api_model.json')
 @app.route('/')
 def landing_page():
-    return jsonify(api_model), 200
+    return jsonify(api_model['schema']), 200
 
 # construct the catchall for URLs which do not exist
 @app.errorhandler(404)
@@ -80,18 +62,19 @@ def page_not_found(error):
 # add requests module to namespace
 import requests
 
-# initialize scheduler
-from pytz import utc
+# construct scheduler object (with gevent processor)
 from flask_apscheduler import APScheduler
 from apscheduler.schedulers.gevent import GeventScheduler
-from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore
-postgresql_store = SQLAlchemyJobStore(url='postgresql://postgres:happy@192.168.99.100:5432')
-jobstore_settings = { 'default': postgresql_store }
 gevent_scheduler = GeventScheduler()
 ap_scheduler = APScheduler(scheduler=gevent_scheduler)
-app.config['SCHEDULER_TIMEZONE'] = utc
-app.config['SCHEDULER_JOBSTORES'] = jobstore_settings
-app.config['SCHEDULER_JOB_DEFAULTS'] = { 'coalesce': True }
+
+# retrieve scheduler configuration settings
+from scheduler.utils import retrieve_settings, config_scheduler
+scheduler_settings = retrieve_settings('models/settings_model.json', '../cred/settings.yaml')
+scheduler_configuration = config_scheduler(scheduler_settings)
+app.config.update(**scheduler_configuration)
+
+# attach app to scheduler and start scheduler
 ap_scheduler.init_app(app)
 ap_scheduler.start()
 
