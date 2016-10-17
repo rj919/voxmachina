@@ -24,8 +24,9 @@ _A Job Scheduler using Flask & APScheduler on Alpine & Gunicorn inside Docker_
 ## Features
 - Flask APScheduler in a Container
 - REST API Client
+- Built-in Requests Functionality
 - Postgres Database Connector
-- Local Credential Controls
+- Configuration by Local Credentials or Environmental Variables
 - Lean Footprint
 
 ## Setup DevEnv
@@ -39,7 +40,6 @@ _A Job Scheduler using Flask & APScheduler on Alpine & Gunicorn inside Docker_
 -- _models/_ (sub-folder for data object model declarations)  
 -- _static/_ (sub-folder for public accessible application content)  
 -- _templates/_ (sub-folder for html templates)  
--- _utils/_ (sub-folder for load and handler methods used by flask app)
 
 ## Build Configurations
 flaskScheduler is built with a number of immutable configurations:
@@ -47,29 +47,30 @@ flaskScheduler is built with a number of immutable configurations:
 - Views have been enabled to allow the **REST API** client
 - All scheduled jobs must use the **UTC timezone**
 - Dates for jobs must be passed in **ISO Format** with +00:00 timezone
-- Only **one execution process** may be selected
+- Only **one execution process** type may be selected
 - Only **one job store** may be used to persist schedule data
 - Only a **Postgres** database may be selected as a job store
 
 ## Mutable Settings
 By default, the scheduler uses a gevent process to manage threads and jobs  
 will be stored in local memory. The launch script checks for new configuration  
-settings first at the file path "cred/settings.yaml", then for any environmental  
-variables set in the background. Any of the following settings can be adjusted:
+settings first at the file path "cred/scheduler.yaml", then for any environ-  
+mental variables set in the background. Any of the following settings can be  
+adjusted:
 
 - scheduler_job_store_user: postgres
 - scheduler_job_store_pass: password
 - scheduler_job_store_host: 192.168.99.100
-- scheduler_job_store_port: 5001
+- scheduler_job_store_port: 5432
 - scheduler_job_defaults_coalesce: true
 - scheduler_job_defaults_max_instances: 1
 - scheduler_executors_type: threadpool
 - scheduler_executors_max_workers: 20
 
-A copy of the settings.yaml file is included in the notes folder.
+A copy of the scheduler.yaml file is included in the notes folder.
  
 ## Launch Commands
-**startScheduler.sh**  
+**start.sh**  
 _Creates container with required volumes and starts flask on a gunicorn server_  
 Requires:  
 
@@ -80,13 +81,19 @@ Requires:
 - Container Root Folder Name (if AWS EC2 deployment with awsDocker module)
 - Virtualbox Name (if Windows or Mac localhost)
 
-**rebuildDocker.sh**  
+**rebuild.sh**  
 _Initiates an automated build command on Docker to update base image_  
 Requires:  
 
 - Container Alias
 - Token from Docker Build Settings
-- Environment Variable File (in cred/)
+- Environment Variable File (in cred/envDocker.sh)
+
+**tunnel.sh**  
+_Initiates a secure tunnel from local device to endpoint on localtunnel.me_  
+Requires:  
+
+- Container Alias
 
 ## Collaboration Notes
 _The Git and Docker repos contain all the configuration for deployment to AWS.  

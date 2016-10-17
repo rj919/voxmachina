@@ -70,7 +70,7 @@ ap_scheduler = APScheduler(scheduler=gevent_scheduler)
 
 # retrieve scheduler configuration settings
 from scheduler.utils import retrieve_settings, config_scheduler
-scheduler_settings = retrieve_settings('models/settings_model.json', '../cred/settings.yaml')
+scheduler_settings = retrieve_settings('models/settings_model.json', '../cred/scheduler.yaml')
 scheduler_configuration = config_scheduler(scheduler_settings)
 app.config.update(**scheduler_configuration)
 
