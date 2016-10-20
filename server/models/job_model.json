@@ -5,14 +5,14 @@
     "func": "launch:app.logger.debug",
     "args": [],
     "kwargs": {
-      "msg": "APScheduler is working."
+      "msg": "APScheduler has started."
     },
     "misfire_grace_time": 1,
     "max_instances": 1,
     "trigger": "date",
     "run_date": "2016-10-09T00:27:22.525728+00:00",
     "replace_existing": false,
-    "coalesce": false
+    "coalesce": true
   },
   "components": {
     ".name": {
@@ -39,6 +39,9 @@
       "discrete_values": [ "date", "interval", "cron" ]
     },
     ".run_date": {
+      "required_field": false
+    },
+    ".coalesce": {
       "required_field": false
     }
   }

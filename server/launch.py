@@ -48,7 +48,7 @@ app.logger.setLevel(logging.DEBUG)
 app.config['ASSETS_DEBUG'] = False
 
 # construct the landing page
-from scheduler.utils import load_settings
+from server.utils import load_settings
 api_model = load_settings('models/api_model.json')
 @app.route('/')
 def landing_page():
@@ -61,6 +61,8 @@ def page_not_found(error):
 
 # add requests module to namespace
 import requests
+from server.utils import handle_request_wrapper
+handle_request = handle_request_wrapper(app)
 
 # construct scheduler object (with gevent processor)
 from flask_apscheduler import APScheduler
@@ -68,8 +70,8 @@ from apscheduler.schedulers.gevent import GeventScheduler
 gevent_scheduler = GeventScheduler()
 ap_scheduler = APScheduler(scheduler=gevent_scheduler)
 
-# retrieve scheduler configuration settings
-from scheduler.utils import retrieve_settings, config_scheduler
+# adjust scheduler configuration settings
+from server.utils import retrieve_settings, config_scheduler
 scheduler_settings = retrieve_settings('models/settings_model.json', '../cred/scheduler.yaml')
 scheduler_configuration = config_scheduler(scheduler_settings)
 app.config.update(**scheduler_configuration)

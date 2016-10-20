@@ -4,5 +4,3 @@ scheduler_job_store_host: 192.168.99.100
 scheduler_job_store_port: 5432
 scheduler_job_defaults_coalesce: true
 scheduler_job_defaults_max_instances: 1
-scheduler_executors_type: threadpool
-scheduler_executors_max_workers: 20

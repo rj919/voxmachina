@@ -2,10 +2,10 @@
 VIRTUALBOX_NAME=default
 APP_CONTAINER_ALIAS=scheduler
 APP_DOCKER_IMAGE=collectiveacuity/flaskscheduler
-# APP_RUN_COMMAND="gunicorn --chdir scheduler -w 1 launch:app -b 0.0.0.0:5000 -k gevent --max-requests 250"
-APP_RUN_COMMAND="sh"
+APP_RUN_COMMAND="gunicorn --chdir server -w 1 launch:app -b 0.0.0.0:5000 -k gevent"
+# APP_RUN_COMMAND="sh"
 APP_ROOT_DIRECTORY=flaskscheduler
-APP_SERVER_VOLUME=/scheduler
+APP_SERVER_VOLUME=/server
 APP_CRED_VOLUME=/cred
 APP_EXTERNAL_PORT=5001
 
@@ -46,10 +46,13 @@ docker run --name $APP_CONTAINER_ALIAS \
 -it -d -p $APP_EXTERNAL_PORT:5000 $APP_DOCKER_IMAGE $APP_RUN_COMMAND
 
 # Instructions for setting -w argument for gunicorn server
-# workers should be (2 x number of cores) + 1
+# http://docs.gunicorn.org/en/stable/design.html#how-many-workers
+# https://www.reddit.com/r/Python/comments/2oaei0/advice_for_sync_vs_async_workers_with_gunicornand/
+# sync workers should be (2 x number of cores) + 1 with --max-requests 250
+# async workers should be 1
 
-# Instructions for running uwsgi server
-# uwsgi --http 0.0.0.0:5000 --chdir server --wsgi-file launch.py --callable app
+# Instructions for running uwsgi async server
+# uwsgi --http 0.0.0.0:5000 --chdir server --wsgi-file launch.py --callable app --gevent 2000 -l 1000
 
 # Instruction to pipe container stdouts to terminal
 # echo To stream log: docker logs -f $APP_CONTAINER_ALIAS
