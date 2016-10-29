@@ -5,7 +5,8 @@
 .hgignore
 
 # Server content files
-scheduler/
+server/
+data/
 
 # Notes & Configs
 /cred/

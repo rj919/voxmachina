@@ -5,7 +5,7 @@
     "func": "launch:app.logger.debug",
     "args": [],
     "kwargs": {
-      "msg": "APScheduler has started."
+      "msg": "APScheduler is working."
     },
     "misfire_grace_time": 1,
     "max_instances": 1,

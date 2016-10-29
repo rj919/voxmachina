@@ -71,8 +71,8 @@ gevent_scheduler = GeventScheduler()
 ap_scheduler = APScheduler(scheduler=gevent_scheduler)
 
 # adjust scheduler configuration settings
-from server.utils import retrieve_settings, config_scheduler
-scheduler_settings = retrieve_settings('models/settings_model.json', '../cred/scheduler.yaml')
+from server.utils import ingest_environ, config_scheduler
+scheduler_settings = ingest_environ('models/settings_model.json')
 scheduler_configuration = config_scheduler(scheduler_settings)
 app.config.update(**scheduler_configuration)
 
@@ -80,8 +80,9 @@ app.config.update(**scheduler_configuration)
 ap_scheduler.init_app(app)
 ap_scheduler.start()
 
-# initialize the test wsgi localhost server
+# initialize test wsgi localhost server with default memory job store
 if __name__ == '__main__':
     from gevent.pywsgi import WSGIServer
     http_server = WSGIServer(('0.0.0.0', 5001), app)
     http_server.serve_forever()
+    # app.run(host='0.0.0.0', port=5001)

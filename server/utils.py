@@ -2,31 +2,6 @@ __author__ = 'rcj1492'
 __created__ = '2016.10'
 __license__ = 'MIT'
 
-def ingest_environ():
-
-    from os import environ
-    typed_dict = {}
-    environ_variables = dict(environ)
-    for key, value in environ_variables.items():
-        if value.lower() == 'true':
-            typed_dict[key] = True
-        elif value.lower() == 'false':
-            typed_dict[key] = False
-        elif value.lower() == 'null':
-            typed_dict[key] = None
-        elif value.lower() == 'none':
-            typed_dict[key] = None
-        else:
-            try:
-                try:
-                    typed_dict[key] = int(value)
-                except:
-                    typed_dict[key] = float(value)
-            except:
-                typed_dict[key] = value
-
-    return typed_dict
-
 def load_settings(file_path, secret_key=''):
 
 # validate inputs
@@ -101,35 +76,49 @@ def load_settings(file_path, secret_key=''):
 
     return file_details
 
-def retrieve_settings(model_path, file_path, secret_key=''):
+def ingest_environ(model_path=''):
 
-# validate input
-    title = 'retrieve_settings'
-    from jsonmodel.validators import jsonModel
-    model_details = load_settings(model_path)
-    settings_model = jsonModel(model_details)
+# convert environment variables into json typed data
+    from os import environ, path
+    typed_dict = {}
+    environ_variables = dict(environ)
+    for key, value in environ_variables.items():
+        if value.lower() == 'true':
+            typed_dict[key] = True
+        elif value.lower() == 'false':
+            typed_dict[key] = False
+        elif value.lower() == 'null':
+            typed_dict[key] = None
+        elif value.lower() == 'none':
+            typed_dict[key] = None
+        else:
+            try:
+                try:
+                    typed_dict[key] = int(value)
+                except:
+                    typed_dict[key] = float(value)
+            except:
+                typed_dict[key] = value
 
-# try to load settings from file
-    file_settings = {}
-    try:
-        file_settings = load_settings(file_path, secret_key)
-    except:
-        pass
+# feed environment variables through model
+    if model_path:
+        if not path.exists(model_path):
+            raise ValueError('%s is not a valid file path.' % model_path)
+        model_dict = load_settings(model_path)
+        from jsonmodel.validators import jsonModel
+        model_object = jsonModel(model_dict)
+        default_dict = model_object.ingest(**{})
+        for key in default_dict.keys():
+            if key.upper() in typed_dict:
+                valid_kwargs = {
+                    'input_data': typed_dict[key.upper()],
+                    'object_title': 'Environment variable %s' % key.upper(),
+                    'path_to_root': '.%s' % key
+                }
+                default_dict[key] = model_object.validate(**valid_kwargs)
+        return default_dict
 
-# retrieve environmental variables
-    environ_var = ingest_environ()
-
-#  construct settings details from file and environment
-    settings_details = settings_model.ingest(**{})
-    for key in settings_model.schema.keys():
-        object_title = 'settings key %s' % key
-        object_path = '.%s' % key
-        if key.upper() in environ_var.keys():
-            settings_details[key] = settings_model.validate(environ_var[key.upper()], object_path, object_title)
-        elif key in file_settings.keys():
-            settings_details[key] = settings_model.validate(file_settings[key], object_path, object_title)
-
-    return settings_details
+    return typed_dict
 
 def handle_request_wrapper(app_object):
     def handle_request(url, job_details):
@@ -144,9 +133,22 @@ def handle_request_wrapper(app_object):
 
 def config_scheduler(scheduler_settings=None):
 
+# validate input
+    if not isinstance(scheduler_settings, dict):
+        raise TypeError('Scheduler settings must be a dictionary.')
+
 # construct default configuration
+    from time import time
     scheduler_configs = {
-        'JOBS': [],
+        'SCHEDULER_JOBS': [ {
+            'id': 'app.logger.debug.%s' % str(time()),
+            'func': 'launch:app.logger.debug',
+            'kwargs': { 'msg': 'APScheduler has started.' },
+            'misfire_grace_time': 5,
+            'max_instances': 1,
+            'replace_existing': False,
+            'coalesce': True
+        } ],
         'SCHEDULER_TIMEZONE': 'UTC',
         'SCHEDULER_VIEWS_ENABLED': True
     }
@@ -194,11 +196,14 @@ def config_scheduler(scheduler_settings=None):
 if __name__ == '__main__':
     import os
     os.environ['scheduler_job_store_pass'] = 'test_pass'
-    settings = retrieve_settings('models/settings_model.json', '../notes/scheduler.yaml')
-    assert settings['scheduler_job_defaults_coalesce']
-    assert settings['scheduler_job_store_pass'] == 'test_pass'
-    scheduler_configs = config_scheduler(settings)
-    assert scheduler_configs['SCHEDULER_JOB_DEFAULTS']['coalesce']
+    model_path = 'models/settings_model.json'
+    settings_model = load_settings(model_path)
+    assert settings_model['schema']['scheduler_job_store_user'] == 'postgres'
+    env_settings = ingest_environ(model_path)
+    assert env_settings['scheduler_job_store_pass'] == 'test_pass'
+    example_settings = settings_model['schema']
+    scheduler_config = config_scheduler(example_settings)
+    assert scheduler_config['SCHEDULER_JOB_DEFAULTS']['coalesce']
     import sys
     import logging
     from flask import Flask
