@@ -6,5 +6,5 @@ docker_run_command: gunicorn --chdir server -w 1 launch:app -b 0.0.0.0:5000 -k g
 docker_mount_volumes:
   '/server': /server
 docker_port_mapping:
-  '5001': 5000
+  '5000': 5001
 docker_environment_variables:
