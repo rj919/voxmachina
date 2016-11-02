@@ -48,8 +48,8 @@ app.logger.setLevel(logging.DEBUG)
 app.config['ASSETS_DEBUG'] = False
 
 # construct the landing page
-from server.utils import load_settings
-api_model = load_settings('models/api_model.json')
+from labpack.records.settings import load_settings
+api_model = load_settings('models/api-model.json')
 @app.route('/')
 def landing_page():
     return jsonify(api_model['schema']), 200
@@ -71,8 +71,9 @@ gevent_scheduler = GeventScheduler()
 ap_scheduler = APScheduler(scheduler=gevent_scheduler)
 
 # adjust scheduler configuration settings
-from server.utils import ingest_environ, config_scheduler
-scheduler_settings = ingest_environ('models/settings_model.json')
+from server.utils import config_scheduler
+from labpack.records.settings import ingest_environ
+scheduler_settings = ingest_environ('models/scheduler-model.json')
 scheduler_configuration = config_scheduler(scheduler_settings)
 app.config.update(**scheduler_configuration)
 

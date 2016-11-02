@@ -6,7 +6,7 @@ _A Job Scheduler using Flask & APScheduler on Alpine & Gunicorn inside Docker_
 - Alpine Edge (OS)
 - Python 3.5.1 (Environment)
 - Gunicorn 19.4.5 (Server)
-- Flask 0.10.1 (Framework)
+- Flask 0.11.1 (Framework)
 - Gevent 1.1.2 (Thread Manager)
 - SQLAlchemy 1.1.1 (Database ORM)
 
