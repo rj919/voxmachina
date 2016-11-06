@@ -6,9 +6,11 @@ if __name__ == '__main__':
 
 # retrieve configurations
     from server.utils import load_settings
-    telegram_config = load_settings('../cred/telegram.yaml')
-    system_config = load_settings('../cred/system.yaml')
-    scheduler_url = 'http://%s:%s' % (system_config['system_ip_address'], system_config['scheduler_system_port'])
+    try:
+        system_config = load_settings('../cred/system.yaml')
+        scheduler_url = 'http://%s:%s' % (system_config['system_ip_address'], system_config['scheduler_system_port'])
+    except:
+        scheduler_url = 'http://localhost:5001'
 
 # construct scheduler client
     from labpack.platforms.apscheduler import apschedulerClient
