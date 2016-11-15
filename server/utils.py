@@ -2,135 +2,6 @@ __author__ = 'rcj1492'
 __created__ = '2016.10'
 __license__ = 'MIT'
 
-def load_settings(file_path, secret_key=''):
-
-# validate inputs
-    title = 'load_settings'
-    try:
-        _key_arg = '%s(file_path=%s)' % (title, str(file_path))
-    except:
-        raise ValueError('%s(file_path=...) must be a string.' % title)
-
-# create extension parser
-    from labpack.parsing.regex import labRegex
-    file_extensions = {
-            "json": ".+\\.json$",
-            "json.gz": ".+\\.json\\.gz$",
-            "yaml": ".+\\.ya?ml$",
-            "yaml.gz": ".+\\.ya?ml\\.gz$",
-            "drep": ".+\\.drep$"
-        }
-    ext_types = labRegex(file_extensions)
-
-# retrieve file details
-    key_map = ext_types.map(file_path)[0]
-    if key_map['json']:
-        import json
-        try:
-            file_data = open(file_path, 'rt')
-            file_details = json.loads(file_data.read())
-        except:
-            raise ValueError('%s is not valid json data.' % _key_arg)
-    elif key_map['yaml']:
-        import yaml
-        try:
-            file_data = open(file_path, 'rt')
-            file_details = yaml.load(file_data.read())
-        except:
-            raise ValueError('%s is not valid yaml data.' % _key_arg)
-    elif key_map['json.gz']:
-        import gzip
-        import json
-        try:
-            file_data = gzip.open(file_path, 'rb')
-        except:
-            raise ValueError('%s is not valid gzip compressed data.' % _key_arg)
-        try:
-            file_details = json.loads(file_data.read().decode())
-        except:
-            raise ValueError('%s is not valid json data.' % _key_arg)
-    elif key_map['yaml.gz']:
-        import gzip
-        import yaml
-        try:
-            file_data = gzip.open(file_path, 'rb')
-        except:
-            raise ValueError('%s is not valid gzip compressed data.' % _key_arg)
-        try:
-            file_details = yaml.load(file_data.read().decode())
-        except:
-            raise ValueError('%s is not valid yaml data.' % _key_arg)
-    elif key_map['drep']:
-        from labpack.compilers import drep
-        try:
-            file_data = open(file_path, 'rb').read()
-            file_details = drep.load(encrypted_data=file_data, secret_key=secret_key)
-        except:
-            raise ValueError('%s is not valid drep data.' % _key_arg)
-    else:
-        ext_names = []
-        ext_methods = set(ext_types.__dir__()) - set(ext_types.builtins)
-        for method in ext_methods:
-            ext_names.append(getattr(method, 'name'))
-        raise ValueError('%s must be one of %s file types.' % (_key_arg, ext_names))
-
-    return file_details
-
-def ingest_environ(model_path=''):
-
-# convert environment variables into json typed data
-    from os import environ, path
-    typed_dict = {}
-    environ_variables = dict(environ)
-    for key, value in environ_variables.items():
-        if value.lower() == 'true':
-            typed_dict[key] = True
-        elif value.lower() == 'false':
-            typed_dict[key] = False
-        elif value.lower() == 'null':
-            typed_dict[key] = None
-        elif value.lower() == 'none':
-            typed_dict[key] = None
-        else:
-            try:
-                try:
-                    typed_dict[key] = int(value)
-                except:
-                    typed_dict[key] = float(value)
-            except:
-                typed_dict[key] = value
-
-# feed environment variables through model
-    if model_path:
-        if not path.exists(model_path):
-            raise ValueError('%s is not a valid file path.' % model_path)
-        model_dict = load_settings(model_path)
-        from jsonmodel.validators import jsonModel
-        model_object = jsonModel(model_dict)
-        default_dict = model_object.ingest(**{})
-        for key in default_dict.keys():
-            if key.upper() in typed_dict:
-                valid_kwargs = {
-                    'input_data': typed_dict[key.upper()],
-                    'object_title': 'Environment variable %s' % key.upper(),
-                    'path_to_root': '.%s' % key
-                }
-                default_dict[key] = model_object.validate(**valid_kwargs)
-        return default_dict
-
-    return typed_dict
-
-def handle_request_wrapper(app_object):
-    def handle_request(url, job_details):
-        import requests
-        try:
-            response = requests.post(url, json=job_details)
-            return response.status_code
-        except requests.exceptions.ConnectionError:
-            app_object.logger.debug('%s is not available.' % url)
-            return 404
-    return handle_request
-
 def config_scheduler(scheduler_settings=None):
 
 # validate input
@@ -138,20 +9,7 @@ def config_scheduler(scheduler_settings=None):
         raise TypeError('Scheduler settings must be a dictionary.')
 
 # construct default configuration
-    from time import time
-    scheduler_configs = {
-        'SCHEDULER_JOBS': [ {
-            'id': 'app.logger.debug.%s' % str(time()),
-            'func': 'launch:app.logger.debug',
-            'kwargs': { 'msg': 'APScheduler has started.' },
-            'misfire_grace_time': 5,
-            'max_instances': 1,
-            'replace_existing': False,
-            'coalesce': True
-        } ],
-        'SCHEDULER_TIMEZONE': 'UTC',
-        'SCHEDULER_VIEWS_ENABLED': True
-    }
+    scheduler_configs = {}
 
 # add job store to scheduler
     job_store_on = False
@@ -193,10 +51,24 @@ def config_scheduler(scheduler_settings=None):
 
     return scheduler_configs
 
+def handle_request(url, job_details):
+    import requests
+    try:
+        status_details = requests.post(url, json=job_details)
+    except:
+        from labpack.handlers.requests import handle_requests
+        request_object = requests.Request(url=url, json=job_details)
+        status_details = handle_requests(request_object)
+        from server.init import app
+        if status_details['error']:
+            app.logger.debug(status_details['error'])
+    return status_details
+
 if __name__ == '__main__':
     import os
     os.environ['scheduler_job_store_pass'] = 'test_pass'
-    model_path = 'models/settings_model.json'
+    model_path = 'models/scheduler-model.json'
+    from labpack.records.settings import load_settings, ingest_environ
     settings_model = load_settings(model_path)
     assert settings_model['schema']['scheduler_job_store_user'] == 'postgres'
     env_settings = ingest_environ(model_path)
@@ -211,7 +83,7 @@ if __name__ == '__main__':
     app_object.logger.addHandler(logging.StreamHandler(sys.stdout))
     app_object.logger.setLevel(logging.DEBUG)
     app_object.config['ASSETS_DEBUG'] = False
+    os.environ['scheduler_job_store_pass'] = ''
     job_kwargs = {'url': 'http://169.254.25.228:5000/job', 'job_details': { 'status': 'ok'}}
-    handle_request = handle_request_wrapper(app_object)
-    response_code = handle_request(**job_kwargs)
-    assert isinstance(response_code, int)
+    status_details = handle_request(**job_kwargs)
+    assert isinstance(status_details['code'], int)
