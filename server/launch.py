@@ -24,7 +24,7 @@ scheduler_configuration = {
     'SCHEDULER_JOBS': [ {
         'id': 'scheduler.debug.%s' % str(time()),
         'func': 'init:app.logger.debug',
-        'kwargs': { 'msg': 'Scheduler is working.' },
+        'kwargs': { 'msg': 'APScheduler has started.' },
         'misfire_grace_time': 5,
         'max_instances': 1,
         'replace_existing': False,
