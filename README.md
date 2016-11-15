@@ -1,6 +1,6 @@
 # flaskScheduler 
 _A Job Scheduler using Flask & APScheduler on Alpine & Gunicorn inside Docker_  
-**by [Collective Acuity](https://collectiveacuity.com)**
+**by [Collective Acuity](http://collectiveacuity.com)**
 
 ## Components
 - Alpine Edge (OS)
