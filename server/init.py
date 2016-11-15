@@ -36,14 +36,15 @@ http://flask.pocoo.org/docs/0.11/deploying/wsgi-standalone/#gevent
 from flask import Flask
 app = Flask(import_name=__name__)
 
+# initialize logging and debugging
+import sys
+import logging
+app.logger.addHandler(logging.StreamHandler(sys.stdout))
+app.logger.setLevel(logging.DEBUG)
+app.config['ASSETS_DEBUG'] = False
+
 # construct scheduler object (with gevent processor)
 from flask_apscheduler import APScheduler
 from apscheduler.schedulers.gevent import GeventScheduler
 gevent_scheduler = GeventScheduler()
 ap_scheduler = APScheduler(scheduler=gevent_scheduler)
-
-# initialize logging and debugging
-import logging
-app.logger.addHandler(logging.StreamHandler(sys.stdout))
-app.logger.setLevel(logging.DEBUG)
-app.config['ASSETS_DEBUG'] = False
