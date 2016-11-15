@@ -5,6 +5,7 @@ docker_image_name: collectiveacuity/flaskscheduler
 docker_run_command: gunicorn --chdir server -w 1 launch:app -b 0.0.0.0:5000 -k gevent
 docker_mount_volumes:
   '/server': /server
+  '/data': /data
 docker_port_mapping:
   '5000': 5001
 docker_environment_variables:

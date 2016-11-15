@@ -2,11 +2,23 @@
 _A Job Scheduler using Flask & APScheduler on Alpine & Gunicorn inside Docker_  
 **by [Collective Acuity](http://collectiveacuity.com)**
 
+## Features
+- Flask APScheduler in a Container
+- REST API Client
+- Built-in Requests Functionality
+- Postgres Database Connector
+- Configuration by Environmental Variables
+- Lean Footprint
+
+## Requirements
+- Python and C dependencies listed in Dockerfile
+
 ## Components
 - Alpine Edge (OS)
-- Python 3.5.1 (Environment)
+- Python 3.5.2 (Environment)
 - Gunicorn 19.4.5 (Server)
 - Flask 0.11.1 (Framework)
+- APScheduler 3.2.0 (Scheduler)
 - Gevent 1.1.2 (Thread Manager)
 - SQLAlchemy 1.1.1 (Database ORM)
 
@@ -19,14 +31,6 @@ _A Job Scheduler using Flask & APScheduler on Alpine & Gunicorn inside Docker_
 
 ## Languages
 - Python 3.5
-
-## Features
-- Flask APScheduler in a Container
-- REST API Client
-- Built-in Requests Functionality
-- Postgres Database Connector
-- Configuration by Environmental Variables
-- Lean Footprint
 
 ## Setup DevEnv
 1. Install Docker Toolbox on Local Device

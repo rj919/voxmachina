@@ -7,6 +7,7 @@ APP_RUN_COMMAND="gunicorn --chdir server -w 1 launch:app -b 0.0.0.0:5000 -k geve
 APP_ROOT_DIRECTORY=flaskscheduler
 APP_SERVER_VOLUME=/server
 APP_CRED_VOLUME=/cred
+APP_DATA_VOLUME=/data
 APP_EXTERNAL_PORT=5001
 
 # Determine System OS
@@ -31,8 +32,8 @@ esac
 
 # Set Path to Volumes
 case ${OS} in
-  "Windows") CONTAINER_VOLUME_PATH=/$(pwd) ;;
-  *) CONTAINER_VOLUME_PATH=$(pwd) ;;
+  "Windows") PROJECT_VOLUME_PATH=/$(pwd) ;;
+  *) PROJECT_VOLUME_PATH=$(pwd) ;;
 esac
 
 # Find hostname using Perl & env variables
@@ -41,8 +42,9 @@ esac
 # Launch Processor Container with Volumes
 docker run --name $APP_CONTAINER_ALIAS \
 -e SYSTEM_LOCAL_HOST=$SYSTEM_LOCAL_HOST \
--v "$CONTAINER_VOLUME_PATH""$APP_SERVER_VOLUME":"$APP_SERVER_VOLUME" \
--v "$CONTAINER_VOLUME_PATH""$APP_CRED_VOLUME":"$APP_CRED_VOLUME" \
+-v "$PROJECT_VOLUME_PATH""$APP_SERVER_VOLUME":"$APP_SERVER_VOLUME" \
+-v "$PROJECT_VOLUME_PATH""$APP_CRED_VOLUME":"$APP_CRED_VOLUME" \
+-v "$PROJECT_VOLUME_PATH""$APP_DATA_VOLUME":"$APP_DATA_VOLUME" \
 -it -d -p $APP_EXTERNAL_PORT:5000 $APP_DOCKER_IMAGE $APP_RUN_COMMAND
 
 # Instructions for setting -w argument for gunicorn server

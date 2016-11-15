@@ -2,6 +2,11 @@ __author__ = 'rcj1492'
 __created__ = '2015.10'
 __license__ = 'MIT'
 
+# create init path to sibling folders
+import os
+import sys
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+
 # initialize app and scheduler objects
 from server.init import app, ap_scheduler
 from flask import request, session, jsonify, url_for, render_template
