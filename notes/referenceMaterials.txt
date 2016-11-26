@@ -1,0 +1,23 @@
+Reference Materials
+
+
+Server Infrastructure:
+
+uWSGI
+https://uwsgi-docs.readthedocs.org/en/latest/
+
+gEvent
+http://www.gevent.org/
+
+Gunicorn
+http://docs.gunicorn.org/en/latest/settings.html#settings
+http://www.philchen.com/2015/08/08/how-to-make-a-scalable-python-web-app-using-flask-and-gunicorn-nginx-on-ubuntu-14-04
+
+
+
+Scheduled Tasks:
+
+AWS Lambda
+https://docs.aws.amazon.com/lambda/latest/dg/getting-started-scheduled-events.html
+https://alestic.com/2015/05/aws-lambda-recurring-schedule/
+https://www.setcronjob.com/prices

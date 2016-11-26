@@ -1,0 +1,16 @@
+{
+  "schema": {
+    "id": "lBh7cXjblYXyqB9Sx5pD09U3hsRvsI_EpuHyg6-Q_AcE9zrT",
+    "dt": 1478312399.052806,
+    "function": "request.post",
+    "args": [ "string" ],
+    "kwargs": {},
+    "name": "request.post with string",
+    "interval": 50
+  },
+  "components": {
+    ".interval": {
+      "integer_data": true
+    }
+  }
+}

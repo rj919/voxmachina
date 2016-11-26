@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+    {% block head %}
+    <link rel="dns-prefetch" href="//twitter.com/CollectiveAcuit">
+    {% assets "css_assets" %}
+    <link rel="stylesheet" href="{{ ASSET_URL }}" type="text/css">
+    {% endassets %}
+    <link rel="shortcut icon" type="image/x-icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
+    {% block link %}{% endblock %}
+    <meta charset="UTF-8">
+    <meta name="lab-context" content="placeholder">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    {% block meta %}{% endblock %}
+    <title>{% block title %}{% endblock %}</title>
+    {% endblock %}
+</head>
+<body>
+    {% block body %}
+    {% endblock %}
+
+    <!-- Javascript Block -->
+    {% assets "js_assets" %}
+    <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+    {% endassets %}
+    {% block javascript %}{% endblock %}
+
+  </body>
+</html>

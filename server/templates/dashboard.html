@@ -1,0 +1,224 @@
+{% extends "wrapper.html" %}
+{% block title %}
+Collective Acuity : Welcome to the Laboratory
+{% endblock %}
+{% block javascript %}
+{% endblock %}
+{% block body %}
+<!-- Header Block -->
+<div id="header">
+    {% block header %}
+    <div id="header_container" class="container-fluid header-container navbar-fixed-top">
+        <div id="header_row" class="row navbar id-verified-border">
+            <div id="header_left" class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                <div id="header_left_button" class="navbar-title-24 navbar-start id-verified-visible hide" {% if not id_verified %}style="display: none;"{% endif %}>
+                    <a href="javascript:void(0)" id="header_left_button_menu" title="Lab Menu" onclick="openDialog('dialog_side_bar_left')" class="icon-list"></a>
+                </div>
+            </div>
+            <div id="header_middle" class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                <div id="header_middle_thin" class="navbar-title-24 navbar-center hidden-lg hidden-md hidden-sm id-verified-visible" {% if not id_verified %}style="display: none;"{% endif %}>
+                    <span id="header_middle_thin_text" title="Collective Acuity">
+                        Collective Acuity
+                    </span>
+                </div>
+                <div id="header_middle_wide" class="navbar-title-24 navbar-start hidden-xs id-verified-visible" {% if not id_verified %}style="display: none;"{% endif %}>
+                    <span id="header_middle_wide_text" title="Collective Acuity">
+                        Collective Acuity
+                    </span>
+                </div>
+            </div>
+            <div id="header_right" class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                <div id="header_right_info" class="navbar-title-24 navbar-end">
+                    <a href="javascript:void(0)" id="header_right_button_info" title="Mission" onclick="stringRequest('display the lab mission')" class="icon-question id-verified-visible" {% if id_verified %}style="display: none;"{% endif %}></a>
+                    <a href="javascript:void(0)" id="header_right_button_chat" title="Protocols" onclick="stringRequest('display the lab protocols')" class="icon-bubbles id-verified-visible" {% if not id_verified %}style="display: none;"{% endif %}></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+</div>
+
+<!-- Content Block -->
+<div id="content">
+    {% block content %}
+    {% endblock %}
+</div>
+
+<!-- Footer Block -->
+<div id="footer">
+    {% block footer %}
+    <div id="footer_container" class="container-fluid footer-container id-verified-visible hide" {% if id_verified %}style="display: none;"{% endif %}>
+        <div id="footer_row" class="row">
+            <div id="footer_left" class="col-lg-6 col-md-6 col-sm-6 hidden-xs">
+                <div id="footer_left_text" class="h6 small text-nowrap">A <a href="https://twitter.com/CollectiveAcuit" target="_blank">Collective Acuity</a> creation.</div>
+            </div>
+            <div id="footer_middle" class="hidden-lg hidden-md hidden-sm col-xs-12">
+                <div id="footer_middle_text" class="h6 small text-center">A <a href="https://twitter.com/CollectiveAcuit" target="_blank">Collective Acuity</a> creation.</div>
+            </div>
+            <div id="footer_right" class="col-lg-6 col-md-6 col-sm-6 hidden-xs">
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+</div>
+
+<!-- Modal Dialogs Block -->
+<div id="dialog_backdrop" class="page-overlay-100 dialog-backdrop" style="display: none;">
+</div>
+<div id="dialog_side_bar_right" class="page-side-bar-right dialog-box dialog-side-bar-right" style="display: none;">
+    <div id="side_bar_right_header_container" class="container-fluid">
+        <div id="side_bar_right_header_row" class="row navbar">
+            <div id="side_bar_right_header_column" class="col-xs-12">
+                <a href="javascript:void(0)" id="side_bar_right_channel_title" title="Channel Toggles" class="navbar-title-24 navbar-start"><span class="icon-equalizer padding-right-10"></span>Channels</a>
+            </div>
+        </div>
+    </div>
+    <div id="side_bar_right_content_container" class="container-fluid">
+        <section id="side_bar_right_channels_section_row" class="row section-last">
+            <div id="side_bar_right_channels_section_column" class="col-xs-12 text-left">
+                <div id="side_bar_right_authentication" class="row form-line">
+                    <a href="javascript:void(0)" id="side_bar_right_authentication_on" class="form-label text-nowrap hide" title="[Click to Sign Off]">
+                        <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+                            <span class="icon-lock margin-right-10"></span>Authentication
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 text-right">
+                            <strong class="icon-success">On</strong>
+                        </div>
+                    </a>
+                    <a href="javascript:void(0)" id="side_bar_right_authentication_off" class="form-label text-nowrap" title="[Click to Sign On]">
+                        <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+                            <span class="icon-lock-open margin-right-10"></span>Authentication
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 text-right">
+                            <strong class="icon-error">Off</strong>
+                        </div>
+                    </a>
+                </div>
+                <div id="side_bar_right_chat_window" class="row form-line">
+                    <a href="javascript:void(0)" id="side_bar_right_chat_window_on" class="form-label text-nowrap hide" title="[Click to Disconnect]">
+                        <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+                            <span class="icon-speech margin-right-10"></span>Chat Window
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 text-right">
+                            <strong class="icon-success">On</strong>
+                        </div>
+                    </a>
+                    <a href="javascript:void(0)" id="side_bar_right_chat_window_off" class="form-label text-nowrap" title="[Click to Connect]">
+                        <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+                            <span class="icon-ban icon-overlay margin-right-10"></span>
+                            <span class="icon-speech margin-right-10"></span>Chat Window
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 text-right">
+                            <strong class="icon-error">Off</strong>
+                        </div>
+                    </a>
+                </div>
+                <div id="side_bar_right_microphone" class="row form-line">
+                    <a href="javascript:void(0)" id="side_bar_right_microphone_on" class="form-label text-nowrap hide" title="[Click to Turn Off]">
+                        <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+                            <span class="icon-microphone margin-right-10"></span>Microphone
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 text-right">
+                            <strong class="icon-success">On</strong>
+                        </div>
+                    </a>
+                    <a href="javascript:void(0)" id="side_bar_right_microphone_off" class="form-label text-nowrap" title="[Click to Turn On]">
+                        <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+                            <span class="icon-ban icon-overlay margin-right-10"></span>
+                            <span class="icon-microphone margin-right-10"></span>Microphone
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 text-right">
+                            <strong class="icon-error">Off</strong>
+                        </div>
+                    </a>
+                </div>
+                <div id="side_bar_right_display" class="row form-line">
+                    <a href="javascript:void(0)" id="side_bar_right_display_on" class="form-label text-nowrap" title="[Click to Close Window]">
+                        <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+                            <span class="icon-screen-desktop margin-right-10"></span>Display
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 text-right">
+                            <strong class="icon-success">On</strong>
+                        </div>
+                    </a>
+                    <a href="javascript:void(0)" id="side_bar_right_dispay_off" class="form-label text-nowrap hide" title="[Click to Turn On]">
+                        <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+                            <span class="icon-ban icon-overlay margin-right-10"></span>
+                            <span class="icon-screen-desktop margin-right-10"></span>Display
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 text-right">
+                            <strong class="icon-error">Off</strong>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+<div id="dialog_side_bar_left" class="page-side-bar-left dialog-box dialog-side-bar-left" style="display: none;">
+    <div id="side_bar_left_header_container" class="container-fluid">
+        <div id="side_bar_left_header_row" class="row navbar">
+            <div id="side_bar_left_header_column" class="col-xs-12">
+                <a href="javascript:void(0)" id="side_bar_left_menu_title" title="Lab Menu" class="navbar-title-24 navbar-start">
+                    <span class="icon-list padding-right-10"></span>Menu
+                </a>
+            </div>
+        </div>
+    </div>
+    <div id="side_bar_left_content_container" class="container-fluid">
+        <section id="side_bar_left_feature_section_row" class="row section-row">
+            <div id="side_bar_left_feature_section_column" class="col-xs-12 text-left">
+                <div id="side_bar_left_experiments" class="form-line">
+                    <a href="javascript:void(0)" id="side_bar_left_experiments_link" class="form-label text-nowrap" title="Experiments">
+                        <span class="icon-chemistry margin-right-10"></span>Experiments
+                    </a>
+                </div>
+                <div id="side_bar_left_integrations" class="form-line">
+                    <a href="javascript:void(0)" id="side_bar_left_integrations_link" class="form-label text-nowrap" title="Integrations">
+                        <span class="icon-puzzle margin-right-10"></span>Integrations
+                    </a>
+                </div>
+                <div id="side_bar_left_permissions" class="form-line">
+                    <a href="javascript:void(0)" id="side_bar_left_permissions_link" class="form-label text-nowrap" title="Permissions">
+                        <span class="icon-key margin-right-10"></span>Permissions
+                    </a>
+                </div>
+                <div id="side_bar_left_records" class="form-line">
+                    <a href="javascript:void(0)" id="side_bar_left_records_link" class="form-label text-nowrap" title="Records">
+                        <span class="icon-docs margin-right-10"></span>Records
+                    </a>
+                </div>
+            </div>
+        </section>
+        <section id="side_bar_left_account_section_row" class="row section-row">
+            <div id="side_bar_left_account_section_column" class="col-xs-12 text-left">
+                <div id="side_bar_left_profile" class="form-line">
+                    <a href="javascript:void(0)" id="side_bar_left_profile_link" class="form-label text-nowrap" title="Profile">
+                        <span class="icon-user margin-right-10"></span>Profile
+                    </a>
+                </div>
+                <div id="side_bar_left_signout" class="form-line">
+                    <a id="side_bar_left_signout_link" class="form-label text-nowrap" onclick="signoutTrigger()" href="javascript:void(0)" title="Sign Out">
+                        <span class="icon-logout margin-right-10"></span>Sign-out
+                    </a>
+                </div>
+            </div>
+        </section>
+        <section id="side_bar_left_info_section_row" class="row section-last">
+            <div id="side_bar_left_info_section_column" class="col-xs-12 text-left">
+                <div id="side_bar_left_protocols" class="form-line">
+                    <a href="javascript:void(0)" id="side_bar_left_protocols_link" class="form-label text-nowrap" onclick="protocolsDialog()" title="Protocols">
+                        <span class="icon-ghost margin-right-10"></span>Lab Protocols
+                    </a>
+                </div>
+                <div id="side_bar_left_api" class="form-line">
+                    <a href="javascript:void(0)" id="side_bar_left_api_link" class="form-label text-nowrap" title="API">
+                        <span class="icon-notebook margin-right-10"></span>API
+                    </a>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+{% endblock %}

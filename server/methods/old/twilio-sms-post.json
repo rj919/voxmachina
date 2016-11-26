@@ -1,0 +1,17 @@
+{
+  "schema": {
+    "method": "POST",
+    "endpoint": "/tink/twilio/sms",
+    "request": {
+      "schema": {
+        "fields": {},
+        "headers": {},
+        "body": {},
+        "file": "",
+        "mimetype": ""
+      },
+      "components": {}
+    },
+    "response": {}
+  }
+}

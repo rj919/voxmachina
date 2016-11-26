@@ -1,0 +1,10 @@
+{
+  "schema": {
+    "file": "signin-request.json"
+  },
+  "components": {
+    ".file": {
+      "must_contain": [ "\\.json$" ]
+    }
+  }
+}
