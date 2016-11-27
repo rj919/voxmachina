@@ -8,7 +8,7 @@ import sys
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 # initialize configuration objects
-from server.init import *
+from server.bot import *
 from flask import request, session, jsonify, url_for, render_template, Response
 
 # add secret key for sessions
@@ -174,7 +174,7 @@ from labpack.handlers.requests import handle_requests
 from labpack.platforms.apscheduler import apschedulerClient
 scheduler_client = apschedulerClient(scheduler_url, handle_requests)
 scheduler_response = scheduler_client.get_info()
-if scheduler_response['error']:
+if 'error' in scheduler_response:
     # TODO start scheduler script
     flask_app.logger.debug(scheduler_response['error'])
 else:
