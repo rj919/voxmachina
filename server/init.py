@@ -48,6 +48,10 @@ service_map = {
     'telegram': {
         'api_client': 'labpack.messaging.telegram.telegramBotClient.__init__',
         'config_path': '../cred/telegram.yaml'
+    },
+    'dropbox': {
+        'oauth_client': 'labpack.authentication.oauth2.oauth2Client.__init__',
+        'config_path': '../cred/dropbox.yaml'
     }
 }
 

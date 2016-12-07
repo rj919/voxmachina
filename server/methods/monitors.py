@@ -82,7 +82,7 @@ def retrieve_location_data(contact_id):
     from labpack.storage.appdata import appdataClient
     moves_data_client = appdataClient('Moves', prod_name='freshAir')
     contact_filter = [{0: {'discrete_values': [contact_id]}}]
-    filter_function = moves_data_client.conditionalFilter(contact_filter)
+    filter_function = moves_data_client.conditional_filter(contact_filter)
     moves_data_list = moves_data_client.list(filter_function=filter_function, reverse_search=True)
     moves_data_record = {}
     location_data = {
@@ -118,7 +118,7 @@ def retrieve_planet_data(contact_id):
         contact_filter = [
             {0: {'discrete_values': [contact_id]}, 1: {'discrete_values': [key]}}
         ]
-        filter_function = planet_data_client.conditionalFilter(contact_filter)
+        filter_function = planet_data_client.conditional_filter(contact_filter)
         planet_data_list = planet_data_client.list(filter_function=filter_function, reverse_search=True)
         planet_data_record = {}
         if planet_data_list:
@@ -165,7 +165,7 @@ def retrieve_forecast_data(contact_id):
         }
     }
     contact_filter = [{0: {'discrete_values': [contact_id]}}]
-    filter_function = accuweather_data_client.conditionalFilter(contact_filter)
+    filter_function = accuweather_data_client.conditional_filter(contact_filter)
     weather_list = accuweather_data_client.list(filter_function=filter_function, reverse_search=True)
     weather_record = {}
     import re
@@ -292,7 +292,7 @@ def monitor_twilio(twilio_config, admin_id):
     twilio_client = twilioClient(account_sid, auth_token, twilio_phone)
     last_value = last_response.replace('incoming/', '')
     message_filter = [{0:{'discrete_values': ['incoming']},1:{'greater_than':last_value}}]
-    filter_function = twilio_data_client.conditionalFilter(message_filter)
+    filter_function = twilio_data_client.conditional_filter(message_filter)
     message_list = twilio_data_client.list(filter_function, max_results=1000)
     if message_list:
         response_record = {
@@ -322,7 +322,7 @@ def monitor_telegram(telegram_config):
     telegram_bot_client = telegramBotClient(**init_kwargs)
     update_key = 'telegram-updates.yaml'
     update_filter = [{0: {'discrete_values': ['counts']}, 1: {'discrete_values': [update_key]}}]
-    filter_function = telegram_data_client.conditionalFilter(update_filter)
+    filter_function = telegram_data_client.conditional_filter(update_filter)
     record_list = telegram_data_client.list(filter_function)
     if record_list:
         update_record = telegram_data_client.read(record_list[0])

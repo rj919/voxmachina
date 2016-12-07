@@ -50,7 +50,7 @@ def retrieve_contents(**input_kwargs):
 # query localhost for file with query words
     query_words = action_kwargs['query_words']
     query_kwargs = {
-        'filter_function': local_client.conditionalFilter([ {'.file_name':{ 'must_contain': query_words}}]),
+        'filter_function': local_client.conditional_filter([ {'.file_name':{ 'must_contain': query_words}}]),
         'max_results': 1,
         'list_root': search_path
     }

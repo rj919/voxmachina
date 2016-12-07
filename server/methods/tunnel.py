@@ -134,7 +134,7 @@ def monitor_tunnel(tunnel_url, control_token, subdomain_name, proxy_provider):
     from labpack.storage.appdata import appdataClient
     knowledge_client = appdataClient(collection_name='Knowledge', prod_name='Fitzroy')
     state_filter = [{0:{'discrete_values':['states']}}]
-    filter_function = knowledge_client.conditionalFilter(state_filter)
+    filter_function = knowledge_client.conditional_filter(state_filter)
     token_list = knowledge_client.list(filter_function=filter_function, max_results=1000,reverse_search=True)
     for token in token_list:
         token_details = knowledge_client.read(token)

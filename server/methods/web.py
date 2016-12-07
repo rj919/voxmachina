@@ -38,7 +38,7 @@ def web_analysis(obs_details, knowledge_client, function_map):
             for noun in string_nouns:
                 noun_list.append(str(noun))
             copy_filters = [{0:{'discrete_values':['copy']}, 1:{'must_contain': noun_list}}]
-            filter_function = knowledge_client.conditionalFilter(copy_filters)
+            filter_function = knowledge_client.conditional_filter(copy_filters)
             copy_list = knowledge_client.list(filter_function)
             if copy_list:
                 copy_details = knowledge_client.read(copy_list[0])
