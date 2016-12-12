@@ -38,11 +38,11 @@ css_modules = [ 'static/styles/lab/lab.css' ]
 
 service_map = {
     'moves': {
-        'oauth_client': 'labpack.activity.moves.movesOAuth.__init__',
+        'oauth_client': 'labpack.authentication.oauth2.oauth2Client.__init__',
         'config_path': '../cred/moves.yaml'
     },
     'meetup': {
-        'oauth_client': 'labpack.events.meetup.meetupOAuth.__init__',
+        'oauth_client': 'labpack.authentication.oauth2.oauth2Client.__init__',
         'config_path': '../cred/meetup.yaml'
     },
     'telegram': {
