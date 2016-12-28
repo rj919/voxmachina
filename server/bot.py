@@ -5,7 +5,7 @@ __license__ = 'MIT'
 from server.init import *
 
 # initialize bot
-from server.pocketbot.bot import botClient
+from server.pocketbot.client import botClient
 from labpack.storage.appdata import appdataClient
 bot_kwargs = {
     'global_scope': globals(),

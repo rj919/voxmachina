@@ -70,13 +70,15 @@ function unpackKwargs(kwargs_input, kwargs_model, method_name) {
 
 function logConsole(console_kwargs) {
 
+    /*
+        a method for reporting a message to the console log
+        eg. "display the response message in the console"
+    */
+
 // declare input schema
     input_schema = {
         'schema': {
             'message': "I am a lollipop."
-        },
-        'metadata': {
-            'example_statements': [ 'display the response message in the console' ]
         }
     }
 
@@ -91,11 +93,21 @@ function logConsole(console_kwargs) {
 
 function responsiveDialog(dialog_kwargs) {
 
-// unpack kwargs input
-    dialog_dict = {
-        'dialog_title': 'Mission',
-        'dialog_content': '<blockquote class="blockquote-reverse"><p>To make accessible to each individual the resources of the world</p><footer>Collective Acuity</footer></blockquote>'
+    /*
+        a method to display text in a responsive dialog panel
+        eg. "display the lab mission in a dialog"
+    */
+
+// construct input schema
+    input_schema = {
+        'schema': {
+            'dialog_title': 'Mission',
+            'dialog_content': '<blockquote class="blockquote-reverse"><p>To make accessible to each individual the resources of the world</p><footer>Collective Acuity</footer></blockquote>'
+        }
     }
+
+// unpack kwargs input
+    dialog_dict = input_schema.schema
     unpackKwargs(dialog_kwargs, dialog_dict, 'responsiveDialog')
 
 // construct method variables
@@ -245,13 +257,18 @@ function methodConstructor(response_kwargs) {
 
 /* a method for parsing function calls from a response body */
 
-// unpack variables in response
-    var response_dict = {
-        'dt': 0,
-        'id': '',
-        'code': 0,
-        'methods': []
+// declare the input schema
+    input_schema = {
+        'schema':  {
+            'dt': 0,
+            'id': '',
+            'code': 0,
+            'methods': []
+        }
     }
+
+// unpack variables in response
+    response_dict = input_schema.schema
     unpackKwargs(response_kwargs, response_dict, 'methodConstructor')
 
 // call each method inside details
@@ -383,7 +400,10 @@ function jsonRequest(request_kwargs) {
 
 function updateContext(context_kwargs) {
 
-/* a method to inject array data into a DOM element */
+    /*
+        a method to inject map and array data into a DOM element
+        eg. "inject array data into a DOM element"
+    */
 
 // declare input schema
     input_schema = {
@@ -398,9 +418,6 @@ function updateContext(context_kwargs) {
             '.context_map': {
                 'extra_fields': true
             }
-        },
-        'metadata': {
-            'example_statements': [ 'inject array data into a DOM element' ]
         }
     }
 
@@ -447,5 +464,3 @@ function updateContext(context_kwargs) {
     element_selector.data(context_data)
 
 }
-
-function dummy() {}

@@ -8,7 +8,8 @@ import sys
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 # initialize configuration objects
-from server.bot import *
+from server.init import *
+from server.bot import bot_client
 from flask import request, session, jsonify, url_for, render_template, Response
 
 # add secret key for sessions
@@ -48,7 +49,7 @@ from server.utils import observe_request, construct_response, observe_tunnel
 from labpack.parsing.flask import extract_request_details, validate_request_details
 
 # construct job retrieval method
-from labpack.compilers.objects import retrieve_function
+from server.pocketbot.mapping.functions import load_function
 
 # construct the landing & dashboard for single-page sites
 @flask_app.route('/')
@@ -92,22 +93,25 @@ def job_route():
     if job_details['function']:
         flask_app.logger.debug({'job': job_details['name']})
         try:
-            job_func = retrieve_function(job_details['function'], globals())
+            global_func = globals()
+            if job_details['function'] in global_func.keys():
+                job_func = global_func[job_details['function']]
+            else:
+                job_func = load_function(job_details['function'])
         except:
             msg = 'Function %s cannot be retrieved from a file path or the global scope.' % job_details['function']
             flask_app.logger.debug(msg)
             return jsonify({'error': msg}), 400
+        if job_details['args']:
+            def job():
+                job_func(*job_details['args'])
+        elif job_details['kwargs']:
+            def job():
+                job_func(**job_details['kwargs'])
         else:
-            if job_details['args']:
-                def job():
-                    job_func(*job_details['args'])
-            elif job_details['kwargs']:
-                def job():
-                    job_func(**job_details['kwargs'])
-            else:
-                def job():
-                    job_func()
-            response.call_on_close(job)
+            def job():
+                job_func()
+        response.call_on_close(job)
     return response
 
 # construct endpoint for tunnel requests
