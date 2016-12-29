@@ -38,19 +38,19 @@ css_modules = [ 'static/styles/lab/lab.css' ]
 
 service_map = {
     'moves': {
-        'oauth_client': 'labpack.authentication.oauth2.oauth2Client.__init__',
+        'oauth_client': 'labpack.authentication.oauth2.oauth2Client',
         'config_path': '../cred/moves.yaml'
     },
     'meetup': {
-        'oauth_client': 'labpack.authentication.oauth2.oauth2Client.__init__',
+        'oauth_client': 'labpack.authentication.oauth2.oauth2Client',
         'config_path': '../cred/meetup.yaml'
     },
     'telegram': {
-        'api_client': 'labpack.messaging.telegram.telegramBotClient.__init__',
+        'api_client': 'labpack.messaging.telegram.telegramBotClient',
         'config_path': '../cred/telegram.yaml'
     },
     'dropbox': {
-        'oauth_client': 'labpack.authentication.oauth2.oauth2Client.__init__',
+        'oauth_client': 'labpack.authentication.oauth2.oauth2Client',
         'config_path': '../cred/dropbox.yaml'
     }
 }

@@ -9,6 +9,7 @@ from server.pocketbot.client import botClient
 from labpack.storage.appdata import appdataClient
 bot_kwargs = {
     'global_scope': globals(),
+    'package_root': 'pocketbot',
     'log_client': appdataClient('Logs', prod_name=bot_config['bot_name']),
     'flask_app': flask_app
 }
@@ -30,7 +31,15 @@ if __name__ == '__main__':
     js_functions = []
     for key, value in bot_client.function_map.javascript.items():
         js_functions.append(value['name'])
-    print(js_functions)
+    assert js_functions
+
+    count = 0
+    bot_client.add_package('actions/test_method.py')
+    for key, value in bot_client.function_map.python.items():
+        if value['name'] == 'test_method':
+            if value['output']['returns']:
+                count += 1
+    assert count
 
 # # test clean kwargs
 #     from labpack.records.id import labID
