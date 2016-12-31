@@ -30,6 +30,12 @@ RUN pip3 install Flask-WTF
 RUN pip3 install Flask_Assets
 RUN pip3 install jsmin
 RUN pip3 install cssmin
+RUN pip3 install nltk
+RUN pip3 install numpy
+RUN pip3 install textblob
+
+# Download nltk corpus
+RUN python3 -m nltk.downloader all
 
 # Install Localtunnel
 RUN apk add nodejs@community
