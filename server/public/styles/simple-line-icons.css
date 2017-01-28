@@ -1,10 +1,10 @@
 @font-face {
 	font-family: 'Simple-Line-Icons';
-	src:url('/static/fonts/Simple-Line-Icons.eot');
-	src:url('/static/fonts/Simple-Line-Icons.eot?#iefix') format('embedded-opentype'),
-		url('/static/fonts/Simple-Line-Icons.woff') format('woff'),
-		url('/static/fonts/Simple-Line-Icons.ttf') format('truetype'),
-		url('/static/fonts/Simple-Line-Icons.svg#Simple-Line-Icons') format('svg');
+	src:url('/public/fonts/Simple-Line-Icons.eot');
+	src:url('/public/fonts/Simple-Line-Icons.eot?#iefix') format('embedded-opentype'),
+		url('/public/fonts/Simple-Line-Icons.woff') format('woff'),
+		url('/public/fonts/Simple-Line-Icons.ttf') format('truetype'),
+		url('/public/fonts/Simple-Line-Icons.svg#Simple-Line-Icons') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }

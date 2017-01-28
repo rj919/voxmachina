@@ -27,14 +27,14 @@ from flask_assets import Environment, Bundle
 lab_assets = Environment(flask_app)
 script_modules = []
 for module in js_modules:
-    script_modules.append(module.replace('static/',''))
+    script_modules.append(module.replace('assets/','../assets/'))
 js_min = Bundle(*script_modules, filters='jsmin', output='scripts/lab.min.js')
 lab_assets.register('js_assets', 'scripts/jquery-2.2.3.min.js', 'scripts/modernizr-custom.js', js_min)
 
 # initialize css minification
 style_modules =[]
 for module in css_modules:
-    style_modules.append(module.replace('static/',''))
+    style_modules.append(module.replace('assets/','../assets/'))
 css_min = Bundle(*style_modules, filters='cssmin', output='styles/lab.min.css')
 lab_assets.register('css_assets', 'styles/bootstrap.css', 'styles/simple-line-icons.css', css_min)
 

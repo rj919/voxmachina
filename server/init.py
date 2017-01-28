@@ -12,9 +12,9 @@ telegram_config = load_settings('../cred/telegram.yaml')
 # construct flask app object
 from flask import Flask
 flask_args = {
-    'import_name': __name__
-    # 'static_folder': 'assets',
-    # 'template_folder': 'views'
+    'import_name': __name__,
+    'static_folder': 'public',
+    'template_folder': 'views'
 }
 flask_app = Flask(**flask_args)
 
@@ -33,8 +33,8 @@ scheduler_url = 'http://%s:%s' % (system_config['system_ip_address'], system_con
 tunnel_url = 'http://%s:%s' % (system_config['system_ip_address'], system_config['tunnel_system_port'])
 
 # define javascript and css modules
-js_modules = [ 'static/scripts/lab/lab.js', 'static/scripts/lab/lab-app.js' ]
-css_modules = [ 'static/styles/lab/lab.css' ]
+js_modules = [ 'assets/scripts/lab.js', 'assets/scripts/lab-app.js' ]
+css_modules = [ 'assets/styles/lab.css' ]
 
 service_map = {
     'moves': {
