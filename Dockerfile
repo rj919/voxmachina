@@ -18,6 +18,7 @@ RUN curl -sS https://bootstrap.pypa.io/get-pip.py | python3
 # Install C Compiler Dependencies
 RUN apk add gcc
 RUN apk add g++
+RUN apk add python3-dev
 
 # Install Python Modules
 RUN pip3 install flask

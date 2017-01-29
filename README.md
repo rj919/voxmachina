@@ -23,7 +23,7 @@ _A Bot Engine using Flask on Alpine & Gunicorn/Gevent inside Docker_
 - Gunicorn 19.4.5 (Server)
 - Flask 0.11.1 (Framework)
 - APScheduler 3.2.0 (Scheduler)
-- Gevent 1.1.2 (Thread Manager)
+- Gevent 1.2.1 (Thread Manager)
 - Bootstrap 3 (CSS Template)
 - jQuery 2.2.3 (Framework)
 
