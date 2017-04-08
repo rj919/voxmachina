@@ -37,6 +37,7 @@ RUN pip3 install labpack
 RUN apk add nodejs@community
 RUN apk add nodejs-npm
 RUN npm install -g localtunnel
+# RUN npm install -g uglify-js
 
 # Clean APK cache
 RUN rm -rf /var/cache/apk/*
