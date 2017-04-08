@@ -34,8 +34,9 @@ RUN pip3 install jsonmodel
 RUN pip3 install labpack
 
 # Install Localtunnel
- RUN apk add nodejs@community
- RUN npm install -g localtunnel
+RUN apk add nodejs@community
+RUN apk add nodejs-npm
+RUN npm install -g localtunnel
 
 # Clean APK cache
 RUN rm -rf /var/cache/apk/*
