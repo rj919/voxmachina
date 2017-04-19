@@ -1,0 +1,12 @@
+{
+  "schema": {
+    "bot_name": "Fitzroy"
+  },
+  "components": {
+    ".bot_name": {
+      "default_value": "Fitzroy",
+      "max_length": 255, 
+      "must_not_contain": ["/", "^\\."]
+    }
+  }
+}

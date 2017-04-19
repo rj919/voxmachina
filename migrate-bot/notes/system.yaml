@@ -1,0 +1,12 @@
+system_ip_address: '127.0.0.1'
+server_system_port: 5000
+server_container_port: 0
+server_logging_level: 'DEBUG'
+server_secret_key: 'ABC-DEF1234ghijkl-567MNOPQRST890uvwxyz'
+scheduler_system_port: 5001
+scheduler_container_port: 0
+tunnel_system_port: 5002
+tunnel_container_port: 0
+tunnel_subdomain_name: 'somerandomstringoflowercaseletters'
+tunnel_control_token: 'abcdefgh01234456789_IJKLMNOPQrstuv-wxyz'
+tunnel_proxy_provider: ''

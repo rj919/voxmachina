@@ -1,0 +1,11 @@
+{
+  "title": "Lab Projects",
+  "description": "Project list for Collective Acuity",
+  "projects": [
+    {
+      "name": "",
+      "details": ""
+    }
+  ],
+  "temp": "mission: side-a: to make accessible to each individual the resources of the world \n side-b: to build an army of intelligent autonomous machines \n the components are numerous and complex (hence the nice ability to map the dependencies) but they can be summarized as five major projects \n 1. a personal record access management platform / protocol \n 2. a devops deployment and continuous integration automation tool for devices \n 3. a set of automated data classification and machine learning techniques to generate inferences \n 4. a bot platform capable of handling an artibrary number of services and powering the intel behind existing open-data services \n 5. about a dozen or so open-source python modules for various different elements of 1-4"
+}

@@ -1,0 +1,10 @@
+{
+  "schema": {
+      "test": ""
+  },
+  "components": {
+    ".": {
+      "extra_fields": true
+    }
+  }
+}

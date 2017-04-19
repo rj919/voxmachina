@@ -1,0 +1,13 @@
+{
+  "schema": {
+    "user_email": ""
+  },
+  "components": {
+    ".user_email": {
+      "must_contain": [ "^[\\w\\-_\\.\\+]{1,24}?@[\\w\\-\\.]{1,24}?\\.[a-z]{2,10}$" ],
+      "must_not_contain": [ "^\\.", "\\.\\.", "\\.@", "@\\.", "[\\\"\\s<>(),]" ],
+      "example_values": [ "satoshi@bitcoin.org" ],
+      "field_title": "Email"
+    }
+  }
+}
