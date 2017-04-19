@@ -7,6 +7,7 @@ keys/
 ###############  media files  ##################
 publicity/
 data/
+tink/
 
 ############### distro files  ##################
 build/
@@ -26,6 +27,7 @@ sdist/
 *.spec
 docs/_build/
 target/
+.webassets-cache
 
 ###############   IDE files   ##################
 .DS_STORE
