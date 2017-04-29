@@ -19,11 +19,6 @@ __eventlet (a thread manager)__
 __gEvent (a thread manager)__
 http://www.gevent.org/
 
-
-Cordova Deployment
-------------------
-https://cordova.apache.org/docs/en/latest/guide/cli/index.html
-
 Scheduled Tasks
 ---------------
 APScheduler Documentation:  
