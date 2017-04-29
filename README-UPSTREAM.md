@@ -7,8 +7,6 @@ TBD
 
 ## Features
 - Flask in a Container
-- Builtin connectors to Flask Scheduler
-- Builtin connectors to Flask Tunnel
 - Local Device Deployment
 - OAuth2 Handled through Proxy Hosts
 - API Service Monitors
