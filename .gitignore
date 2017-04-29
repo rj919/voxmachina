@@ -1,14 +1,14 @@
 ###############  .gitignore   ##################
 
-################ credentials  ##################
+###############  credentials  ##################
 cred/
 keys/
 
-###############  media files  ##################
-publicity/
+###############  data files   ##################
 data/
+appdata/
 
-############### distro files  ##################
+###############  distro files  #################
 build/
 .Python
 develop-eggs/
@@ -26,6 +26,11 @@ sdist/
 *.spec
 docs/_build/
 target/
+node_modules/
+.webassets-cache/
+platforms/
+plugins/
+hooks/
 
 ###############   IDE files   ##################
 .DS_STORE
@@ -35,9 +40,10 @@ nbproject
 .node_history
 __pycache__
 *.so
+tinker/
 
 ############## backup sync files ###############
 desktop.ini
 *.gdoc
-
-
+.dropbox
+Thumbs.db

@@ -1,5 +1,5 @@
 # Define Variables
-APP_CONTAINER_ALIAS=scheduler
+APP_CONTAINER_ALIAS=server
 
 # Instructions for tunnel to web
 echo To open up tunnel: lt --port 5000 --subdomain [subdomain]

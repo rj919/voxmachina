@@ -6,7 +6,6 @@
 
 # Server content files
 server/
-data/
 
 # Notes & Configs
 /cred/

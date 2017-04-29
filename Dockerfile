@@ -25,19 +25,18 @@ RUN apk add postgresql-dev
 RUN pip3 install flask
 RUN pip3 install gunicorn
 RUN pip3 install gevent
-RUN pip3 install requests
-RUN pip3 install apscheduler
-RUN pip3 install Flask-APScheduler
-RUN pip3 install SQLAlchemy
-RUN pip3 install psycopg2
 RUN pip3 install jsonmodel
 RUN pip3 install labpack
+RUN pip3 install requests
+RUN pip3 install pytz
+RUN pip3 install apscheduler
+RUN pip3 install SQLAlchemy
+RUN pip3 install psycopg2
 
 # Install Localtunnel
 RUN apk add nodejs@community
 RUN apk add nodejs-npm
 RUN npm install -g localtunnel
-# RUN npm install -g uglify-js
 
 # Clean APK cache
 RUN rm -rf /var/cache/apk/*

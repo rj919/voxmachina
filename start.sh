@@ -1,14 +1,15 @@
 # Set Docker Variables
 VIRTUALBOX_NAME=default
-APP_CONTAINER_ALIAS=scheduler
-APP_DOCKER_IMAGE=collectiveacuity/flaskscheduler
-APP_RUN_COMMAND="gunicorn --chdir server -w 1 launch:app -b 0.0.0.0:5000 -k gevent"
+APP_CONTAINER_ALIAS=server
+APP_DOCKER_IMAGE=collectiveacuity/flaskserver
+# APP_RUN_COMMAND="gunicorn --chdir www -k gevent -w 3 launch:flask_app -b 0.0.0.0:5000"
+APP_RUN_COMMAND="gunicorn --chdir www --worker-class eventlet -w 1 launch:flask_app -b 0.0.0.0:5000"
 # APP_RUN_COMMAND="sh"
-APP_ROOT_DIRECTORY=flaskscheduler
-APP_SERVER_VOLUME=/server
+APP_ROOT_DIRECTORY=flaskserver
+APP_SERVER_VOLUME=/www
 APP_CRED_VOLUME=/cred
 APP_DATA_VOLUME=/data
-APP_EXTERNAL_PORT=5001
+APP_EXTERNAL_PORT=5000
 
 # Determine System OS
 if [ -z "${OS}" ]
@@ -32,8 +33,8 @@ esac
 
 # Set Path to Volumes
 case ${OS} in
-  "Windows") PROJECT_VOLUME_PATH=/$(pwd) ;;
-  *) PROJECT_VOLUME_PATH=$(pwd) ;;
+  "Windows") CONTAINER_VOLUME_PATH=/$(pwd) ;;
+  *) CONTAINER_VOLUME_PATH=$(pwd) ;;
 esac
 
 # Find hostname using Perl & env variables
@@ -42,19 +43,16 @@ esac
 # Launch Processor Container with Volumes
 docker run --name $APP_CONTAINER_ALIAS \
 -e SYSTEM_LOCAL_HOST=$SYSTEM_LOCAL_HOST \
--v "$PROJECT_VOLUME_PATH""$APP_SERVER_VOLUME":"$APP_SERVER_VOLUME" \
--v "$PROJECT_VOLUME_PATH""$APP_CRED_VOLUME":"$APP_CRED_VOLUME" \
--v "$PROJECT_VOLUME_PATH""$APP_DATA_VOLUME":"$APP_DATA_VOLUME" \
+-v "$CONTAINER_VOLUME_PATH""$APP_SERVER_VOLUME":"$APP_SERVER_VOLUME" \
+-v "$CONTAINER_VOLUME_PATH""$APP_CRED_VOLUME":"$APP_CRED_VOLUME" \
+-v "$CONTAINER_VOLUME_PATH""$APP_DATA_VOLUME":"$APP_DATA_VOLUME" \
 -it -d -p $APP_EXTERNAL_PORT:5000 $APP_DOCKER_IMAGE $APP_RUN_COMMAND
 
 # Instructions for setting -w argument for gunicorn server
-# http://docs.gunicorn.org/en/stable/design.html#how-many-workers
-# https://www.reddit.com/r/Python/comments/2oaei0/advice_for_sync_vs_async_workers_with_gunicornand/
-# sync workers should be (2 x number of cores) + 1 with --max-requests 250
-# async workers should be 1
+# workers should be (2 x number of cores) + 1
 
-# Instructions for running uwsgi async server
-# uwsgi --http 0.0.0.0:5000 --chdir server --wsgi-file launch.py --callable app --gevent 2000 -l 1000
+# Instructions for running uwsgi server
+# uwsgi --http 0.0.0.0:5000 --chdir www --wsgi-file launch.py --callable app
 
 # Instruction to pipe container stdouts to terminal
 # echo To stream log: docker logs -f $APP_CONTAINER_ALIAS

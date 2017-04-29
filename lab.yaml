@@ -1,11 +1,10 @@
-repo_remote_url: https://bitbucket.org/collectiveacuity/flaskscheduler
+repo_remote_url: https://bitbucket.org/collectiveacuity/flaskbot
 docker_virtualbox_name: default
-docker_container_alias: scheduler
-docker_image_name: collectiveacuity/flaskscheduler
+docker_container_alias: bot
+docker_image_name: collectiveacuity/flaskbot
 docker_run_command: gunicorn --chdir server -w 1 launch:app -b 0.0.0.0:5000 -k gevent
 docker_mount_volumes:
   '/server': /server
-  '/data': /data
 docker_port_mapping:
-  '5000': 5001
+  '5000': 5000
 docker_environment_variables:

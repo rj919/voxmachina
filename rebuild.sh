@@ -1,5 +1,5 @@
 # Define Variables
-APP_DOCKER_IMAGE=collectiveacuity/flaskscheduler
+APP_DOCKER_IMAGE=collectiveacuity/flaskbot
 
 # Test presence of environmental variable file & trigger build
 if [ `ls cred/docker.yaml` = cred/docker.yaml ]
