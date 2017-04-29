@@ -150,7 +150,7 @@ for job in job_list:
 if __name__ == '__main__':
 
     # for multiple workers with scheduler:
-    # spawn each worker to check if scheduler worker is already active
+    # spawn each worker to check first if a scheduler worker is already active
     # use postgres to persist jobs through workers
 
     from gevent.pywsgi import WSGIServer
