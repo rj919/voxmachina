@@ -34,13 +34,10 @@ https://www.setcronjob.com/prices
 Git Merging
 -----------
 ```
-git branch public
 git checkout public
-git rm --no-cached --ignore-unmatch server/pocketbot/*
 git commit -m 'new updates'
 git push fork master
 git checkout -f master
-git branch -D public
 ```
 Docker Commands
 ---------------
