@@ -1,6 +1,5 @@
-{% extends "wrapper.html" %}
-{% block title %}Collective Acuity : Page Not Found{% endblock %}
-{% block body %}
+{% extends "landing.html" %}
+{% block content %}
 <div id="content_container" class="container content-container-fill">
     <div id="content_row" class="row height-100">
         <div id="content_left" class="col-lg-4 col-md-4 col-sm-3 col-xs-2"></div>
@@ -11,12 +10,14 @@
                         <span id="map_icon" class="icon-map float-middle"></span>
                     </div>
                     <div id="message_text" class="text-center padding-vertical-10">
-                        <div id="error_message" class="form-label">Page Not Found</div>
-                        <div id="try_again_message" class="form-label">Try again.</div>
+                        <div id="error_message">Page Not Found</div>
+                        <div id="try_again_message">Try again.</div>
                     </div>
                 </div>
             </div>
         </div>
+        <div id="content_right" class="col-lg-4 col-md-4 col-sm-3 col-xs-2"></div>
     </div>
 </div>
 {% endblock %}
+

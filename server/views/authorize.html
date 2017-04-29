@@ -1,0 +1,20 @@
+{% extends "landing.html" %}
+{% block content %}
+<div id="content_container" class="container content-container-fill">
+    <div id="content_row" class="row height-100">
+        <div id="content_left" class="col-lg-4 col-md-4 col-sm-3 col-xs-2"></div>
+        <div id="content_middle" class="col-lg-4 col-md-4 col-sm-6 col-xs-8 height-100">
+            <div id="content_middle_row" class="row vertical-center-40">
+                <div id="content_middle_column" class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center">
+                    {% if auth_logo %}<img src="{{ auth_logo }}" alt="%s" class="icon-mega margin-bottom-10">{% endif %}
+                    <div id="message_text" class="form-text">
+                        <div id="oauth2_confirmation_text" class="bold margin-bottom-10">Sweet! You have connected {{ auth_name }} to {{ bot_name }}.</div>
+                        <div id="oauth2_confirmation_close">Closing in 5...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="content_right" class="col-lg-4 col-md-4 col-sm-3 col-xs-2"></div>
+    </div>
+</div>
+{% endblock %}
