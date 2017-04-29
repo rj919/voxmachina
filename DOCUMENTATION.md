@@ -6,7 +6,6 @@ http://flask.pocoo.org/docs/0.11/deploying/wsgi-standalone/#gevent
 
 Server Infrastructure
 ---------------------
-
 __Gunicorn (a worker manager)__
 http://docs.gunicorn.org/en/latest/settings.html#settings
 http://www.philchen.com/2015/08/08/how-to-make-a-scalable-python-web-app-using-flask-and-gunicorn-nginx-on-ubuntu-14-04
@@ -40,7 +39,6 @@ https://www.setcronjob.com/prices
 
 Docker Commands
 ---------------
-
 Dockerfile & .dockerignore file locations:  
 ```cd Dropbox/Projects/Lab/Dev/flaskServer```
 
