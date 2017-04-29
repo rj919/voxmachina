@@ -1,8 +1,0 @@
-{
-  "title": "Newsletter Subscription",
-  "description": "Process for adding a visitor to the email newsletters subscription.",
-  "effective_date": "2016.05.30.13.45.55",
-  "steps": {
-    "confirmation": "user@example.com has been added to the newsletter. Check your inbox for a verification email."
-  }
-}
