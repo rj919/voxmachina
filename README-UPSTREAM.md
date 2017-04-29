@@ -84,8 +84,8 @@ When pushing content to public fork, first commit the changes on master, then us
 git checkout public
 git merge --no-commit --no-ff master
 git reset -- server/pocketbot/*
-git commit
-git push fork master
+git commit -m 'master into public'
+git push fork public
 git checkout -f master
 ```
 
