@@ -41,12 +41,12 @@ git rm --cached --ignore-unmatch -r dev/*
 git commit -m 'removed files'
 git checkout -f master
 ```
-How to merge changes into public fork except for a specific dev folder:
+How to merge changes into public fork except for a specific dev folder (if merge is blocked, it may require deleting newly created version of dev folder in the IDE):
 ```bash
 git checkout public
 git merge --no-commit --no-ff master
 git reset -- dev/*
-git commit
+git commit -m 'master into public'
 git push fork public
 git checkout -f master
 ```
