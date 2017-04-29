@@ -3,10 +3,10 @@ __created__ = '2017.04'
 __license__ = '©2017 Collective Acuity'
 
 # inject environmental variables
-import os
-if os.path.exists('../cred'):
-    from server.utils import inject_envvar
-    inject_envvar('../cred')
+from os import environ
+from server.utils import inject_cred
+system_environment = environ.get('SYSTEM_ENVIRONMENT', 'dev')
+inject_cred(system_environment)
 
 # retrieve system configurations
 from labpack.records.settings import ingest_environ
@@ -27,19 +27,17 @@ flask_app = Flask(**flask_kwargs)
 from datetime import timedelta
 class flaskDev(object):
     ASSETS_DEBUG = False
-    OAUTH2_CALLBACK_ENDPOINT = bot_config['oauth2_callback_dev']
     BOT_SECRET_KEY = bot_config['bot_secret_key']
     BOT_LOGGING_LEVEL = 'DEBUG'
     MAX_CONTENT_LENGTH = 8192
 
 class flaskProd(object):
     ASSETS_DEBUG = False
-    OAUTH2_CALLBACK_ENDPOINT = bot_config['oauth2_callback_prod']
     BOT_SECRET_KEY = bot_config['bot_secret_key']
     BOT_LOGGING_LEVEL = 'INFO'
     MAX_CONTENT_LENGTH = 8192
 
-if bot_config['system_environment_type'] == 'dev':
+if system_environment == 'dev':
     flask_app.config.from_object(flaskDev)
 else:
     flask_app.config.from_object(flaskProd)
