@@ -77,6 +77,19 @@ Requires:
 
 - Container Alias
 
+Git Merging
+-----------
+When pushing content to public fork, first the development folder needs to be removed from the repo.
+```
+git branch public
+git checkout public
+git rm --no-cached --ignore-unmatch server/pocketbot/*
+git commit -m 'new updates'
+git push fork master
+git checkout -f master
+git branch -D public
+```
+
 ## Collaboration Notes
 _The Git and Docker repos contain all the configuration information required for collaboration except access tokens. To synchronize access tokens across multiple devices, platforms and users without losing local control, you can use LastPass, an encrypted email platform such as ProtonMail or smoke signals. If you use any AWS services, use AWS IAM to assign user permissions and create keys for each collaborator individually. Collaborators are required to install all service dependencies on their local device if they wish to test code on their localhost. A collaborate should always **FORK** the repo from the main master and fetch changes from the upstream repo so reality is controlled by one admin responsible for approving all changes. New dependencies should be added to the Dockerfile, **NOT** to the repo files. Collaborators should test changes to Dockerfile locally before making a pull request to merge any new dependencies:_  
 
