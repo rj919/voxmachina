@@ -46,11 +46,10 @@ TBD
 
 ## Server Sub-Folders
 -- _assets/_ (sub-folder for non-python code and project resources)   
--- _data/_ (sub-folder for ephemeral data stored on image)  
 -- _methods/_ (sub-folder for application specific python classes)  
 -- _models/_ (sub-folder for data object model declarations)  
--- _static/_ (sub-folder for public accessible application content)  
--- _templates/_ (sub-folder for html templates)
+-- _public/_ (sub-folder for public accessible application content)  
+-- _views/_ (sub-folder for html templates)
 
 ## Launch Commands
 **start.sh**  
