@@ -1,8 +1,5 @@
-system_environment_type: 'dev'
 system_ip_address: '127.0.0.1'
 bot_brand_name: 'My Cool Bot'
 bot_system_port: 5000
 bot_logging_level: 'DEBUG'
 bot_secret_key: 'ABC-DEF1234ghijkl-567MNOPQRST890uvwxyz'
-oauth2_callback_dev: 'https://somerandomstringoflowercaseletters.localtunnel.me'
-oauth2_callback_prod: 'https://bot.collectiveacuity.com'

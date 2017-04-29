@@ -2,6 +2,43 @@ __author__ = 'rcj1492'
 __created__ = '2017.02'
 __license__ = '©2017 Collective Acuity'
 
+def inject_envvar(folder_path):
+
+    ''' a method to create environment variables from file key-value pairs '''
+
+    import os
+    from labpack.records.settings import load_settings
+
+    envvar_list = []
+    for suffix in ['.yaml', '.yml', '.json']:
+        envvar_list.extend(compile_list(folder_path, suffix))
+
+    for file_path in envvar_list:
+        file_details = load_settings(file_path)
+        for key, value in file_details.items():
+            key_cap = key.upper()
+            os.environ[key_cap] = str(value)
+    # TODO: walk lists and dicts
+
+    return True
+
+def inject_cred(system_environment):
+
+    ''' a method to inject environment variables in the cred folder '''
+
+    from os import path
+
+    if path.exists('../cred'):
+        inject_envvar('../cred')
+    if system_environment == 'dev':
+        if path.exists('../cred/dev'):
+            inject_envvar('../cred/dev')
+    elif system_environment == 'prod':
+        if path.exists('../cred/prod'):
+            inject_envvar('../cred/prod')
+
+    return True
+
 def compile_list(folder_path, file_suffix=''):
 
     file_list = []
@@ -33,24 +70,6 @@ def compile_map(folder_path, file_suffix='', json_model=False):
             file_map[file_key] = file_details
 
     return file_map
-
-def inject_envvar(folder_path):
-
-    import os
-    from labpack.records.settings import load_settings
-
-    envvar_list = []
-    for suffix in ['.yaml', '.yml', '.json']:
-        envvar_list.extend(compile_list(folder_path, suffix))
-
-    for file_path in envvar_list:
-        file_details = load_settings(file_path)
-        for key, value in file_details.items():
-            key_cap = key.upper()
-            os.environ[key_cap] = str(value)
-    # TODO: walk lists and dicts
-
-    return True
 
 def config_scheduler(scheduler_settings):
 
