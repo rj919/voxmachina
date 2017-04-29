@@ -79,15 +79,12 @@ Requires:
 
 Git Merging
 -----------
-When pushing content to public fork, first the development folder needs to be removed from the repo.
+When pushing content to public fork, first commit the changes on master, then use the public branch to push content to the fork.
 ```
-git branch public
 git checkout public
-git rm --no-cached --ignore-unmatch server/pocketbot/*
 git commit -m 'new updates'
 git push fork master
 git checkout -f master
-git branch -D public
 ```
 
 ## Collaboration Notes

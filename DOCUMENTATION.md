@@ -31,7 +31,18 @@ https://docs.aws.amazon.com/lambda/latest/dg/getting-started-scheduled-events.ht
 https://alestic.com/2015/05/aws-lambda-recurring-schedule/  
 https://www.setcronjob.com/prices  
 
+<<<<<<< HEAD
 
+=======
+Git Merging
+-----------
+```
+git checkout public
+git commit -m 'new updates'
+git push fork master
+git checkout -f master
+```
+>>>>>>> master
 Docker Commands
 ---------------
 Dockerfile & .dockerignore file locations:  
