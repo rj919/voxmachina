@@ -1,0 +1,49 @@
+###############  .gitignore   ##################
+
+###############  credentials  ##################
+cred/
+keys/
+
+###############  data files   ##################
+data/
+appdata/
+
+###############  distro files  #################
+build/
+.Python
+develop-eggs/
+dist/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+*.egg-info/
+.installed.cfg
+*.egg
+*.manifest
+*.spec
+docs/_build/
+target/
+node_modules/
+.webassets-cache/
+platforms/
+plugins/
+hooks/
+
+###############   IDE files   ##################
+.DS_STORE
+.netbeans
+nbproject
+.idea
+.node_history
+__pycache__
+*.so
+tinker/
+
+############## backup sync files ###############
+desktop.ini
+*.gdoc
+.dropbox
+Thumbs.db

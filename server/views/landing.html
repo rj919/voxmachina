@@ -1,0 +1,86 @@
+{% extends "wrapper.html" %}
+{% block javascript %}{% endblock %}
+{% block body %}
+<!-- Header Block -->
+<div id="header">
+    {% block header %}
+    <div id="header_container" class="container-fluid header-container navbar-fixed">
+        <div id="header_row" class="row navbar header-border">
+            <div id="header_left" class="col-xs-3">
+            </div>
+            <div id="header_middle" class="col-xs-6">
+                <div id="header_middle_mobile" class="navbar-title-24 navbar-center hidden-lg hidden-md hidden-sm id-verified"{% if not id_verified %} style="display: none;"{% endif %}>
+                    <div id="header_middle_mobile_text" title="{{ page_details.label }}">
+                        {{ page_details.title }}
+                    </div>
+                </div>
+                <div id="header_middle_desktop" class="navbar-title-24 navbar-start hidden-xs id-verified"{% if not id_verified %} style="display: none;"{% endif %}>
+                    <div id="header_middle_desktop_text" title="{{ page_details.label }}">
+                        {{ page_details.title }}
+                    </div>
+                </div>
+            </div>
+            <div id="header_right" class="col-xs-3">
+                <div id="header_right_landing" class="navbar-title-24 navbar-end landing-page"{% if not landing_page %} style="display: none;"{% endif %}>
+                    <a href="javascript:void(0)" id="header_right_button_info" title="Mission" onclick="missionDialog()" class="icon-question landing-page"></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+</div>
+
+<!-- Content Block -->
+<div id="content">
+    {% block content %}
+    <div id="landing_container" class="content-container-fill">
+        <div id="landing_row" class="row height-100">
+            <div id="landing_left" class="col-lg-4 col-md-4 col-sm-3 hidden-xs"></div>
+            <div id="landing_middle" class="col-lg-4 col-md-4 col-sm-6 col-xs-12 height-100">
+                <div id="landing_middle_row" class="row vertical-center-40">
+                    <div id="landing_middle_column" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div id="landing_box" class="font-mega text-center line-height-1 padding-vertical-20">
+                            <div id="landing_box_animation">
+                                <span id="landing_box_icon" class="icon-chemistry"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="landing_right" class="col-lg-4 col-md-4 col-sm-3 hidden-xs"></div>
+        </div>
+    </div>
+    {% endblock %}
+</div>
+
+<!-- Footer Block -->
+<div id="footer">
+    {% block footer %}
+    <div id="footer_container" class="container-fluid footer-container">
+        <div id="footer_anonymous" class="landing-page"{% if not landing_page %} style="display: none;"{% endif %}>
+            <div id="footer_row" class="row navbar navbar-title-16">
+                <div id="footer_left" class="col-lg-6 col-md-6 col-sm-6 hidden-xs">
+                    <div id="footer_left_text" class="text-nowrap">A <a href="https://twitter.com/CollectiveAcuit" target="_blank">Collective Acuity</a> creation.</div>
+                </div>
+                <div id="footer_middle" class="hidden-lg hidden-md hidden-sm col-xs-12">
+                    <div id="footer_middle_text" class="text-center">A <a href="https://twitter.com/CollectiveAcuit" target="_blank">Collective Acuity</a> creation.</div>
+                </div>
+                <div id="footer_right" class="col-lg-6 col-md-6 col-sm-6 hidden-xs">
+                </div>
+            </div>
+        </div>
+        <div id="footer_verified" class="id-verified-visible"{% if not id_verified %} style="display: none;"{% endif %}>
+            <div id="footer_verified_mobile" class="hidden-lg hidden-md"></div>
+        </div>
+    </div>
+    {% endblock %}
+</div>
+
+<!-- Modal Dialogs Block -->
+<div id="dialogs">
+    {% block dialogs %}
+    <div id="dialog_backdrop" class="page-container-100 dialog-backdrop" style="display: none;">
+</div>
+    {% endblock %}
+</div>
+{% endblock %}

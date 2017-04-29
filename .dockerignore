@@ -1,0 +1,14 @@
+# IDE Files
+.idea
+.gitignore
+.git
+.hgignore
+
+# Server content files
+server/
+
+# Notes & Configs
+/cred/
+/notes/
+/*.sh
+
