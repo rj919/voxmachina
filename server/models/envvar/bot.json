@@ -1,0 +1,32 @@
+{
+  "schema": {
+    "system_environment_type": "dev",
+    "system_ip_address": "127.0.0.1",
+    "bot_brand_name": "My Cool Bot",
+    "bot_system_port": 5001,
+    "bot_logging_level": "DEBUG",
+    "bot_secret_key": "abcdefgh01234456789_IJKLMNOPQrstuv-wxyz",
+    "oauth2_callback_dev": "https://somerandomstringoflowercaseletters.localtunnel.me",
+    "oauth2_callback_prod": "https://bot.collectiveacuity.com"
+  },
+  "components": {
+    ".system_environment_type": {
+      "discrete_values": [ "dev", "test", "prod" ]
+    },
+    ".bot_logging_level": {
+      "discrete_values": [ 
+        "CRITICAL", "ERROR", "WARNING", "INFO", "DEBUG", "NOTSET"
+      ],
+      "default_value": "DEBUG"
+    },
+    ".bot_system_port": {
+      "integer_data": true
+    },
+    ".oauth2_callback_dev": {
+      "must_contain": [ "^https?://" ]
+    },
+    ".oauth2_callback_prod": {
+      "must_contain": [ "^https?://" ]
+    }
+  }
+}
