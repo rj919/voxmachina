@@ -42,12 +42,12 @@ git commit -m 'removed files'
 git checkout -f master
 ```
 How to merge changes into public fork except for a specific dev folder:
-```
+```bash
 git checkout public
 git merge --no-commit --no-ff master
 git reset -- dev/*
 git commit
-git push fork master
+git push fork public
 git checkout -f master
 ```
 
