@@ -37,7 +37,7 @@ How to create a public branch without dev folder:
 ```bash
 git branch public
 git checkout public
-git rm --cached --ignore-unmatch -rf dev/*
+git rm --cached --ignore-unmatch -r dev/*
 git commit -m 'removed files'
 git checkout -f master
 ```
