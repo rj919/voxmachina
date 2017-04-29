@@ -33,7 +33,15 @@ https://www.setcronjob.com/prices
 
 Git Commands
 ------------
-How to merge changes into public fork except for a specific dev folder.
+How to create a public branch without dev folder:
+```bash
+git branch public
+git checkout public
+git rm --no-cached --ignore-unmatch -rf dev/*
+git commit -m 'removed files'
+git checkout -f master
+```
+How to merge changes into public fork except for a specific dev folder:
 ```
 git checkout public
 git merge --no-commit --no-ff master
