@@ -82,7 +82,9 @@ Git Merging
 When pushing content to public fork, first commit the changes on master, then use the public branch to push content to the fork.
 ```
 git checkout public
-git commit -m 'new updates'
+git merge --no-commit --no-ff master
+git reset -- server/pocketbot/*
+git commit
 git push fork master
 git checkout -f master
 ```

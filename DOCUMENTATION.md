@@ -31,14 +31,18 @@ https://docs.aws.amazon.com/lambda/latest/dg/getting-started-scheduled-events.ht
 https://alestic.com/2015/05/aws-lambda-recurring-schedule/  
 https://www.setcronjob.com/prices  
 
-Git Merging
------------
+Git Commands
+------------
+How to merge changes into public fork except for a specific dev folder.
 ```
 git checkout public
-git commit -m 'new updates'
+git merge --no-commit --no-ff master
+git reset -- dev/*
+git commit
 git push fork master
 git checkout -f master
 ```
+
 Docker Commands
 ---------------
 Dockerfile & .dockerignore file locations:  
