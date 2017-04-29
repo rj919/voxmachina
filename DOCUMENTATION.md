@@ -10,11 +10,6 @@ __Gunicorn (a worker manager)__
 http://docs.gunicorn.org/en/latest/settings.html#settings
 http://www.philchen.com/2015/08/08/how-to-make-a-scalable-python-web-app-using-flask-and-gunicorn-nginx-on-ubuntu-14-04
 
-__uWSGI (a server framework)__
-https://uwsgi-docs.readthedocs.org/en/latest/
-
-__eventlet (a thread manager)__
-
 __gEvent (a thread manager)__
 http://www.gevent.org/
 
