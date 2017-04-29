@@ -31,17 +31,7 @@ https://docs.aws.amazon.com/lambda/latest/dg/getting-started-scheduled-events.ht
 https://alestic.com/2015/05/aws-lambda-recurring-schedule/  
 https://www.setcronjob.com/prices  
 
-Git Merging
------------
-```
-git branch public
-git checkout public
-git rm --no-cached --ignore-unmatch server/pocketbot/*
-git commit -m 'new updates'
-git push fork master
-git checkout -f master
-git branch -D public
-```
+
 Docker Commands
 ---------------
 Dockerfile & .dockerignore file locations:  
