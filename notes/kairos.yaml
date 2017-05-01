@@ -1,0 +1,7 @@
+# https://developer.kairos.com/admin
+kairos_app_id: abcd1234
+kairos_api_key: abcdef0123456789abcdef0123456789
+kairos_image_throttle_minute: 60
+kairos_image_throttle_month: 1000000
+kairos_video_throttle_day: 3600
+kairos_video_throttle_month: 86400

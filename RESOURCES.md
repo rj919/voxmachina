@@ -6,10 +6,13 @@ Speech
 [Watson](https://console.ng.bluemix.net/catalog/services/speech-to-text)  
 [Google](https://cloud.google.com/speech/)  
 [Amazon](https://console.aws.amazon.com/polly/)  
-[Microsoft](https://azure.microsoft.com/en-us/services/cognitive-services/)
+[Microsoft](https://azure.microsoft.com/en-us/services/cognitive-services/)  
+[Wit.ai](https://wit.ai/docs/http/20170307#post--speech-link)  
+[Julius](https://jasperproject.github.io/documentation/configuration/#julius-stt)  
 
 OCR
 ---
+[OCR.Space](https://ocr.space/ocrapi)  
 [Tesseract](https://github.com/tesseract-ocr/tesseract/wiki)    
 [Google](https://cloud.google.com/vision/docs/fulltext-annotations)
 
@@ -25,6 +28,7 @@ Entity Recognition
 [API.ai](https://api.ai/)  
 [Wit.ai](https://wit.ai/)  
 [Amazon](https://console.aws.amazon.com/lex/)  
+[Rasa](https://github.com/golastmile/rasa_nlu)  
 
 Sentiment/Emotion/Tone
 ----------------------
@@ -38,6 +42,9 @@ Image/Video Classification
 [Google](https://cloud.google.com/vision/)  
 [Amazon](https://console.aws.amazon.com/rekognition/home)  
 [Microsoft](https://azure.microsoft.com/en-us/services/cognitive-services/)  
+[Clarifai](https://developer.clarifai.com/)  
+[Kairos](http://www.kairos.com/docs/api/)  
+
 
 OAuth2 Resources
 ----------------

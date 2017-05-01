@@ -1,0 +1,5 @@
+# https://ocr.space/ocrapi
+ocrspace_api_key: abcd123456ef789
+ocrspace_throttle_size: 1000000
+ocrspace_throttle_day: 500
+ocrspace_throttle_month: 25000

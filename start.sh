@@ -1,15 +1,14 @@
 # Set Docker Variables
 VIRTUALBOX_NAME=default
-APP_CONTAINER_ALIAS=server
-APP_DOCKER_IMAGE=collectiveacuity/flaskserver
-# APP_RUN_COMMAND="gunicorn --chdir www -k gevent -w 3 launch:flask_app -b 0.0.0.0:5000"
-APP_RUN_COMMAND="gunicorn --chdir www --worker-class eventlet -w 1 launch:flask_app -b 0.0.0.0:5000"
+APP_CONTAINER_ALIAS=bot
+APP_DOCKER_IMAGE=collectiveacuity/flaskbot
+APP_RUN_COMMAND="gunicorn --chdir server -k gevent -w 1 launch:flask_app -b 0.0.0.0:5000"
 # APP_RUN_COMMAND="sh"
-APP_ROOT_DIRECTORY=flaskserver
-APP_SERVER_VOLUME=/www
+APP_ROOT_DIRECTORY=flaskbot
+APP_SERVER_VOLUME=/server
 APP_CRED_VOLUME=/cred
 APP_DATA_VOLUME=/data
-APP_EXTERNAL_PORT=5000
+APP_EXTERNAL_PORT=5001
 
 # Determine System OS
 if [ -z "${OS}" ]
