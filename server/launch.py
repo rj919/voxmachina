@@ -42,8 +42,8 @@ def landing_page():
     ''' the landing page '''
     return render_template('landing.html', **landing_kwargs), 200
 
-@flask_app.route('/authorize/<service_name>')
-def authorize_service_route(service_name=''):
+@flask_app.route('/oauth2/callback/<service_name>')
+def oauth2_callback_route(service_name=''):
 
     ''' a method to handle the oauth2 callback '''
 

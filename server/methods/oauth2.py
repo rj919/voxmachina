@@ -78,8 +78,8 @@ def retrieve_oauth2_configs(folder_path=''):
 
 if __name__ == '__main__':
     import os
-    if os.path.exists('../../cred'):
+    if os.path.exists('../../cred/dev'):
         from server.utils import inject_envvar
-        inject_envvar('../../cred')
+        inject_envvar('../../cred/dev')
     oauth2_services = retrieve_oauth2_configs()
     print(oauth2_services)
