@@ -1,0 +1,14 @@
+{
+  "schema": {
+    "aws_s3_access_key_id": "AKIAIZ4QZESSRRECJ44Q",
+    "aws_s3_secret_access_key": "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",
+    "aws_s3_default_region": "us-east-1",
+    "aws_s3_owner_id": 382322839053,
+    "aws_s3_user_name": "flaskServer"
+  },
+  "components": {
+    ".aws_s3_owner_id": {
+      "integer_data": true
+    }
+  }
+}

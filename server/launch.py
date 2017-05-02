@@ -52,7 +52,7 @@ def oauth2_callback_route(service_name=''):
     flask_app.logger.debug(request_details)
     request_details['json'] = {'service': service_name}
     request_details['json'].update(**request_details['params'])
-    response_details = construct_response(request_details, request_models['authorize-get'])
+    response_details = construct_response(request_details, request_models['oauth2-callback-get'])
 
 # validate existence of service
     if not response_details['error']:
