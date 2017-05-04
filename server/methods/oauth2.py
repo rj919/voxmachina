@@ -78,7 +78,7 @@ def retrieve_oauth2_configs(folder_path=''):
 
     return oauth2_services
 
-def create_state(account_id, oauth2_config, records_client):
+def create_state(account_id, service_scope, records_client):
 
     from labpack.records.id import labID
     record_id = labID()
@@ -87,11 +87,11 @@ def create_state(account_id, oauth2_config, records_client):
         'record_dt': record_id.epoch,
         'expires_at': record_id.epoch + 60 * 15,
         'account_id': account_id,
-        'service_scope': oauth2_config['oauth2_service_scope'].split(' ')
+        'service_scope': service_scope
     }
 
     if isinstance(records_client, appdataClient):
-        state_key = 'oauth2/state/%s.yaml' % state_details['state_value']
+        state_key = 'oauth2/states/%s.yaml' % state_details['state_value']
         records_client.create(state_key, state_details)
 # TODO add support for s3 and databases
     else:
@@ -106,7 +106,7 @@ def read_state(state_value, records_client):
         file_name = '%s.yaml' % state_value
         conditional_filter = [{
             0: { 'discrete_values': [ 'oauth2' ] },
-            1: { 'discrete_values': [ 'state' ] },
+            1: { 'discrete_values': [ 'states' ] },
             2: { 'discrete_values': [ file_name ] }
         }]
         state_filter = records_client.conditional_filter(conditional_filter)
@@ -121,7 +121,7 @@ def delete_state(state_value, records_client):
 
     delete_status = ''
     if isinstance(records_client, appdataClient):
-        state_key = 'oauth2/state/%s.yaml' % state_value
+        state_key = 'oauth2/states/%s.yaml' % state_value
         delete_status = records_client.delete(state_key)
 # TODO add support for s3 and databases
 
@@ -145,7 +145,7 @@ def get_token(auth_code, oauth2_config):
 
     return access_token
 
-def create_token(account_id, service_name, service_scope, token_details, records_client, service_id=''):
+def create_token(account_id, service_name, service_scope, token_details, records_client):
 
     token_fields = {
         'access_token': '',
@@ -154,8 +154,7 @@ def create_token(account_id, service_name, service_scope, token_details, records
         'refresh_token': '',
         'account_id': account_id,
         'service_name': service_name,
-        'service_id': service_id,
-        'service_scope': []
+        'service_scope': service_scope
     }
 
 # update token fields with access token input
@@ -170,17 +169,9 @@ def create_token(account_id, service_name, service_scope, token_details, records
         del token_details['user_id']
     token_fields.update(**token_details)
 
-# add service scope to token
-    if isinstance(service_scope, str):
-        token_fields['service_scope'].extend(service_scope.split(' '))
-    elif isinstance(service_scope, list):
-        token_fields['service_scope'].extend(service_scope)
-    else:
-        raise ValueError('%s must be a list or space separate string' % str(service_scope))
-
 # create path
     if isinstance(records_client, appdataClient):
-        token_path = 'oauth2/token/%s/%s/%s.yaml' % (token_fields['service_name'], token_fields['account_id'], token_fields['expires_at'])
+        token_path = 'oauth2/tokens/%s/%s/%s.yaml' % (token_fields['service_name'], token_fields['account_id'], token_fields['expires_at'])
         records_client.create(token_path, token_fields, overwrite=True)
 # TODO add support for s3 and databases
     else:
@@ -188,129 +179,97 @@ def create_token(account_id, service_name, service_scope, token_details, records
 
     return token_fields
 
-def prepare_oauth2(oauth2_config, records_client, proxy_provider=''):
+def prepare_oauth2(account_id, oauth2_config, records_client, monitor_id='', scheduler_client=None, proxy_provider=''):
 
-# construct placeholder response
-    auth_url = ''
+    title = 'prepare_oauth2'
 
-# retrieve configuration values
-    client_id = oauth2_config['oauth2_client_id']
-    client_secret = oauth2_config['oauth2_client_secret']
-    service_scope = oauth2_config['oauth2_service_scope']
-    auth_endpoint = oauth2_config['oauth2_auth_endpoint']
-    token_endpoint = oauth2_config['oauth2_token_endpoint']
-    redirect_uri = oauth2_config['oauth2_redirect_uri']
-    request_mimetype = oauth2_config['oauth2_request_mimetype']
-    subdomain_name = oauth2_config['oauth2_subdomain_name']
+# validate inputs
+    if proxy_provider:
+        if not scheduler_client or not monitor_id:
+            raise IndexError('%s(proxy_provider=%s) requires both monitor_id and scheduler_client arguments' % (title, proxy_provider))
+
+# construct default output
+    preparation_details = {
+        'state_value': '',
+        'auth_url': '',
+        'error': ''
+    }
 
 # construct oauth2 client
     service_kwargs = {
-        'client_id': client_id,
-        'client_secret': client_secret,
-        'auth_endpoint': auth_endpoint,
-        'token_endpoint': token_endpoint,
-        'redirect_uri': redirect_uri,
-        'request_mimetype': request_mimetype
+        'client_id': oauth2_config['oauth2_client_id'],
+        'client_secret': oauth2_config['oauth2_client_secret'],
+        'auth_endpoint': oauth2_config['oauth2_auth_endpoint'],
+        'token_endpoint': oauth2_config['oauth2_token_endpoint'],
+        'redirect_uri': oauth2_config['oauth2_redirect_uri'],
+        'request_mimetype': oauth2_config['oauth2_request_mimetype']
     }
     from labpack.authentication.oauth2 import oauth2Client
-    service_client = oauth2Client(**service_kwargs)
+    oauth2_client = oauth2Client(**service_kwargs)
 
-# generate state record
-    from labpack.records.id import labID
-    record_id = labID()
-    state_value = record_id.id36
-    service_scope = service_scope.split(' ')
-    record_dt = record_id.epoch
-    expiration_dt = record_dt + 60 * 15
-
-    auth_url = service_client.generate_url()
-
-    
-def generate_oauth2_message(service_name, tunnel=False):
-    
-    tunnel_url = global_scope['tunnel_url']
-    system_config = global_scope['system_config']
-    # service_client = service_map[service_name]['oauth2_client']
-    oauth2_config = load_settings(service_map[service_name]['config_path'])
-    client_id = oauth2_config['oauth2_client_id']
-    client_secret = oauth2_config['oauth2_client_secret']
-    service_scope = oauth2_config['oauth2_service_scope']
-    auth_endpoint = oauth2_config['oauth2_auth_endpoint']
-    token_endpoint = oauth2_config['oauth2_token_endpoint']
-    redirect_uri = oauth2_config['oauth2_redirect_uri']
-    request_mimetype = oauth2_config['oauth2_request_mimetype']
-    subdomain_name = oauth2_config['oauth2_subdomain_name']
-    control_token = system_config['tunnel_control_token']
-    proxy_provider = system_config['tunnel_proxy_provider']
-    from labpack.records.id import labID
-    record_id = labID()
-    expiration_date = record_id.epoch + 60 * 2
-    body_dict = {
-        'state_value': record_id.id36,
-        'record_dt': record_id.epoch,
-        'expires_at': expiration_date,
-        'user_id': user_id,
-        'contact_id': obs_details['interface_id'],
-        'subdomain_name': subdomain_name,
-        'proxy_provider': proxy_provider,
-        'service_scope': []
+# create state record
+    service_scope = oauth2_config['oauth2_service_scope'].split(' ')
+    state_kwargs = {
+        'account_id': account_id,
+        'service_scope': service_scope,
+        'records_client': records_client
     }
-    if service_scope:
-        body_dict['service_scope'] = service_scope.split()
-    state_value = body_dict['state_value']
-    key_string = 'knowledge/states/%s.yaml' % state_value
-    service_scope = body_dict['service_scope']
-    message_text = 'Tap to connect your %s account:' % service_name.capitalize()
-    tunnel_sequence = [
-        {
-            'function': 'pocketbot/channels/tunnel:open_tunnel',
-            'kwargs': {'tunnel_url': tunnel_url, 'control_token': control_token, 'subdomain_name': subdomain_name}
-        },
-        {
-            'function': 'labpack.storage.appdata.appdataClient.__init__',
-            'kwargs': {'collection_name': 'Logs', 'prod_name': 'Fitzroy'}
-        },
-        {
-            'function': 'create',
-            'kwargs': {'key_string': key_string, 'body_dict': body_dict}
-        },
-        {
-            'function': 'labpack.authentication.oauth2.oauth2Client.__init__',
-            'kwargs': {'client_id': client_id, 'client_secret': client_secret, 'auth_endpoint': auth_endpoint,
-                       'token_endpoint': token_endpoint, 'redirect_uri': redirect_uri,
-                       'request_mimetype': request_mimetype}
-        },
-        {
-            'function': 'generate_url',
-            'kwargs': {'service_scope': service_scope, 'state_value': state_value}
-        },
-        {
-            'function': 'labpack.messaging.telegram.telegramBotClient.__init__',
-            'kwargs': {'bot_id': bot_id, 'access_token': access_token}
-        },
-        {
-            'function': 'send_message',
-            'kwargs': {'user_id': user_id, 'message_text': message_text}
-        },
-        {
-            'function': 'send_message',
-            'kwargs': {'user_id': user_id, 'message_text': 'generate_url:output'}
-        },
-        {
-            'function': 'pocketbot/channels/tunnel:monitor_tunnel',
-            'kwargs': {'tunnel_url': tunnel_url, 'control_token': control_token, 'subdomain_name': subdomain_name,
-                       'proxy_provider': proxy_provider},
-            'interval': 15,
-            'end': expiration_date + 20
-        }
-    ]
-    expression_list.extend(tunnel_sequence)
-    
-    
+    state_details = create_state(**state_kwargs)
+    state_value = state_details['state_value']
+    preparation_details['state_value'] = state_value
+
+# generate authorization url
+    auth_url = oauth2_client.generate_url(service_scope, state_value)
+    preparation_details['auth_url'] = auth_url
+
+# setup tunnel
+    if proxy_provider:
+        import re
+        from os import environ
+        subdomain_regex = re.compile('https?://(.*?)\..*')
+        subdomain_name = subdomain_regex.findall(oauth2_config['oauth2_redirect_uri'])
+        port_number = environ['bot_internal_port'.upper()]
+        from server.methods.tunnel import start_tunnel, start_monitor
+        tunnel_status = start_tunnel(subdomain_name, port_number, proxy_provider)
+        if not tunnel_status:
+            preparation_details['error'] = '%s.%s failed to open.' % (subdomain_name, proxy_provider)
+        else:
+            monitor_kwargs = {
+                'records_client': records_client,
+                'scheduler_client': scheduler_client,
+                'subdomain_name': subdomain_name,
+                'port_number': port_number,
+                'proxy_provider': proxy_provider,
+                'monitor_id': monitor_id
+            }
+            start_monitor(**monitor_kwargs)
+
+    return preparation_details
+
 if __name__ == '__main__':
+
     import os
+    from server.utils import inject_envvar
+    if os.path.exists('../../cred'):
+        inject_envvar('../../cred')
     if os.path.exists('../../cred/dev'):
-        from server.utils import inject_envvar
         inject_envvar('../../cred/dev')
+
     oauth2_services = retrieve_oauth2_configs()
-    print(oauth2_services)
+    assert 'moves' in oauth2_services.keys()
+
+    from server.methods.storage import initialize_storage_client
+    records_client = initialize_storage_client('Records')
+    account_id = 'moves_unittest_id'
+    oauth2_config = oauth2_services['moves']
+    service_scope = oauth2_config['oauth2_service_scope'].split(' ')
+    state_details = create_state(account_id, service_scope, records_client)
+    state_value = state_details['state_value']
+    read_details = read_state(state_value, records_client)
+    print(read_details)
+    state_status = delete_state(state_value, records_client)
+    assert state_status.find('has been deleted') > -1
+
+    preparation_details = prepare_oauth2(account_id, oauth2_config, records_client)
+    print(preparation_details)
+    delete_state(preparation_details['state_value'], records_client)

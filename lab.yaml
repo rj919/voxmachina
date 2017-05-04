@@ -2,9 +2,9 @@ repo_remote_url: https://bitbucket.org/collectiveacuity/flaskbot
 docker_virtualbox_name: default
 docker_container_alias: bot
 docker_image_name: collectiveacuity/flaskbot
-docker_run_command: gunicorn --chdir server -w 1 launch:app -b 0.0.0.0:5000 -k gevent
+docker_run_command: gunicorn --chdir server -w 1 launch:app -b 0.0.0.0:5001 -k gevent
 docker_mount_volumes:
   '/server': /server
 docker_port_mapping:
-  '5000': 5000
+  '5001': 5001
 docker_environment_variables:

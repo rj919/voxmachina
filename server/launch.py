@@ -145,6 +145,6 @@ if __name__ == '__main__':
     # use postgres to persist jobs through workers
 
     from gevent.pywsgi import WSGIServer
-    http_server = WSGIServer(('0.0.0.0', 5001), flask_app)
+    http_server = WSGIServer(('0.0.0.0', bot_config['bot_internal_port']), flask_app)
     flask_app.logger.info('Server started.')
     http_server.serve_forever()

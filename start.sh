@@ -2,7 +2,7 @@
 VIRTUALBOX_NAME=default
 APP_CONTAINER_ALIAS=bot
 APP_DOCKER_IMAGE=collectiveacuity/flaskbot
-APP_RUN_COMMAND="gunicorn --chdir server -k gevent -w 1 launch:flask_app -b 0.0.0.0:5000"
+APP_RUN_COMMAND="gunicorn --chdir server -k gevent -w 1 launch:flask_app -b 0.0.0.0:5001"
 # APP_RUN_COMMAND="sh"
 APP_ROOT_DIRECTORY=flaskbot
 APP_SERVER_VOLUME=/server
@@ -45,7 +45,7 @@ docker run --name $APP_CONTAINER_ALIAS \
 -v "$CONTAINER_VOLUME_PATH""$APP_SERVER_VOLUME":"$APP_SERVER_VOLUME" \
 -v "$CONTAINER_VOLUME_PATH""$APP_CRED_VOLUME":"$APP_CRED_VOLUME" \
 -v "$CONTAINER_VOLUME_PATH""$APP_DATA_VOLUME":"$APP_DATA_VOLUME" \
--it -d -p $APP_EXTERNAL_PORT:5000 $APP_DOCKER_IMAGE $APP_RUN_COMMAND
+-it -d -p $APP_EXTERNAL_PORT:5001 $APP_DOCKER_IMAGE $APP_RUN_COMMAND
 
 # Instructions for setting -w argument for gunicorn server
 # workers should be (2 x number of cores) + 1

@@ -14,10 +14,22 @@ def analyze_features(feature_map, records_client, media_client):
             'bot_id': int(environ['TELEGRAM_BOT_ID'])
         }
         admin_id = 'telegram_%s' % int(environ['TELEGRAM_ADMIN_ID'])
+        response_message = 'Gotcha'
+        if 'raw' in feature_map['text'].keys():
+            if feature_map['text']['raw'].lower() == 'connect moves':
+                from server.methods.oauth2 import prepare_oauth2, retrieve_oauth2_configs
+                oauth2_configs = retrieve_oauth2_configs()
+                if 'moves' in oauth2_configs.keys():
+                    account_id = feature_map['contact_id']
+                    prepare_kwargs = {
+                        'account_id': account_id,
+                        'oauth2_config': oauth2_configs['moves'],
+                        'records_client': records_client
+                    }
+                    preparation_details = prepare_oauth2(**prepare_kwargs)
+                    response_message = preparation_details['auth_url']
         telegram_client = telegramBotClient(**init_kwargs)
-        telegram_client.send_message(feature_map['interface_id'], 'Gotcha')
-        # if 'raw' in feature_map['text'].keys():
-        #     telegram_client.send_message(feature_map['interface_id'], feature_map['text']['raw'])
+        telegram_client.send_message(feature_map['interface_id'], response_message)
 
     return True
 

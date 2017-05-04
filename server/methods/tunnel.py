@@ -191,12 +191,12 @@ def stop_tunnel(subdomain_name, port_number, proxy_provider='localtunnel.me', ti
 
     return status_msg
 
-def start_monitor(knowledge_client, scheduler_client, subdomain_name, port_number, proxy_provider, monitor_id):
+def start_monitor(records_client, scheduler_client, subdomain_name, port_number, proxy_provider, monitor_id):
 
     '''
         a method to start a self-regulating tunnel monitor
         
-    :param knowledge_client: object to manage state records
+    :param records_client: object to manage state records
     :param scheduler_client: object to manage job store
     :param subdomain_name: string with name of subdomain on proxy provider
     :param port_number: integer with port of server on localhost
@@ -215,11 +215,12 @@ def start_monitor(knowledge_client, scheduler_client, subdomain_name, port_numbe
             'id': monitor_id,
             'function': monitor_tunnel,
             'kwargs': {
-                'knowledge_client': knowledge_client,
+                'records_client': records_client,
                 'scheduler_client': scheduler_client,
                 'subdomain_name': subdomain_name,
                 'port_number': port_number,
-                'proxy_provider': proxy_provider
+                'proxy_provider': proxy_provider,
+                'monitor_id': monitor_id
             },
             'interval': 20
         }
@@ -239,37 +240,40 @@ def start_monitor(knowledge_client, scheduler_client, subdomain_name, port_numbe
             
     return status_msg
 
-def monitor_tunnel(knowledge_client, scheduler_client, subdomain_name, port_number, proxy_provider):
+def monitor_tunnel(records_client, scheduler_client, subdomain_name, port_number, proxy_provider, monitor_id):
 
     keep_open = False
     from time import time
     from labpack.storage.appdata import appdataClient
 
 # search for state tokens
-    if isinstance(knowledge_client, appdataClient):
-        state_filter = [{0:{'discrete_values':['states']}}]
-        filter_function = knowledge_client.conditional_filter(state_filter)
-        token_list = knowledge_client.list(filter_function=filter_function, max_results=1000,reverse_search=True)
+    if isinstance(records_client, appdataClient):
+        state_conditions = [{
+            0: {'discrete_values':['oauth2']},
+            1: {'discrete_values':['states']}
+        }]
+        state_filter = records_client.conditional_filter(state_conditions)
+        token_list = records_client.list(filter_function=state_filter, max_results=1000,reverse_search=True)
 
 # remove expired state tokens
         for token in token_list:
-            token_details = knowledge_client.read(token)
+            token_details = records_client.read(token)
             delete_record = True
             if 'expires_at' in token_details.keys():
                 if time() < token_details['expires_at']:
                     delete_record = False
             if delete_record:
                 try:
-                    knowledge_client.delete(token)
+                    records_client.delete(token)
                 except:
                     pass
             else:
                 keep_open = True
-                
+# TODO extend support for s3 and databases
+
 # close down tunnel and turn off monitor
     if not keep_open:
         if stop_tunnel(subdomain_name, port_number, proxy_provider, 12):
-            monitor_id = 'bot.tunnel.monitor'
             scheduler_client.remove_job(monitor_id)
     
     return True
