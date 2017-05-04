@@ -24,10 +24,10 @@ flask_scheduler = GeventScheduler(**scheduler_kwargs)
 flask_scheduler.start()
 
 # import authorization methods
-from labpack.handlers.requests import handle_requests
-from labpack.authentication.oauth2 import oauth2Client
+from server.jobs import records_client
 from labpack.parsing.flask import extract_request_details
-from server.utils import read_state, delete_state, create_token, construct_response
+from server.methods.oauth2 import read_state, delete_state, get_token, create_token
+from server.utils import construct_response
 
 # define landing kwargs
 from labpack.records.settings import load_settings
@@ -66,7 +66,7 @@ def oauth2_callback_route(service_name=''):
     state_details = {}
     if not response_details['error']:
         state_value = request_details['json']['state']
-        state_details = read_state(state_value)
+        state_details = read_state(state_value, records_client)
         if not state_details:
             response_details['error'] = 'OAuth2 request does not exist or expired.'
             response_details['code'] = 400
@@ -76,18 +76,8 @@ def oauth2_callback_route(service_name=''):
     oauth2_config = {}
     if not response_details['error']:
         oauth2_config = oauth2_configs[service_name]
-        oauth2_kwargs = {
-            'client_id': oauth2_config['oauth2_client_id'],
-            'client_secret': oauth2_config['oauth2_client_secret'],
-            'auth_endpoint': oauth2_config['oauth2_auth_endpoint'],
-            'token_endpoint': oauth2_config['oauth2_token_endpoint'],
-            'redirect_uri': oauth2_config['oauth2_redirect_uri'],
-            'request_mimetype': oauth2_config['oauth2_request_mimetype'],
-            'requests_handler': handle_requests
-        }
-        oauth2_client = oauth2Client(**oauth2_kwargs)
         auth_code = request_details['json']['code']
-        access_token = oauth2_client.get_token(auth_code)
+        access_token = get_token(auth_code, oauth2_config)
         if access_token['error']:
             response_details['error'] = access_token['error']
             response_details['code'] = access_token['code']
@@ -97,7 +87,8 @@ def oauth2_callback_route(service_name=''):
         token_kwargs = {
             'account_id': state_details['account_id'],
             'service_scope': state_details['service_scope'],
-            'service_name': service_name
+            'service_name': service_name,
+            'records_client': records_client
         }
         if access_token['json']:
             token_kwargs['token_details'] = access_token['json']
@@ -108,7 +99,7 @@ def oauth2_callback_route(service_name=''):
 
 # remove state record
     if not response_details['error']:
-        delete_state(state_value)
+        delete_state(state_value, records_client)
         service_title = service_name.replace('_', ' ').capitalize()
         authorize_kwargs = {
             'auth_name': service_title,
