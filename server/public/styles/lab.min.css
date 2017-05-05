@@ -479,32 +479,30 @@ color: inherit;
       height: 100vh; }
 
       .vertical-center {
-        position: relative;
+        position: absolute;
         top: 50%;
         top: 50vh;
-        -webkit-transform: translateY(-50%);
-                transform: translateY(-50%); }
+        -webkit-transform: translateY(-100%);
+                transform: translateY(-100%);
+        height: auto; }
 
-        .vertical-center-40 {
-          position: relative;
-          top: 40%;
-          top: 40vh;
-          -webkit-transform: translateY(-40%);
-                  transform: translateY(-40%); }
+        .vertical-center-content {
+          position: absolute;
+          top: 50%;
+          top: 50vh;
+          -webkit-transform: translateY(calc(50px - 100%));
+                  transform: translateY(calc(50px - 100%));
+          height: auto; }
 
-          .vertical-bottom-40 {
-            position: absolute;
-            height: auto;
-            display: -webkit-box;
-            display: -ms-flexbox;
-            display: flex;
-            -webkit-box-align: end;
-                -ms-flex-align: end;
-                    align-items: flex-end;
-            bottom: 60%;
-            bottom: 60vh; }
+          .vertical-center-40 {
+            position: relative;
+            top: 40%;
+            top: 40vh;
+            -webkit-transform: translateY(-40%);
+                    transform: translateY(-40%); }
 
-            .vertical-bottom-footer {
+            .vertical-bottom-40 {
+              position: absolute;
               height: auto;
               display: -webkit-box;
               display: -ms-flexbox;
@@ -512,168 +510,179 @@ color: inherit;
               -webkit-box-align: end;
                   -ms-flex-align: end;
                       align-items: flex-end;
-              bottom: calc(100% - 50px) !important;
-              bottom: calc(100vh - 5rem) !important; }
+              bottom: 60%;
+              bottom: 60vh; }
 
-              .vertical-bottom-100 {
+              .vertical-bottom-footer {
                 height: auto;
                 display: -webkit-box;
                 display: -ms-flexbox;
                 display: flex;
                 -webkit-box-align: end;
                     -ms-flex-align: end;
-                        align-items: flex-end; }
+                        align-items: flex-end;
+                bottom: calc(100% - 50px) !important;
+                bottom: calc(100vh - 5rem) !important; }
 
-                .float-center {
-                  margin-left: auto;
-                  margin-right: auto; }
+                .vertical-bottom-100 {
+                  height: auto;
+                  display: -webkit-box;
+                  display: -ms-flexbox;
+                  display: flex;
+                  -webkit-box-align: end;
+                      -ms-flex-align: end;
+                          align-items: flex-end; }
 
-                  .float-middle {
-                    display: block;
-                    vertical-align: middle; }
+                  .float-center {
+                    margin-left: auto;
+                    margin-right: auto; }
 
-                    .float-top {
-                      display: inline-block;
-                      vertical-align: top; }
+                    .float-middle {
+                      display: block;
+                      vertical-align: middle; }
 
-                      .float-bottom {
+                      .float-top {
                         display: inline-block;
-                        vertical-align: bottom; }
+                        vertical-align: top; }
 
-                        .float-right {
-                          float: right;
-                          text-align: right; }
+                        .float-bottom {
+                          display: inline-block;
+                          vertical-align: bottom; }
 
-                          .float-right-inline {
-                            @extends .float-right;
-                            display: inline-block; }
+                          .float-right {
+                            float: right;
+                            text-align: right; }
 
-                            .float-left {
-                              float: left;
-                              text-align: left; }
+                            .float-right-inline {
+                              @extends .float-right;
+                              display: inline-block; }
 
-                              .float-left-inline {
-                                @extends .float-left;
-                                display: inline-block; }
+                              .float-left {
+                                float: left;
+                                text-align: left; }
 
-                                .line-height-1 {
-                                  line-height: 1px;
-                                  line-height: 0.1rem; }
+                                .float-left-inline {
+                                  @extends .float-left;
+                                  display: inline-block; }
 
-                                  .word-wrap {
-                                    word-wrap: break-word; }
+                                  .line-height-1 {
+                                    line-height: 1px;
+                                    line-height: 0.1rem; }
 
-                                    .no-wrap {
-                                      white-space: nowrap;
-                                      text-overflow: ellipsis;
-                                      overflow: hidden; }
+                                    .word-wrap {
+                                      word-wrap: break-word; }
 
-                                      .font-mega {
-                                        font-size: 96px;
-                                        font-size: 9.6rem; }
+                                      .no-wrap {
+                                        white-space: nowrap;
+                                        text-overflow: ellipsis;
+                                        overflow: hidden; }
 
-                                        .font-xl {
-                                          font-size: 64px;
-                                          font-size: 6.4rem; }
+                                        .font-mega {
+                                          font-size: 96px;
+                                          font-size: 9.6rem; }
 
-                                          .font-lg {
-                                            font-size: 48px;
-                                            font-size: 4.8rem; }
+                                          .font-xl {
+                                            font-size: 64px;
+                                            font-size: 6.4rem; }
 
-                                            .font-md {
-                                              font-size: 36px;
-                                              font-size: 3.6rem; }
+                                            .font-lg {
+                                              font-size: 48px;
+                                              font-size: 4.8rem; }
 
-                                              .font-sm {
-                                                font-size: 24px;
-                                                font-size: 2.4rem; }
+                                              .font-md {
+                                                font-size: 36px;
+                                                font-size: 3.6rem; }
 
-                                                .font-xs {
-                                                  font-size: 16px;
-                                                  font-size: 1.6rem; }
+                                                .font-sm {
+                                                  font-size: 24px;
+                                                  font-size: 2.4rem; }
 
-                                                  .font-mini {
-                                                    font-size: 12px;
-                                                    font-size: 1.2rem; }
+                                                  .font-xs {
+                                                    font-size: 16px;
+                                                    font-size: 1.6rem; }
 
-                                                    .font-micro {
-                                                      font-size: 10px;
-                                                      font-size: 1rem; }
+                                                    .font-mini {
+                                                      font-size: 12px;
+                                                      font-size: 1.2rem; }
 
-                                                      .font-success {
-                                                        color: #00ff00; }
+                                                      .font-micro {
+                                                        font-size: 10px;
+                                                        font-size: 1rem; }
 
-                                                        .font-error {
-                                                          color: #a94442; }
+                                                        .font-success {
+                                                          color: #00ff00; }
 
-                                                          .normal {
-                                                            font-weight: normal; }
+                                                          .font-error {
+                                                            color: #a94442; }
 
-                                                            .bold {
-                                                              font-weight: bold; }
+                                                            .normal {
+                                                              font-weight: normal; }
 
-                                                              .italic {
-                                                                font-style: italic; }
+                                                              .bold {
+                                                                font-weight: bold; }
 
-                                                                .oblique {
-                                                                  font-style: oblique; }
+                                                                .italic {
+                                                                  font-style: italic; }
 
-                                                                  .small-caps {
-                                                                    font-variant: small-caps; }
+                                                                  .oblique {
+                                                                    font-style: oblique; }
 
-                                                                    .icon-mega {
-                                                                      height: 96px;
-                                                                      height: 9.6rem;
-                                                                      width: auto; }
+                                                                    .small-caps {
+                                                                      font-variant: small-caps; }
 
-                                                                      .icon-xl {
-                                                                        height: 64px;
-                                                                        height: 6.4rem;
+                                                                      .icon-mega {
+                                                                        height: 96px;
+                                                                        height: 9.6rem;
                                                                         width: auto; }
 
-                                                                        .icon-lg {
-                                                                          height: 48px;
-                                                                          height: 4.8rem;
+                                                                        .icon-xl {
+                                                                          height: 64px;
+                                                                          height: 6.4rem;
                                                                           width: auto; }
 
-                                                                          .icon-md {
-                                                                            height: 36px;
-                                                                            height: 3.6rem;
+                                                                          .icon-lg {
+                                                                            height: 48px;
+                                                                            height: 4.8rem;
                                                                             width: auto; }
 
-                                                                            .icon-sm {
-                                                                              height: 24px;
-                                                                              height: 2.4rem;
+                                                                            .icon-md {
+                                                                              height: 36px;
+                                                                              height: 3.6rem;
                                                                               width: auto; }
 
-                                                                              .icon-xs {
-                                                                                height: 16px;
-                                                                                height: 1.6rem;
-                                                                                width: 16px;
-                                                                                width: 1.6rem;
-                                                                                line-height: 1; }
+                                                                              .icon-sm {
+                                                                                height: 24px;
+                                                                                height: 2.4rem;
+                                                                                width: auto; }
 
-                                                                                .icon-mini {
-                                                                                  height: 12px;
-                                                                                  height: 1.2rem;
-                                                                                  width: 12px;
-                                                                                  width: 1.2rem; }
+                                                                                .icon-xs {
+                                                                                  height: 16px;
+                                                                                  height: 1.6rem;
+                                                                                  width: 16px;
+                                                                                  width: 1.6rem;
+                                                                                  line-height: 1; }
 
-                                                                                  .icon-overlay {
-                                                                                    position: absolute; }
+                                                                                  .icon-mini {
+                                                                                    height: 12px;
+                                                                                    height: 1.2rem;
+                                                                                    width: 12px;
+                                                                                    width: 1.2rem; }
 
-                                                                                    .icon-success {
-                                                                                      color: #00ff00; }
+                                                                                    .icon-overlay {
+                                                                                      position: absolute; }
 
-                                                                                      .icon-error {
-                                                                                        color: #a94442; }
+                                                                                      .icon-success {
+                                                                                        color: #00ff00; }
 
-                                                                                        .icon-attention {
-                                                                                          color: #00ff00; }
-                                                                                          .icon-attention:hover, .icon-attention:focus {
-                                                                                            color: #00b200;
-                                                                                            text-decoration: none;
-                                                                                            outline: none; }
+                                                                                        .icon-error {
+                                                                                          color: #a94442; }
+
+                                                                                          .icon-attention {
+                                                                                            color: #00ff00; }
+                                                                                            .icon-attention:hover, .icon-attention:focus {
+                                                                                              color: #00b200;
+                                                                                              text-decoration: none;
+                                                                                              outline: none; }
 
 .icon-button-16 {
   height: 24px;

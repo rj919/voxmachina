@@ -100,52 +100,18 @@ function missionDialog() {
     });
 }
 
-var device_handlers = {
-
-// Handler Constructor
-    initialize: function() {
-        this.bindEvents();
-    },
-// Bind Event Listeners
-    bindEvents: function() {
-        document.addEventListener('deviceready', this.onDeviceReady, false);
-        document.addEventListener('DOMContentLoaded', this.onDeviceReady, false);
-    },
-// deviceoffline event handler
-    onDeviceOffline: function() {
-        console.log('Device Offline')
-    },
-// deviceonline event handler
-    onDeviceOnline: function() {
-        console.log('Device Online')
-    },
-// deviceready Event Handler
-    onDeviceReady: function() {
-
-    // construct landingView
-        if (($('#oauth2_confirmation_close').length )) {
-            var count = 8
-            var close_timer = window.setInterval(function() {
-                if (count > 0) {
-                    var closing_text = sprintf('Closing in %s...', count)
-                    $('#oauth2_confirmation_close').text(closing_text)
-                    count -= 1
-                } else {
-                    window.clearInterval(close_timer)
-                    window.close()
-                }
-            }, 1000)
-        }
-
-    // log state
-        console.log('Device Ready');
-
-    // add online and offline handlers
-        document.addEventListener('offline', this.onDeviceOffline, false);
-        document.addEventListener('online', this.onDeviceOnline, false);
-
+$(function(){
+    if (($('#oauth2_confirmation_close').length )) {
+        var count = 8
+        var close_timer = window.setInterval(function() {
+            if (count > 0) {
+                var closing_text = 'Closing in ' + count + '...'
+                $('#oauth2_confirmation_close').text(closing_text)
+                count -= 1
+            } else {
+                window.clearInterval(close_timer)
+                window.close()
+            }
+        }, 1000)
     }
-
-}
-
-device_handlers.initialize();
+});

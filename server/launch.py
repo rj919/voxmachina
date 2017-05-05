@@ -101,19 +101,34 @@ def oauth2_callback_route(service_name=''):
     if not response_details['error']:
         delete_state(state_value, records_client)
         service_title = service_name.replace('_', ' ').capitalize()
-        authorize_kwargs = {
+        callback_kwargs = {
             'auth_name': service_title,
             'bot_name': bot_config['bot_brand_name']
         }
-        authorize_kwargs.update(**landing_kwargs)
-        authorize_kwargs['landing_page'] = False
-        authorize_kwargs['page_details']['subtitle'] = 'OAuth2 Confirmation'
+        callback_kwargs.update(**landing_kwargs)
+        callback_kwargs['landing_page'] = False
+        callback_kwargs['page_details']['subtitle'] = 'OAuth2 Confirmation'
         if 'oauth2_service_logo' in oauth2_config.keys():
-            authorize_kwargs['auth_logo'] = oauth2_config['oauth2_service_logo']
-        return render_template('authorize.html', **authorize_kwargs), 200
+            callback_kwargs['auth_logo'] = oauth2_config['oauth2_service_logo']
+        return render_template('callback.html', **callback_kwargs), 200
 
     flask_app.logger.debug(response_details)
     return jsonify(response_details), response_details['code']
+
+@flask_app.route('/test/<service_name>')
+def test_route(service_name=''):
+    oauth2_config = oauth2_configs[service_name]
+    service_title = service_name.replace('_', ' ').capitalize()
+    callback_kwargs = {
+        'auth_name': service_title,
+        'bot_name': bot_config['bot_brand_name']
+    }
+    callback_kwargs.update(**landing_kwargs)
+    callback_kwargs['landing_page'] = False
+    callback_kwargs['page_details']['subtitle'] = 'OAuth2 Confirmation'
+    if 'oauth2_service_logo' in oauth2_config.keys():
+        callback_kwargs['auth_logo'] = oauth2_config['oauth2_service_logo']
+    return render_template('callback.html', **callback_kwargs), 200
 
 @flask_app.errorhandler(404)
 def page_not_found(error):
