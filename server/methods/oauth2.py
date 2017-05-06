@@ -225,10 +225,10 @@ def prepare_oauth2(account_id, oauth2_config, records_client, monitor_id='', sch
 # setup tunnel
     if proxy_provider:
         import re
-        from os import environ
+        from server.utils import retrieve_port
         subdomain_regex = re.compile('https?://(.*?)\..*')
         subdomain_name = subdomain_regex.findall(oauth2_config['oauth2_redirect_uri'])
-        port_number = environ['bot_internal_port'.upper()]
+        port_number = retrieve_port()
         from server.methods.tunnel import start_tunnel, start_monitor
         tunnel_status = start_tunnel(subdomain_name, port_number, proxy_provider)
         if not tunnel_status:

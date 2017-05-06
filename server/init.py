@@ -4,7 +4,7 @@ __license__ = '©2017 Collective Acuity'
 
 # inject environmental variables
 from os import environ
-from server.utils import inject_cred
+from server.utils import inject_cred, retrieve_port
 system_environment = environ.get('SYSTEM_ENVIRONMENT', 'dev')
 inject_cred(system_environment)
 
@@ -30,12 +30,14 @@ class flaskDev(object):
     BOT_SECRET_KEY = bot_config['bot_secret_key']
     BOT_LOGGING_LEVEL = 'DEBUG'
     MAX_CONTENT_LENGTH = 8192
+    BOT_SERVER_PORT = retrieve_port()
 
 class flaskProd(object):
     ASSETS_DEBUG = False
     BOT_SECRET_KEY = bot_config['bot_secret_key']
     BOT_LOGGING_LEVEL = 'INFO'
     MAX_CONTENT_LENGTH = 8192
+    BOT_SERVER_PORT = retrieve_port()
 
 if system_environment == 'dev':
     flask_app.config.from_object(flaskDev)

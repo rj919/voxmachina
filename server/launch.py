@@ -139,7 +139,8 @@ def page_not_found(error):
 from server.jobs import job_list
 from labpack.compilers.objects import retrieve_function
 from labpack.platforms.apscheduler import apschedulerClient
-scheduler_client = apschedulerClient('http://localhost:5001')
+scheduler_url = 'http://localhost:%s' % flask_app.config['BOT_SERVER_PORT']
+scheduler_client = apschedulerClient(scheduler_url)
 for job in job_list:
     job_fields = scheduler_client._construct_fields(**job)
     standard_fields = {
@@ -160,6 +161,6 @@ if __name__ == '__main__':
     # use postgres to persist jobs through workers
 
     from gevent.pywsgi import WSGIServer
-    http_server = WSGIServer(('0.0.0.0', bot_config['bot_internal_port']), flask_app)
+    http_server = WSGIServer(('0.0.0.0', int(flask_app.config['BOT_SERVER_PORT'])), flask_app)
     flask_app.logger.info('Server started.')
     http_server.serve_forever()

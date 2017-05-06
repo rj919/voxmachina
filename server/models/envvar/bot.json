@@ -2,7 +2,7 @@
   "schema": {
     "system_ip_address": "127.0.0.1",
     "bot_brand_name": "My Cool Bot",
-    "bot_internal_port": 5001,
+    "bot_server_port": 5001,
     "bot_logging_level": "DEBUG",
     "bot_secret_key": "abcdefgh01234456789_IJKLMNOPQrstuv-wxyz"
   },
@@ -13,7 +13,7 @@
       ],
       "default_value": "DEBUG"
     },
-    ".bot_internal_port": {
+    ".bot_server_port": {
       "integer_data": true
     }
   }

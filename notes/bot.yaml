@@ -1,5 +1,5 @@
 system_ip_address: '127.0.0.1'
 bot_brand_name: 'My Cool Bot'
-bot_interal_port: 5001
+bot_server_port: 5001
 bot_logging_level: 'DEBUG'
 bot_secret_key: 'ABC-DEF1234ghijkl-567MNOPQRST890uvwxyz'

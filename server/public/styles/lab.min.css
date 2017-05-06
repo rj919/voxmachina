@@ -479,20 +479,12 @@ color: inherit;
       height: 100vh; }
 
       .vertical-center {
-        position: absolute;
+        position: relative;
         top: 50%;
         top: 50vh;
         -webkit-transform: translateY(-100%);
                 transform: translateY(-100%);
         height: auto; }
-
-        .vertical-center-content {
-          position: absolute;
-          top: 50%;
-          top: 50vh;
-          -webkit-transform: translateY(calc(50px - 100%));
-                  transform: translateY(calc(50px - 100%));
-          height: auto; }
 
           .vertical-center-40 {
             position: relative;

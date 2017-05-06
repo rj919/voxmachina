@@ -30,14 +30,25 @@ def inject_cred(system_environment):
 
     if path.exists('../cred'):
         inject_envvar('../cred')
-    if system_environment == 'dev':
-        if path.exists('../cred/dev'):
-            inject_envvar('../cred/dev')
-    elif system_environment == 'prod':
-        if path.exists('../cred/prod'):
-            inject_envvar('../cred/prod')
+    system_path = '../cred/%s' % system_environment
+    if path.exists(system_path):
+        if path.isdir(system_path):
+            inject_envvar(system_path)
 
     return True
+
+def retrieve_port():
+
+    ''' a method to retrieve the server port value as string '''
+
+    from os import environ
+    server_port = environ.get('PORT', None)
+    if server_port:
+        pass
+    else:
+        server_port = environ.get('BOT_SERVER_PORT')
+
+    return server_port
 
 def compile_list(folder_path, file_suffix=''):
 
@@ -120,86 +131,55 @@ def config_scheduler(scheduler_settings):
 
     return scheduler_configs
 
-def create_state(account_id, oauth2_config):
+def construct_response(request_details, request_model=None, ignore_errors=False, check_session=False):
 
+    '''
+        a method to construct fields for a flask response
+
+    :param request_details: dictionary with details extracted from request object
+    :param request_model: [optional] object with jsonmodel class properties
+    :param ignore_errors: [optional] boolean to ignore errors
+    :param check_session: [optional] boolean to check for session
+    :return: dictionary with fields for a flask response
+    '''
+
+# import dependencies
     from labpack.records.id import labID
-    from labpack.records.settings import save_settings
+    from labpack.parsing.flask import validate_request_content
 
+# construct default response
     record_id = labID()
-    state_details = {
-        'account_id': account_id,
-        'state_value': record_id.id36,
+    response_details = {
         'dt': record_id.epoch,
-        'service_scope': oauth2_config['oauth2_service_scope'],
-        'proxy_provider': '',
-        'subdomain': ''
-    }
-    state_path = '../data/oauth2/state/%s.yaml' % state_details['state_value']
-    save_settings(state_path, state_details, overwrite=True)
-
-    return state_details
-
-def read_state(state_value):
-
-    from os import path
-    from labpack.records.settings import load_settings
-    state_details = {}
-    state_path = '../data/oauth2/state/%s.yaml' % state_value
-    if path.exists(state_path):
-        state_details = load_settings(state_path)
-
-    return state_details
-
-def delete_state(state_value):
-
-    from os import path
-    from labpack.records.settings import remove_settings
-    state_path = '../data/oauth2/state/%s.yaml' % state_value
-    if path.exists(state_path):
-        remove_settings(state_path)
-
-    return True
-
-def create_token(token_details, account_id, service_scope, service_name, service_id=''):
-
-    from labpack.records.settings import save_settings
-
-    token_fields = {
-        'access_token': '',
-        'token_type': '',
-        'expires_at': 0,
-        'refresh_token': '',
-        'account_id': account_id,
-        'service_name': service_name,
-        'service_id': service_id,
-        'service_scope': []
+        'id': record_id.id36,
+        'code': 200,
+        'error': '',
+        'details': {}
     }
 
-# update token fields with access token input
-    if 'expires_in' in token_details.keys():
-        if isinstance(token_details['expires_in'], int):
-            from time import time
-            token_details['expires_at'] = time() + token_details['expires_in']
-        del token_details['expires_in']
-    if 'user_id' in token_details.keys():
-        if isinstance(token_details['user_id'], int) or isinstance(token_details['user_id'], str):
-            token_details['service_id'] = token_details['user_id']
-        del token_details['user_id']
-    token_fields.update(**token_details)
+# validate request format
+    if ignore_errors:
+        pass
+    elif request_details['error']:
+        response_details['error'] = request_details['error']
+        response_details['code'] = request_details['code']
+    elif not request_details['json']:
+        response_details['error'] = 'request body must be content-type application/json'
+        response_details['code'] = 400
+    elif check_session:
+        if not request_details['session']:
+            response_details['error'] = 'request missing valid session token'
+            response_details['code'] = 400
+    elif request_model:
+        status_details = validate_request_content(request_details['json'], request_model)
+        if status_details['error']:
+            response_details['error'] = status_details['error']
+            response_details['code'] = status_details['code']
 
-# add service scope to token
-    if isinstance(service_scope, str):
-        token_fields['service_scope'].extend(service_scope.split(' '))
-    elif isinstance(service_scope, list):
-        token_fields['service_scope'].extend(service_scope)
-    else:
-        raise ValueError('%s must be a list or space separate string' % str(service_scope))
+    return response_details
 
-# create path
-    token_path = '../data/oauth2/token/%s/%s/%s.yaml' % (token_fields['service_name'], token_fields['account_id'], token_fields['expires_at'])
-    save_settings(token_path, token_fields, overwrite=True)
 
-    return token_fields
+##############
 
 def create_account(account_email, account_password):
 
@@ -452,53 +432,6 @@ def extract_request(request_object, secret_key):
     request_details.update(**session_details)
 
     return request_details
-
-def construct_response(request_details, request_model=None, ignore_errors=False, check_session=False):
-
-    '''
-        a method to construct fields for a flask response
-
-    :param request_details: dictionary with details extracted from request object
-    :param request_model: [optional] object with jsonmodel class properties
-    :param ignore_errors: [optional] boolean to ignore errors
-    :param check_session: [optional] boolean to check for session
-    :return: dictionary with fields for a flask response
-    '''
-
-# import dependencies
-    from labpack.records.id import labID
-    from labpack.parsing.flask import validate_request_content
-
-# construct default response
-    record_id = labID()
-    response_details = {
-        'dt': record_id.epoch,
-        'id': record_id.id36,
-        'code': 200,
-        'error': '',
-        'details': {}
-    }
-
-# validate request format
-    if ignore_errors:
-        pass
-    elif request_details['error']:
-        response_details['error'] = request_details['error']
-        response_details['code'] = request_details['code']
-    elif not request_details['json']:
-        response_details['error'] = 'request body must be content-type application/json'
-        response_details['code'] = 400
-    elif check_session:
-        if not request_details['session']:
-            response_details['error'] = 'request missing valid session token'
-            response_details['code'] = 400
-    elif request_model:
-        status_details = validate_request_content(request_details['json'], request_model)
-        if status_details['error']:
-            response_details['error'] = status_details['error']
-            response_details['code'] = status_details['code']
-
-    return response_details
 
 def validate_session(session_details):
 
