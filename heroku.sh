@@ -18,6 +18,10 @@
 # heroku container:login
 # (on Windows, use cmd.exe)
 
+# to test dockerfile:
+# docker build -t bot-test -f DockerfileHeroku .
+# docker run -it -d -e PORT=5000 -p 5000:5000 --name bot bot-test
+
 # test dependencies
 echo "Checking dependencies..."
 

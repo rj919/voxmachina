@@ -4,9 +4,6 @@
 .git
 .hgignore
 
-# Server content files
-server/
-
 # Notes & Configs
 /cred/
 /notes/
