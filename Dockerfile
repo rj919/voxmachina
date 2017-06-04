@@ -38,5 +38,13 @@ RUN apk add nodejs@community
 RUN apk add nodejs-npm
 RUN npm install -g localtunnel
 
+# Copy server files
+ADD ./cred /opt/cred/
+ADD ./server /opt/server/
+WORKDIR /opt/server
+
+# Run Command
+CMD gunicorn -k gevent -w 1 launch:flask_app -b 0.0.0.0:$PORT
+
 # Clean APK cache
 RUN rm -rf /var/cache/apk/*

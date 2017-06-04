@@ -9,6 +9,8 @@ data/
 appdata/
 
 ###############  distro files  #################
+site/
+docs/site/
 build/
 .Python
 develop-eggs/
@@ -28,7 +30,6 @@ docs/_build/
 target/
 node_modules/
 .webassets-cache/
-platforms/
 plugins/
 hooks/
 
@@ -47,3 +48,14 @@ desktop.ini
 *.gdoc
 .dropbox
 Thumbs.db
+
+#################  unit testing   #################
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+
+################# version control #################

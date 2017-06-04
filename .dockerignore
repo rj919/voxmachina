@@ -3,9 +3,8 @@
 .gitignore
 .git
 .hgignore
-
-# Notes & Configs
-/cred/
-/notes/
-/*.sh
+__pycache__/
+.netbeans
+.node_history
+*.so
 
