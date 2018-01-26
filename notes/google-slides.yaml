@@ -1,0 +1,19 @@
+# https://console.developers.google.com/apis/dashboard
+# https://developers.google.com/identity/protocols/googlescopes
+google_slides_app_name: 'Laboratory Dev'
+google_slides_developer_name: 'Collective Acuity'
+google_slides_service_name: 'google_slides'
+google_slides_service_route: 'google-slides'
+google_slides_service_title: 'Google Slides'
+google_slides_service_organization: 'Google, Inc.'
+google_slides_service_tags: 'Productivity'
+google_slides_service_logo: '/public/images/logos/google-slides-logo.png'
+google_slides_service_description: 'Google Slides is a spreadsheet program, part of a free, web-based software office suite offered by Google within its Google Drive service.'
+google_slides_service_url: 'https://www.google.com/slides/about/'
+google_slides_service_added: 1495234906.918875
+google_slides_auth_endpoint: 'https://accounts.google.com/o/oauth2/v2/auth'
+google_slides_token_endpoint: 'https://www.googleapis.com/oauth2/v4/token'
+google_slides_client_id: '123456789000-abcdef1234ghijkl567mnopqrst890uv.apps.googleusercontent.com'
+google_slides_client_secret: 'abc-DEF1234ghiJKL-567mno'
+google_slides_response_type: ''
+google_slides_request_mimetype: ''

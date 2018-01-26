@@ -1,0 +1,14 @@
+# https://app.mailgun.com/app/domains
+mailgun_smtp_hostname: smtp.mailgun.org
+mailgun_smtp_login: user@mg.exampledomain.com
+mailgun_smtp_password: 
+mailgun_smtp_port: 587
+mailgun_smtp_protocol: SSL/TLS
+mailgun_api_key: key-abcdef0123456789abcdef0123456789
+mailgun_api_base_url: https://api.mailgun.net/v3/mg.exampledomain.com
+mailgun_email_key: pubkey-abcdef0123456789abcdef0123456789
+mailgun_sandbox_domain: sandboxabcdef0123456789abcdef0123456789.mailgun.org
+mailgun_dkim_route: k1._domainkey.mg.exampledomain.com
+mailgun_dkim_value: "k=rsa; p="
+mailgun_spf_route: mg.exampledomain.com
+mailgun_spf_value: "v=spf1 include:mailgun.org ~all"

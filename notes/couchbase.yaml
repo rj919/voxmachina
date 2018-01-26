@@ -1,0 +1,6 @@
+# Credentials to Couchbase Server for Sync Gateway
+# http://localhost:8091/ui/index.html#!/security/userRoles
+couchbase_username: sync
+couchbase_password: somerandompassword
+couchbase_port: 8091
+couchbase_hostname: localhost

@@ -1,0 +1,8 @@
+# Amazon Web Services for Collective Acuity
+# https://collectiveacuity.signin.aws.amazon.com/console
+# http://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp.html
+aws_polly_access_key_id: ABCDEF1234GHIJKL567MNOPQ
+aws_polly_secret_access_key: ABC-DEF1234ghijkl-567MNOPQRST890uvwxyz
+aws_polly_default_region: us-east-2
+aws_polly_owner_id: '1234567890'
+aws_polly_user_name: labpolly 

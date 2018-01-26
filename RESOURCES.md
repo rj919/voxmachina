@@ -40,10 +40,15 @@ Image/Video Classification
 --------------------
 [Watson](https://console.ng.bluemix.net/catalog/services/visual-recognition)  
 [Google](https://cloud.google.com/vision/)  
-[Amazon](https://console.aws.amazon.com/rekognition/home)  
+[Amazon Rekognition](https://console.aws.amazon.com/rekognition/home)  
 [Microsoft](https://azure.microsoft.com/en-us/services/cognitive-services/)  
 [Clarifai](https://developer.clarifai.com/)  
 [Kairos](http://www.kairos.com/docs/api/)  
+
+
+Text/Semantic Analysis
+----------------------
+[OnToText](http://docs.s4.ontotext.com/display/S4docs/Text+Analytics)  
 
 
 OAuth2 Resources
@@ -71,6 +76,34 @@ General Resources
 Knowledge Graphs
 ----------------
 [Microsoft](https://azure.microsoft.com/en-us/services/cognitive-services/academic-knowledge/)  
+
+
+Telephony
+---------
+[Twilio](https://www.twilio.com/console)  
+[Nexmo](https://dashboard.nexmo.com/)  
+
+
+Email
+-----
+[SparkPost](https://app.sparkpost.com/account/)  
+[Mailgun](https://app.mailgun.com/app/domains)  
+[Mandrill](https://mandrillapp.com/settings)  
+
+
+Remote Host
+-----------
+[Heroku](https://dashboard.heroku.com/login)  
+[Amazon EC2](https://console.aws.amazon.com/ec2/v2/home)  
+[IBM Bluemix]()  
+[Google Cloud]()
+
+
+Remote Storage
+--------------
+[Dropbox](https://www.dropbox.com/developers/apps/create)
+[Amazon S3](https://console.aws.amazon.com/s3/home)
+[Google Drive](https://developers.google.com/drive/)
 
 
 

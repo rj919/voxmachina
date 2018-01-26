@@ -1,0 +1,3 @@
+server_system_port: 5000
+server_logging_level: 'DEBUG'
+server_secret_key: 'ABC-DEF1234ghijkl-567MNOPQRST890uvwxyz'

@@ -1,0 +1,19 @@
+# https://console.developers.google.com/apis/dashboard
+# https://developers.google.com/identity/protocols/googlescopes
+google_sheets_app_name: 'Laboratory Dev'
+google_sheets_developer_name: 'Collective Acuity'
+google_sheets_service_name: 'google_sheets'
+google_sheets_service_route: 'google-sheets'
+google_sheets_service_title: 'Google Sheets'
+google_sheets_service_organization: 'Google, Inc.'
+google_sheets_service_tags: 'Productivity'
+google_sheets_service_logo: '/public/images/logos/google-sheets-logo.png'
+google_sheets_service_description: 'Google Slides is a presentation program, part of a free, web-based software office suite offered by Google within its Google Drive service.'
+google_sheets_service_url: 'https://www.google.com/sheets/about/'
+google_sheets_service_added: 1505608180.857248
+google_sheets_auth_endpoint: 'https://accounts.google.com/o/oauth2/v2/auth'
+google_sheets_token_endpoint: 'https://www.googleapis.com/oauth2/v4/token'
+google_sheets_client_id: '123456789000-abcdef1234ghijkl567mnopqrst890uv.apps.googleusercontent.com'
+google_sheets_client_secret: 'abc-DEF1234ghiJKL-567mno'
+google_sheets_response_type: ''
+google_sheets_request_mimetype: ''

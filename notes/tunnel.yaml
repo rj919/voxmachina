@@ -1,0 +1,6 @@
+tunnel_server_subdomain: 'somerandomstringoflowercaseletters'
+tunnel_syncgateway_subdomain: 'somerandomstringoflowercaseletters'
+tunnel_domain_name: 'localtunnel.me'
+tunnel_proxy_provider: 'localtunnel.me'
+tunnel_account_name: ''
+tunnel_account_password: ''
