@@ -1,0 +1,7 @@
+{
+  "schema": {
+    "mailgun_api_key": "key-abcdef0123456789",
+    "mailgun_email_key": "pubkey-abcdef0123456789",
+    "mailgun_spf_route": "mg.collectiveacuity.com"
+  }
+}

@@ -65,6 +65,12 @@ from server.utils import compile_map, compile_tables
 sql_models = compile_map('models/sql/', file_suffix='.json', json_model=True)
 sql_tables = compile_tables(flask_app.config['LAB_SQL_URL'], sql_models)
 
+# construct storage collections
+from labpack.storage.appdata import appdataClient
+record_collections = {
+    'media': appdataClient('media', root_path='../data')
+}
+
 # construct oauth2 service configs
 from server.methods.oauth2 import retrieve_oauth2_configs
 oauth2_configs = retrieve_oauth2_configs()
@@ -72,6 +78,40 @@ oauth2_configs = retrieve_oauth2_configs()
 # construct request models
 from server.utils import compile_map
 request_models = compile_map('models/requests', file_suffix='.json', json_model=True)
+
+# construct email client
+from labpack.email.mailgun import mailgunClient
+from labpack.handlers.requests import handle_requests
+mailgun_cred = ingest_environ('models/envvar/mailgun.json')
+mailgun_kwargs = {
+    'api_key': mailgun_cred['mailgun_api_key'],
+    'email_key': mailgun_cred['mailgun_email_key'],
+    'account_domain': mailgun_cred['mailgun_spf_route'],
+    'requests_handler': handle_requests
+}
+email_client = mailgunClient(**mailgun_kwargs)
+
+# construct telegram client
+from labpack.messaging.telegram import telegramBotClient
+telegram_cred = ingest_environ('model/envvar/telegram.json')
+telegram_kwargs = {
+    'bot_id': telegram_cred['telegram_bot_id'],
+    'access_token': telegram_cred['telegram_access_token'],
+    'requests_handler': handle_requests
+}
+telegram_client = telegramBotClient(**telegram_kwargs)
+
+# construct speech client
+from labpack.speech.aws.polly import pollyClient
+polly_config = ingest_environ('models/envvar/aws-polly.json')
+polly_kwargs = {
+    'access_id': polly_config['aws_polly_access_key_id'],
+    'secret_key': polly_config['aws_polly_secret_access_key'],
+    'region_name': polly_config['aws_polly_default_region'],
+    'owner_id': str(polly_config['aws_polly_owner_id']),
+    'user_name': polly_config['aws_polly_user_name']
+}
+speech_client = pollyClient(**polly_kwargs)
 
 if __name__ == '__main__':
     print(bot_config)

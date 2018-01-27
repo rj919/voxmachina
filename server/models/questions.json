@@ -1,0 +1,158 @@
+[
+  {
+    "name": "first_name",
+    "question": "What is your first name?",
+    "options": [],
+    "link": "",
+    "title": "first name",
+    "datatype": "string",
+    "max_length": 32,
+    "must_contain": {
+      "[a-zA-Z]{1}": "must contain at least one letter."
+    },
+    "must_not_contain": {
+      "\\d+": "cannot contain numbers."
+    },
+    "required": true
+  },
+  {
+    "name": "last_name",
+    "question": "What is your last name?",
+    "options": [],
+    "link": "",
+    "title": "last name",
+    "datatype": "string",
+    "max_length": 32,
+    "must_contain": {
+      "[a-zA-Z]{1}": "must contain at least one letter."
+    },
+    "must_not_contain": {
+      "\\d+": "cannot contain numbers."
+    },
+    "required": true
+  },
+  {
+    "name": "middle_name",
+    "question": "What is your middle name?",
+    "options": [],
+    "link": "",
+    "title": "middle name",
+    "datatype": "string",
+    "max_length": 32,
+    "must_contain": {
+      "[a-zA-Z]{1}": "must contain at least one letter."
+    },
+    "must_not_contain": {
+      "\\d+": "cannot contain numbers."
+    },
+    "required": false
+  },
+  {
+    "name": "tax_id",
+    "question": "What is your Social Security Number or ITIN?",
+    "options": [],
+    "link": "",
+    "title": "tax id number",
+    "datatype": "string",
+    "must_contain": {
+      "\\d{3}\\-?\\d{2}\\-?\\d{4}": "must be 9 digits, or 9 digits in XXX-XX-XXXX format."
+    },
+    "required": true
+  },
+  {
+    "name": "tax_id_type",
+    "question": "What type of tax id number is it?",
+    "options": ["SSN", "ITIN"],
+    "link": "",
+    "title": "tax id type",
+    "datatype": "string",
+    "required": true
+  },
+  {
+    "name": "date_of_birth",
+    "question": "What is your date of birth (as YYYY-MM-DD)?",
+    "options": [],
+    "link": "",
+    "title": "date of birth",
+    "datatype": "string",
+    "must_contain": {
+      "\\d{4}\\-?\\d{2}\\-?\\d{2}": "must be 8 digits, or 8 digits in YYYY-MM-DD format."
+    },
+    "required": true
+  },
+  {
+    "name": "phone_number",
+    "question": "What is your phone number?",
+    "options": [],
+    "link": "",
+    "title": "phone number",
+    "datatype": "string",
+    "must_contain": {
+      "\\d{3}\\.?\\d{3}\\.?\\d{4}": "must be 10 digits, or 10 digits in XXX.XXX.XXXX format."
+    },
+    "required": true
+  },
+  {
+    "name": "phone_type",
+    "question": "What type of phone is it?",
+    "options": ["mobile", "home", "work" ],
+    "link": "",
+    "title": "type of phone",
+    "datatype": "string",
+    "required": true
+  },
+  {
+    "name": "accept_tcpa",
+    "question": "Would you like to be contacted by Capital One for marketing and promotions on this number?",
+    "options": ["Accept", "Decline"],
+    "link": "",
+    "title": "marketing calls",
+    "datatype": "boolean",
+    "required": true
+  },
+  {
+    "name": "email_address",
+    "question": "What is your email address?",
+    "options": [],
+    "link": "",
+    "title": "email address",
+    "datatype": "string",
+    "must_contain": {
+        "^[\\w\\-_\\.\\+]{1,24}?@[\\w\\-\\.]{1,24}?\\.[a-z]{2,10}$": "is not valid. Try again."
+    },
+    "required": true
+  },
+  {
+    "name": "address_line_1",
+    "question": "What is your home street address (first line)?",
+    "options": [],
+    "link": "",
+    "title": "street address",
+    "datatype": "string",
+    "max_length": 64,
+    "must_not_contain": {
+      "(p|P)\\.?(o|O)\\.?\\s(b|B)(o|O)(x|X)": "cannot be a PO Box"
+    },
+    "required": true
+  },
+  {
+    "name": "address_line_2",
+    "question": "What is your home street address (second line)?",
+    "options": [],
+    "link": "",
+    "title": "street address line 2",
+    "datatype": "string",
+    "max_length": 64,
+    "required": false
+  },
+  {
+    "name": "city_name",
+    "question": "What is your home address city?",
+    "options": [],
+    "link": "",
+    "title": "home city",
+    "datatype": "string",
+    "max_length": 32,
+    "required": true
+  }
+]

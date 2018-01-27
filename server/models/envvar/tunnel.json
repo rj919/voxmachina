@@ -1,0 +1,29 @@
+{
+  "schema": {
+    "tunnel_server_subdomain": "somerandomstringoflowercaseletters",
+    "tunnel_syncgateway_subdomain": "somerandomstringoflowercaseletters",
+    "tunnel_domain_name": "localtunnel.me",
+    "tunnel_proxy_provider": "localtunnel.me",
+    "tunnel_account_name": "", 
+    "tunnel_account_password": ""
+  },
+  "components": {
+    ".tunnel_server_subdomain": {
+      "min_length": 4,
+      "max_length": 63,
+      "must_not_contain": [
+        "[^a-z]+"
+      ]
+    },
+    ".tunnel_syncgateway_subdomain": {
+      "min_length": 4,
+      "max_length": 63,
+      "must_not_contain": [
+        "[^a-z]+"
+      ]
+    },
+    ".tunnel_proxy_provider": {
+      "discrete_values": [ "localtunnel.me" ]
+    }
+  }
+}

@@ -108,7 +108,7 @@ def compile_tables(database_url, object_map):
         client_map[table_name] = sqlClient(**sql_kwargs)
     
     return client_map
-
+    
 def config_scheduler(scheduler_settings):
 
 # validate input

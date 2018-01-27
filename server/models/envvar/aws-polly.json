@@ -1,0 +1,9 @@
+{
+  "schema": {
+    "aws_polly_access_key_id": "AKABCDEFG123456HIJKL789",
+    "aws_polly_secret_access_key": "abcdefghijklmnopqrstuvwxyz012356789ABC",
+    "aws_polly_default_region": "us-east-2",
+    "aws_polly_owner_id": 1234567890,
+    "aws_polly_user_name": "iam_user_name"
+  }
+}

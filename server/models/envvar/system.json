@@ -1,0 +1,11 @@
+{
+  "schema": {
+    "system_environment_type": "dev",
+    "system_ip_address": "127.0.0.1"
+  },
+  "components": {
+    ".system_environment_type": {
+      "discrete_values": [ "dev", "test", "prod", "ec2", "tunnel" ]
+    }
+  }
+}

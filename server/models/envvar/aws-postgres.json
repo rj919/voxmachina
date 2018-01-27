@@ -1,0 +1,10 @@
+{
+  "schema": {
+    "aws_postgres_username": "username",
+    "aws_postgres_identifier": "instanceid",
+    "aws_postgres_dbname": "dbname",
+    "aws_postgres_password": "abcd0123EFGH4567IJK890",
+    "aws_postgres_port": 5432,
+    "aws_postgres_hostname": "instanceid.abc123efg456hi.us-east-1.rds.amazonaws.com"
+  }
+}

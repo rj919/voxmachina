@@ -1,0 +1,18 @@
+{
+  "schema": {
+    "server_system_port": 5000,
+    "server_logging_level": "DEBUG",
+    "server_secret_key": "abcdefgh01234456789_IJKLMNOPQrstuv-wxyz"
+  },
+  "components": {
+    ".server_logging_level": {
+      "discrete_values": [ 
+        "CRITICAL", "ERROR", "WARNING", "INFO", "DEBUG", "NOTSET"
+      ],
+      "default_value": "DEBUG"
+    },
+    ".server_system_port": {
+      "integer_data": true
+    }
+  }
+}

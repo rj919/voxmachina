@@ -1,0 +1,22 @@
+{
+  "schema": {
+    "oauth2_app_name": "My App",
+    "oauth2_developer_name": "Collective Acuity",
+    "oauth2_service_name": "moves",
+    "oauth2_service_route": "",
+    "oauth2_service_title": "",
+    "oauth2_service_organization": "",
+    "oauth2_service_tags": "",
+    "oauth2_service_logo": "",
+    "oauth2_service_description": "",
+    "oauth2_service_url": "",
+    "oauth2_service_added": 0.0,
+    "oauth2_auth_endpoint": "https://api.moves-app.com/oauth/v1/authorize",
+    "oauth2_token_endpoint": "https://api.moves-app.com/oauth/v1/access_token",
+    "oauth2_client_id": "ABC-DEF1234ghijkl-567MNOPQRST890uvwxyz",
+    "oauth2_client_secret": "abcdefgh01234456789_IJKLMNOPQrstuv-wxyz",
+    "oauth2_service_scope": "activity location",
+    "oauth2_response_type": "code",
+    "oauth2_request_mimetype": ""
+  }
+}

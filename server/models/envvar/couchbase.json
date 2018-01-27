@@ -1,0 +1,13 @@
+{
+  "schema": {
+    "couchbase_username": "",
+    "couchbase_password": "",
+    "couchbase_port": 0,
+    "couchbase_hostname": ""
+  },
+  "components": {
+    ".couchbase_port": {
+      "integer_data": true
+    }
+  }
+}
