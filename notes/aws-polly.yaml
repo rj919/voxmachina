@@ -1,5 +1,4 @@
-# Amazon Web Services for Collective Acuity
-# https://collectiveacuity.signin.aws.amazon.com/console
+# Credentials to AWS Polly service
 # http://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp.html
 aws_polly_access_key_id: ABCDEF1234GHIJKL567MNOPQ
 aws_polly_secret_access_key: ABC-DEF1234ghijkl-567MNOPQRST890uvwxyz

@@ -1,4 +1,4 @@
-# Credentials to Postgres Micro RDS Instance for Lab Prototyping
+# Credentials to AWS Postgres Micro RDS Instance
 # https://us-east-2.console.aws.amazon.com/rds/home
 aws_postgres_username: labadmin
 aws_postgres_identifier: labdb

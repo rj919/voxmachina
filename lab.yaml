@@ -1,7 +1,0 @@
-docker_image_name: flaskbot
-docker_container_alias: bot
-docker_mount_volumes:
-docker_port_mapping:
-  '5001': 5001
-docker_environment_variables:
-  'PORT': 5001
