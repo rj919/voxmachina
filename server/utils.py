@@ -1,6 +1,6 @@
 __author__ = 'rcj1492'
 __created__ = '2017.02'
-__license__ = '©2017 Collective Acuity'
+__license__ = '©2017-2018 Collective Acuity'
 
 def inject_envvar(folder_path):
 
@@ -22,20 +22,68 @@ def inject_envvar(folder_path):
 
     return True
 
-def inject_cred(system_environment):
+def inject_cred(system_environment='', cred_path='../cred'):
 
     ''' a method to inject environment variables in the cred folder '''
 
     from os import path
-
-    if path.exists('../cred'):
-        inject_envvar('../cred')
-    system_path = '../cred/%s' % system_environment
-    if path.exists(system_path):
-        if path.isdir(system_path):
-            inject_envvar(system_path)
+    
+    if path.exists(cred_path):
+        inject_envvar(cred_path)
+    if system_environment:
+        system_path = path.join(cred_path, system_environment)
+        if path.exists(system_path):
+            if path.isdir(system_path):
+                inject_envvar(system_path)
 
     return True
+
+def ingest_environ(model_path=''):
+
+# convert environment variables into json typed data
+    from os import environ, path
+    typed_dict = {}
+    environ_variables = dict(environ)
+    for key, value in environ_variables.items():
+        if value.lower() == 'true':
+            typed_dict[key] = True
+        elif value.lower() == 'false':
+            typed_dict[key] = False
+        elif value.lower() == 'null':
+            typed_dict[key] = None
+        elif value.lower() == 'none':
+            typed_dict[key] = None
+        else:
+            try:
+                try:
+                    typed_dict[key] = int(value)
+                except:
+                    typed_dict[key] = float(value)
+            except:
+                typed_dict[key] = value
+
+# feed environment variables through model
+    if model_path:
+        from labpack.records.settings import load_settings
+        root_path = environ.get('LAB_ROOT_PATH', '')
+        model_path = path.join(root_path, model_path)
+        if not path.exists(model_path):
+            raise ValueError('%s is not a valid file path.' % model_path)
+        model_dict = load_settings(model_path)
+        from jsonmodel.validators import jsonModel
+        model_object = jsonModel(model_dict)
+        default_dict = model_object.ingest(**{})
+        for key in default_dict.keys():
+            if key.upper() in typed_dict:
+                valid_kwargs = {
+                    'input_data': typed_dict[key.upper()],
+                    'object_title': 'Environment variable %s' % key.upper(),
+                    'path_to_root': '.%s' % key
+                }
+                default_dict[key] = model_object.validate(**valid_kwargs)
+        return default_dict
+
+    return typed_dict
 
 def retrieve_port(envvar_key=''):
 
@@ -56,7 +104,13 @@ def compile_list(folder_path, file_suffix=''):
 
     file_list = []
 
-    from os import listdir, path
+    from os import listdir, path, environ
+
+# determine folder root
+    root_path = environ.get('LAB_ROOT_PATH', '')
+    folder_path = path.join(root_path, folder_path)
+
+# retrieve files in folder
     for file_name in listdir(folder_path):
         file_path = path.join(folder_path, file_name)
         if path.isfile(file_path):
@@ -108,7 +162,50 @@ def compile_tables(database_url, object_map):
         client_map[table_name] = sqlClient(**sql_kwargs)
     
     return client_map
+
+def compile_collections(collection_list, prod_name, org_name, s3_config=None):
     
+    record_collections = {}
+    
+    if s3_config:
+        if s3_config['aws_s3_access_key_id']:
+
+            import re
+            prod_name = re.sub(r'[^\w]', '', prod_name.lower().replace(' ', '-').replace('_', '-'))
+            org_name = re.sub(r'[^\w]', '', org_name.lower().replace(' ', '-').replace('_', '-'))
+
+            from labpack.storage.aws.s3 import s3Client
+            for collection in collection_list:
+                collection_name = re.sub(r'[^\w]', '', collection.lower().replace(' ', '-').replace('_', '-'))
+                record_collections[collection] = s3Client(
+                    access_id=s3_config['aws_s3_access_key_id'],
+                    secret_key=s3_config['aws_s3_secret_access_key'],
+                    region_name=s3_config['aws_s3_default_region'],
+                    owner_id=s3_config['aws_s3_owner_id'],
+                    user_name=s3_config['aws_s3_user_name'],
+                    collection_name=collection_name,
+                    prod_name=prod_name,
+                    org_name=org_name
+                )
+
+    if not record_collections:
+        from labpack.storage.appdata import appdataClient
+        for collection in collection_list:
+            record_collections[collection] = appdataClient(collection, root_path='../data')
+    
+    return record_collections
+
+def compile_jobs(folder_path='jobs'):
+
+    job_list = []
+    from time import time
+    job_map = compile_map(folder_path, file_suffix='.json')
+    for key, value in job_map.items():
+        value['id'] = '%s.%s' % (key, time())
+        job_list.append(value)
+
+    return job_list
+
 def config_scheduler(scheduler_settings):
 
 # validate input
@@ -205,3 +302,6 @@ def construct_response(request_details, request_model=None, ignore_errors=False,
 
     return response_details
 
+if __name__ == '__main__':
+    
+    print(compile_jobs())

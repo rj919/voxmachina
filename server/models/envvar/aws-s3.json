@@ -1,10 +1,10 @@
 {
   "schema": {
-    "aws_s3_access_key_id": "AKIAIZ4QZESSRRECJ44Q",
-    "aws_s3_secret_access_key": "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",
-    "aws_s3_default_region": "us-east-1",
-    "aws_s3_owner_id": 382322839053,
-    "aws_s3_user_name": "flaskServer"
+    "aws_s3_access_key_id": "ABCDEF1234GHIJKL567MNOPQ",
+    "aws_s3_secret_access_key": "ABC-DEF1234ghijkl-567MNOPQRST890uvwxyz",
+    "aws_s3_default_region": "us-east-2",
+    "aws_s3_owner_id": 1234567890,
+    "aws_s3_user_name": "labs3"
   },
   "components": {
     ".aws_s3_owner_id": {

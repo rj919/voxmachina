@@ -5,5 +5,10 @@
     "aws_polly_default_region": "us-east-2",
     "aws_polly_owner_id": 1234567890,
     "aws_polly_user_name": "iam_user_name"
+  },
+  "components": {
+    ".aws_polly_owner_id": {
+      "integer_data": true
+    }
   }
 }

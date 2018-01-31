@@ -6,5 +6,10 @@
     "aws_postgres_password": "abcd0123EFGH4567IJK890",
     "aws_postgres_port": 5432,
     "aws_postgres_hostname": "instanceid.abc123efg456hi.us-east-1.rds.amazonaws.com"
+  },
+  "components": {
+    ".aws_postgres_port": {
+      "integer_data": true
+    }
   }
 }

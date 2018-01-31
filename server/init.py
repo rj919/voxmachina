@@ -1,16 +1,28 @@
 __author__ = 'rcj1492'
 __created__ = '2017.04'
-__license__ = '©2017 Collective Acuity'
+__license__ = '©2017-2018 Collective Acuity'
 
 # inject environmental variables
 from os import environ
-from server.utils import inject_cred, retrieve_port
+from server.utils import inject_cred, retrieve_port, ingest_environ
 system_environment = environ.get('SYSTEM_ENVIRONMENT', 'dev')
 inject_cred(system_environment)
 
 # retrieve system configurations
-from labpack.records.settings import ingest_environ
 bot_config = ingest_environ('models/envvar/bot.json')
+s3_config = ingest_environ('models/envvar/aws-s3.json')
+tunnel_config = ingest_environ('models/envvar/tunnel.json')
+tunnel_url = '%s.%s' % (tunnel_config['tunnel_server_subdomain'], tunnel_config['tunnel_domain_name'])
+postgres_config = ingest_environ('models/envvar/aws-postgres.json')
+postgres_url = ''
+if postgres_config['aws_postgres_username']:
+    postgres_url = '%s:%s@%s:%s/%s' % (
+    postgres_config['aws_postgres_username'],
+    postgres_config['aws_postgres_password'],
+    postgres_config['aws_postgres_hostname'],
+    postgres_config['aws_postgres_port'],
+    postgres_config['aws_postgres_dbname']
+)
 
 # construct flask app object
 from flask import Flask
@@ -22,8 +34,6 @@ flask_kwargs = {
 flask_app = Flask(**flask_kwargs)
 
 # declare flask configurations
-# http://flask.pocoo.org/docs/0.12/config/
-# http://flask.pocoo.org/docs/0.12/api/#sessions
 from datetime import timedelta
 class flaskDev(object):
     ASSETS_DEBUG = False
@@ -36,19 +46,32 @@ class flaskDev(object):
     LAB_SQL_URL = 'sqlite:///../data/records.db'
     MAX_CONTENT_LENGTH = 8192
 
+class flaskTunnel(object):
+    ASSETS_DEBUG = False
+    LAB_SECRET_KEY = bot_config['bot_secret_key']
+    LAB_SERVER_PROTOCOL = 'https'
+    LAB_SERVER_DOMAIN = tunnel_url
+    LAB_SERVER_PORT = retrieve_port()
+    LAB_SERVER_LOGGING = 'DEBUG'
+    LAB_TOKEN_EXPIRATION = timedelta(hours=24).total_seconds()
+    LAB_SQL_URL = 'sqlite:///../data/records.db'
+    MAX_CONTENT_LENGTH = 8192
+    
 class flaskProd(object):
     ASSETS_DEBUG = False
     LAB_SECRET_KEY = bot_config['bot_secret_key']
     LAB_SERVER_PROTOCOL = 'https'
-    LAB_SERVER_DOMAIN = ''
+    LAB_SERVER_DOMAIN = bot_config['bot_domain_name']
     LAB_SERVER_PORT = retrieve_port()
     LAB_SERVER_LOGGING = 'INFO'
     LAB_TOKEN_EXPIRATION = timedelta(hours=24).total_seconds()
-    LAB_SQL_URL = ''
+    LAB_SQL_URL = postgres_url
     MAX_CONTENT_LENGTH = 8192
 
 if system_environment == 'dev':
     flask_app.config.from_object(flaskDev)
+elif system_environment == 'tunnel':
+    flask_app.config.from_object(flaskTunnel)
 else:
     flask_app.config.from_object(flaskProd)
 
@@ -62,18 +85,17 @@ flask_app.logger.setLevel(flask_logging_attr)
 
 # construct sql tables
 from server.utils import compile_map, compile_tables
-sql_models = compile_map('models/sql/', file_suffix='.json', json_model=True)
-sql_tables = compile_tables(flask_app.config['LAB_SQL_URL'], sql_models)
+sql_map = compile_map('models/sql', file_suffix='.json', pythonic=True)
+bot_sql_map = compile_map('models/sql/%s' % bot_config['bot_folder_name'], file_suffix='.json', pythonic=True)
+for key, value in bot_sql_map.items():
+    if key not in sql_map.keys():
+        sql_map[key] = value
+sql_tables = compile_tables(flask_app.config['LAB_SQL_URL'], sql_map)
 
 # construct storage collections
-from labpack.storage.appdata import appdataClient
-record_collections = {
-    'media': appdataClient('media', root_path='../data')
-}
-
-# construct oauth2 service configs
-from server.methods.oauth2 import retrieve_oauth2_configs
-oauth2_configs = retrieve_oauth2_configs()
+collection_list = [ 'media' ]
+from server.utils import compile_collections
+record_collections = compile_collections(collection_list, bot_config['bot_folder_name'], 'lab', s3_config)
 
 # construct request models
 from server.utils import compile_map
@@ -93,11 +115,11 @@ email_client = mailgunClient(**mailgun_kwargs)
 
 # construct telegram client
 from labpack.messaging.telegram import telegramBotClient
-telegram_cred = ingest_environ('model/envvar/telegram.json')
+telegram_cred = ingest_environ('models/envvar/telegram.json')
 telegram_kwargs = {
     'bot_id': telegram_cred['telegram_bot_id'],
     'access_token': telegram_cred['telegram_access_token'],
-    'requests_handler': handle_requests
+    'requests_handler': handle_requests,
 }
 telegram_client = telegramBotClient(**telegram_kwargs)
 
@@ -115,5 +137,4 @@ speech_client = pollyClient(**polly_kwargs)
 
 if __name__ == '__main__':
     print(bot_config)
-    print(oauth2_configs)
-    print(request_models)
+    print(request_models.keys())
