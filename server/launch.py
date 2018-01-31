@@ -9,7 +9,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 # initialize flask and configuration objects
 from server.init import flask_app, bot_config
-from flask import url_for, render_template
+from flask import request, jsonify, url_for, render_template
 
 # initialize bot client
 from server.bot import bot_client
@@ -27,6 +27,8 @@ flask_scheduler = GeventScheduler(**scheduler_kwargs)
 flask_scheduler.start()
 
 # define landing kwargs
+from server.utils import construct_response
+from labpack.parsing.flask import extract_request_details
 from labpack.records.settings import load_settings
 landing_kwargs = {
     'landing_page': True,
@@ -38,6 +40,26 @@ landing_kwargs = {
 def landing_page():
     ''' the landing page '''
     return render_template('landing.html', **landing_kwargs), 200
+
+@flask_app.route('/webhook/<service_name>', methods=['POST'])
+def webhook_route(service_name=''):
+
+# ingest request
+    request_details = extract_request_details(request)
+    flask_app.logger.debug(request_details)
+    endpoint_list = [ 'telegram' ]
+    response_details = construct_response(request_details, endpoint_list=endpoint_list)
+
+# validate service request
+    if not response_details['error']:
+        pass
+
+# send webhook to bot
+    if not response_details['error']:
+        pass
+
+    flask_app.logger.debug(response_details)
+    return jsonify(response_details), response_details['code']
 
 @flask_app.errorhandler(404)
 def page_not_found(error):
