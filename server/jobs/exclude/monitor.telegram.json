@@ -1,0 +1,4 @@
+{
+  "function": "bot:bot_client.monitor_telegram",
+  "interval": 3
+}

@@ -20,13 +20,13 @@ TBD
 
 ## Components
 - Alpine Edge (OS)
-- Python 3.5.2 (Environment)
+- Python 3.6.3 (Environment)
 - Gunicorn 19.4.5 (Server)
 - Flask 0.11.1 (Framework)
 - APScheduler 3.2.0 (Scheduler)
 - Gevent 1.2.1 (Thread Manager)
 - Bootstrap 3 (CSS Template)
-- jQuery 2.2.3 (Framework)
+- jQuery 3.1.1 (Framework)
 
 ## Dev Env
 - Docker (Provisioning)
@@ -35,7 +35,7 @@ TBD
 - Dropbox (Sync, Backup)
 
 ## Languages
-- Python 3.5
+- Python 3.6
 
 ## Setup DevEnv
 1. Install Docker Toolbox on Local Device

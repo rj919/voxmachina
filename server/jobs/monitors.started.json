@@ -1,0 +1,4 @@
+{
+  "function": "init:flask_app.logger.debug",
+  "kwargs": { "msg": "Monitors are started." }
+}
