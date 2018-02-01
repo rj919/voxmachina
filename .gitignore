@@ -59,4 +59,6 @@ nosetests.xml
 coverage.xml
 
 ################# version control #################
+.hgignore
 .hg/
+fitzroy/
