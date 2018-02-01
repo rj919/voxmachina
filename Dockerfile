@@ -32,6 +32,7 @@ RUN pip3 install pytz
 RUN pip3 install apscheduler
 RUN pip3 install SQLAlchemy
 RUN pip3 install psycopg2
+RUN pip3 install paho-mqtt
 
 # Install Localtunnel
 RUN apk add nodejs@community
