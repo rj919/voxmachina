@@ -6,3 +6,4 @@ telegram_admin_id: 0123456789
 telegram_bot_id: 1234567890
 telegram_bot_username: 'myBot'
 telegram_bot_name: 'my bot'
+telegram_webhook_token: 'ABC-DEF1234ghijkl-567MNOPQRST890uvwxyz'

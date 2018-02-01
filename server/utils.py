@@ -1,3 +1,4 @@
+''' a package of utility functions for flask configuration, data client init and request handling '''
 __author__ = 'rcj1492'
 __created__ = '2017.02'
 __license__ = '©2017-2018 Collective Acuity'
@@ -65,8 +66,6 @@ def ingest_environ(model_path=''):
 # feed environment variables through model
     if model_path:
         from labpack.records.settings import load_settings
-        root_path = environ.get('LAB_ROOT_PATH', '')
-        model_path = path.join(root_path, model_path)
         if not path.exists(model_path):
             raise ValueError('%s is not a valid file path.' % model_path)
         model_dict = load_settings(model_path)
@@ -106,16 +105,13 @@ def compile_list(folder_path, file_suffix=''):
 
     from os import listdir, path, environ
 
-# determine folder root
-    root_path = environ.get('LAB_ROOT_PATH', '')
-    folder_path = path.join(root_path, folder_path)
-
 # retrieve files in folder
-    for file_name in listdir(folder_path):
-        file_path = path.join(folder_path, file_name)
-        if path.isfile(file_path):
-            if not file_suffix or file_name.find(file_suffix) > -1:
-                file_list.append(file_path)
+    if path.exists(folder_path):
+        for file_name in listdir(folder_path):
+            file_path = path.join(folder_path, file_name)
+            if path.isfile(file_path):
+                if not file_suffix or file_name.find(file_suffix) > -1:
+                    file_list.append(file_path)
 
     return file_list
 
@@ -163,7 +159,7 @@ def compile_tables(database_url, object_map):
     
     return client_map
 
-def compile_collections(collection_list, prod_name, org_name, s3_config=None):
+def compile_collections(collection_list, prod_name, org_name, data_path='../data', s3_config=None):
     
     record_collections = {}
     
@@ -191,7 +187,7 @@ def compile_collections(collection_list, prod_name, org_name, s3_config=None):
     if not record_collections:
         from labpack.storage.appdata import appdataClient
         for collection in collection_list:
-            record_collections[collection] = appdataClient(collection, root_path='../data')
+            record_collections[collection] = appdataClient(collection, root_path=data_path)
     
     return record_collections
 
@@ -205,7 +201,7 @@ def compile_jobs(folder_path='jobs'):
         job_list.append(value)
 
     return job_list
-
+    
 def config_scheduler(scheduler_settings):
 
 # validate input

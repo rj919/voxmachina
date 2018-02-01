@@ -8,11 +8,9 @@ import sys
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 # initialize flask and configuration objects
-from server.init import flask_app, bot_config
-from flask import request, jsonify, url_for, render_template
-
-# initialize bot client
-from server.bot import bot_client
+import json
+from server.init import flask_app, bot_config, webhook_map
+from flask import request, jsonify, url_for, Response, render_template
 
 # initialize job scheduling
 from pytz import utc
@@ -25,6 +23,10 @@ scheduler_update = config_scheduler(scheduler_config)
 scheduler_kwargs.update(**scheduler_update)
 flask_scheduler = GeventScheduler(**scheduler_kwargs)
 flask_scheduler.start()
+
+# initialize bot client
+from server.bot import bot_client
+launch_scope = globals()
 
 # define landing kwargs
 from server.utils import construct_response
@@ -41,25 +43,42 @@ def landing_page():
     ''' the landing page '''
     return render_template('landing.html', **landing_kwargs), 200
 
-@flask_app.route('/webhook/<service_name>', methods=['POST'])
-def webhook_route(service_name=''):
+@flask_app.route('/webhook/<webhook_token>', methods=['POST'])
+def webhook_route(webhook_token=''):
 
 # ingest request
     request_details = extract_request_details(request)
-    flask_app.logger.debug(request_details)
-    endpoint_list = [ 'telegram' ]
-    response_details = construct_response(request_details, endpoint_list=endpoint_list)
+    # flask_app.logger.debug(request_details)
+    response_details = construct_response(request_details)
+    call_on_close = None
+    if webhook_token not in webhook_map.keys():
+        response_details['error'] = 'Invalid webhook token.'
+        response_details['code'] = 404
 
-# validate service request
+# send webhook content to bot
     if not response_details['error']:
-        pass
+        if request_details['json']:
+            callable_method = webhook_map[webhook_token]['method']
+            def webhook_callable():
+                from labpack.compilers.objects import retrieve_function
+                callable_object = retrieve_function(callable_method, launch_scope)
+                callable_object(request_details['json'])
+            call_on_close = webhook_callable
 
-# send webhook to bot
-    if not response_details['error']:
-        pass
-
-    flask_app.logger.debug(response_details)
-    return jsonify(response_details), response_details['code']
+# response to request
+    if call_on_close:
+        response_kwargs = {
+            'response': json.dumps(response_details),
+            'status': response_details['code'],
+            'mimetype': 'application/json'
+        }
+        response_object = Response(**response_kwargs)
+        response_object.call_on_close(call_on_close)
+        # flask_app.logger.debug(response_details)
+        return response_object
+    else:
+        # flask_app.logger.debug(response_details)
+        return jsonify(response_details), response_details['code']
 
 @flask_app.errorhandler(404)
 def page_not_found(error):
@@ -86,8 +105,20 @@ for job in job_list:
     job_fields.update(**standard_fields)
     flask_scheduler.add_job(**job_fields)
 
+# register webhooks
+if flask_app.config['LAB_SYSTEM_ENVIRONMENT'] == 'prod':
+    from server.init import telegram_webhook
+    if telegram_webhook:
+        from server.init import telegram_client
+        telegram_client.delete_webhook()
+        telegram_client.set_webhook(telegram_webhook)
+
 # initialize the test wsgi localhost server
 if __name__ == '__main__':
+
+    if flask_app.config['LAB_SYSTEM_ENVIRONMENT'] == 'tunnel':
+        from server.init import tunnel_url
+        flask_app.logger.info('Tunnel endpoint: %s' % tunnel_url)
 
     # for multiple workers with scheduler:
     # spawn each worker to check first if a scheduler worker is already active

@@ -5,7 +5,7 @@ __license__ = '©2017-2018 Collective Acuity'
 # inject environmental variables
 from os import environ
 from server.utils import inject_cred, retrieve_port, ingest_environ
-system_environment = environ.get('SYSTEM_ENVIRONMENT', 'dev')
+system_environment = environ.get('SYSTEM_ENVIRONMENT', 'tunnel')
 inject_cred(system_environment)
 
 # retrieve system configurations
@@ -37,6 +37,7 @@ flask_app = Flask(**flask_kwargs)
 from datetime import timedelta
 class flaskDev(object):
     ASSETS_DEBUG = False
+    LAB_SYSTEM_ENVIRONMENT = 'dev'
     LAB_SECRET_KEY = bot_config['bot_secret_key']
     LAB_SERVER_PROTOCOL = 'http'
     LAB_SERVER_DOMAIN = 'localhost'
@@ -48,6 +49,7 @@ class flaskDev(object):
 
 class flaskTunnel(object):
     ASSETS_DEBUG = False
+    LAB_SYSTEM_ENVIRONMENT = 'tunnel'
     LAB_SECRET_KEY = bot_config['bot_secret_key']
     LAB_SERVER_PROTOCOL = 'https'
     LAB_SERVER_DOMAIN = tunnel_url
@@ -59,6 +61,7 @@ class flaskTunnel(object):
     
 class flaskProd(object):
     ASSETS_DEBUG = False
+    LAB_SYSTEM_ENVIRONMENT = 'prod'
     LAB_SECRET_KEY = bot_config['bot_secret_key']
     LAB_SERVER_PROTOCOL = 'https'
     LAB_SERVER_DOMAIN = bot_config['bot_domain_name']
@@ -95,11 +98,19 @@ sql_tables = compile_tables(flask_app.config['LAB_SQL_URL'], sql_map)
 # construct storage collections
 collection_list = [ 'media' ]
 from server.utils import compile_collections
-record_collections = compile_collections(collection_list, bot_config['bot_folder_name'], 'lab', s3_config)
+record_collections = compile_collections(
+    collection_list=collection_list, 
+    prod_name=bot_config['bot_folder_name'], 
+    org_name='lab', 
+    s3_config=s3_config
+)
 
 # construct request models
 from server.utils import compile_map
 request_models = compile_map('models/requests', file_suffix='.json', json_model=True)
+
+# construct webhook map
+webhook_map = {}
 
 # construct email client
 from labpack.email.mailgun import mailgunClient
@@ -122,6 +133,17 @@ telegram_kwargs = {
     'requests_handler': handle_requests,
 }
 telegram_client = telegramBotClient(**telegram_kwargs)
+telegram_webhook = ''
+if telegram_cred['telegram_webhook_token']:
+    webhook_token = telegram_cred['telegram_webhook_token']
+    telegram_webhook = '%s://%s/webhook/%s' % (
+        flask_app.config['LAB_SERVER_PROTOCOL'], 
+        flask_app.config['LAB_SERVER_DOMAIN'], 
+        webhook_token
+    )
+    webhook_map[webhook_token] = {
+        'method': 'bot_client.monitor_telegram'
+    }
 
 # construct speech client
 from labpack.speech.aws.polly import pollyClient
@@ -136,5 +158,10 @@ polly_kwargs = {
 speech_client = pollyClient(**polly_kwargs)
 
 if __name__ == '__main__':
+    
     print(bot_config)
     print(request_models.keys())
+    
+# set webhook for tunnel
+#     telegram_client.delete_webhook()
+#     telegram_client.set_webhook(telegram_webhook)

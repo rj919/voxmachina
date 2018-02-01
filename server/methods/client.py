@@ -556,7 +556,7 @@ class botClient(object):
     
     # construct empty queue
         self.queue = []
-
+ 
     def extract_telegram(self, update):
     
         from time import time
@@ -582,35 +582,43 @@ class botClient(object):
 
         return feature_map
     
-    def monitor_telegram(self):
+    def monitor_telegram(self, update=None):
     
-    # retrieve last update
-        last_update = 0
-        record_id = 0
-        for record in self.sql_tables['telegram'].list():
-            last_update = int(record['last_update'])
-            record_id = record['id']
-            break
-        if not last_update:
-            record_details = { 
-                'last_update': 0
-            }
-            record_id = self.sql_tables['telegram'].create(record_details)
-    
-    # get updates from telegram
-        updates_details = self.telegram_client.get_updates(last_update)
-    
-    # construct update list
         update_list = []
-        if updates_details['json']['result']:
-            update_list = sorted(updates_details['json']['result'], key=lambda k: k['update_id'])
     
-        # update last update value in db
-            offset_details = {
-                'id': record_id,
-                'last_update': int(update_list[-1]['update_id'])
-            }
-            self.sql_tables['telegram'].update(offset_details)
+    # process result from webhook
+        if update:
+            update_list.append(update)
+    
+    # else check for updates
+        else:
+        
+        # retrieve last update id
+            last_update = 0
+            record_id = 0
+            for record in self.sql_tables['telegram'].list():
+                last_update = int(record['last_update'])
+                record_id = record['id']
+                break
+            if not last_update:
+                record_details = { 
+                    'last_update': 0
+                }
+                record_id = self.sql_tables['telegram'].create(record_details)
+
+        # get updates from telegram
+            updates_details = self.telegram_client.get_updates(last_update)
+
+        # construct update list
+            if updates_details['json']['result']:
+                update_list = sorted(updates_details['json']['result'], key=lambda k: k['update_id'])
+
+            # update last update value in db
+                offset_details = {
+                    'id': record_id,
+                    'last_update': int(update_list[-1]['update_id'])
+                }
+                self.sql_tables['telegram'].update(offset_details)
     
     # process updates
         for update in update_list:
@@ -663,56 +671,58 @@ class botClient(object):
         
         message_queue = []
     
-        telegram_id = feature_map['interface_id']
-        msg_text = feature_map['text'].lower()
+        print(feature_map)
         
-    # determine start
-        if msg_text in ('/start', 'start'):
-            message_queue = action_client.start(telegram_id)
-        elif msg_text in ('/start_over', 'start over'):
-            message_queue = action_client.start_over(telegram_id)
-        elif msg_text in ('/restart', 'restart', '/reactivate', 'reactivate', '/play', 'play'):
-            message_queue = action_client.restart(telegram_id)
-        elif msg_text in ('/stop', 'stop', '/deactivate', 'deactivate', '/pause', 'pause'):
-            message_queue = action_client.pause('telegram_id')
-        elif msg_text in ('/help', 'help', 'info'):
-            message_queue = action_client.help(telegram_id)
-        elif msg_text in ('/score', 'score'):
-            message_queue = action_client.score(telegram_id)
-        elif msg_text in ('/register', 'register'):
-            message_queue = action_client.register_prompt(telegram_id)
-        elif msg_text in ('hack'):
-            message_queue = action_client.hack(telegram_id)
-        elif msg_text in ('release'):
-            message_queue = action_client.release(telegram_id)
-        elif msg_text in ('/options', 'options'):
-            message_queue = action_client.options(telegram_id)
-        elif msg_text in ('continue'):
-            telegram_filter = { 
-                '.interface_id': { 'equal_to': telegram_id }, 
-                '.direction': { 'equal_to': 'outgoing'} 
-            }
-            telegram_order = [ { '.dt': 'descending' } ]
-            previous_message = ''
-            for message in message_client.list(telegram_filter, telegram_order):
-                previous_message = message['text']
-                break
-            if previous_message:
-                message_queue = action_client.continue_dialog(telegram_id, previous_message)
-        else:
-            telegram_filter = { 
-                '.interface_id': { 'equal_to': telegram_id }, 
-                '.direction': { 'equal_to': 'incoming'} 
-            }
-            telegram_order = [ { '.dt': 'descending' } ]
-            previous_message = {}
-            for message in message_client.list(telegram_filter, telegram_order):
-                previous_message = message
-                break
-            if previous_message:
-                previous_text = previous_message['text'].lower()
-                if previous_text in ('/register', 'register'):
-                    message_queue = action_client.register(telegram_id, feature_map['text'])
+    #     telegram_id = feature_map['interface_id']
+    #     msg_text = feature_map['text'].lower()
+    #     
+    # # determine start
+    #     if msg_text in ('/start', 'start'):
+    #         message_queue = action_client.start(telegram_id)
+    #     elif msg_text in ('/start_over', 'start over'):
+    #         message_queue = action_client.start_over(telegram_id)
+    #     elif msg_text in ('/restart', 'restart', '/reactivate', 'reactivate', '/play', 'play'):
+    #         message_queue = action_client.restart(telegram_id)
+    #     elif msg_text in ('/stop', 'stop', '/deactivate', 'deactivate', '/pause', 'pause'):
+    #         message_queue = action_client.pause('telegram_id')
+    #     elif msg_text in ('/help', 'help', 'info'):
+    #         message_queue = action_client.help(telegram_id)
+    #     elif msg_text in ('/score', 'score'):
+    #         message_queue = action_client.score(telegram_id)
+    #     elif msg_text in ('/register', 'register'):
+    #         message_queue = action_client.register_prompt(telegram_id)
+    #     elif msg_text in ('hack'):
+    #         message_queue = action_client.hack(telegram_id)
+    #     elif msg_text in ('release'):
+    #         message_queue = action_client.release(telegram_id)
+    #     elif msg_text in ('/options', 'options'):
+    #         message_queue = action_client.options(telegram_id)
+    #     elif msg_text in ('continue'):
+    #         telegram_filter = { 
+    #             '.interface_id': { 'equal_to': telegram_id }, 
+    #             '.direction': { 'equal_to': 'outgoing'} 
+    #         }
+    #         telegram_order = [ { '.dt': 'descending' } ]
+    #         previous_message = ''
+    #         for message in message_client.list(telegram_filter, telegram_order):
+    #             previous_message = message['text']
+    #             break
+    #         if previous_message:
+    #             message_queue = action_client.continue_dialog(telegram_id, previous_message)
+    #     else:
+    #         telegram_filter = { 
+    #             '.interface_id': { 'equal_to': telegram_id }, 
+    #             '.direction': { 'equal_to': 'incoming'} 
+    #         }
+    #         telegram_order = [ { '.dt': 'descending' } ]
+    #         previous_message = {}
+    #         for message in message_client.list(telegram_filter, telegram_order):
+    #             previous_message = message
+    #             break
+    #         if previous_message:
+    #             previous_text = previous_message['text'].lower()
+    #             if previous_text in ('/register', 'register'):
+    #                 message_queue = action_client.register(telegram_id, feature_map['text'])
                 
         return True
 
