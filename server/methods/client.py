@@ -630,7 +630,7 @@ class botClient(object):
             self.analyze_observation(feature_map)
         
         return True
-        
+
     def save_observation(self, feature_map):
 
         return True
@@ -656,7 +656,7 @@ class botClient(object):
                     'style': message['kwargs'].get('message_style', ''),
                     'audio': message['kwargs'].get('voice_path', '')
                 }
-                self.message_table.create(message_details)
+                self.sql_tables['messages'].create(message_details)
                 print(message_details)
 
             # send outgoing message
