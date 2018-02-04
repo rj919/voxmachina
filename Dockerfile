@@ -29,20 +29,20 @@ RUN pip3 install jsonmodel
 RUN pip3 install labpack
 RUN pip3 install requests
 RUN pip3 install pytz
+RUN pip3 install boto3
 RUN pip3 install apscheduler
 RUN pip3 install SQLAlchemy
 RUN pip3 install psycopg2
 RUN pip3 install paho-mqtt
 
-# Install Localtunnel
-RUN apk add nodejs@community
-RUN apk add nodejs-npm
-RUN npm install -g localtunnel
-
 # Copy server files
 ADD ./cred /opt/cred/
 ADD ./server /opt/server/
+RUN mkdir /opt/data
 WORKDIR /opt/server
+
+# Set environmental variables
+ENV SYSTEM_ENVIRONMENT=heroku
 
 # Run Command
 CMD gunicorn -k gevent -w 1 launch:flask_app -b 0.0.0.0:$PORT

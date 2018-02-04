@@ -2,11 +2,16 @@ __author__ = 'rcj1492'
 __created__ = '2017.04'
 __license__ = '©2017-2018 Collective Acuity'
 
+default_environment = 'dev'
+
 # inject environmental variables
 from os import environ
 from server.utils import inject_cred, retrieve_port, ingest_environ
-system_environment = environ.get('SYSTEM_ENVIRONMENT', 'tunnel')
-inject_cred(system_environment)
+system_environment = environ.get('SYSTEM_ENVIRONMENT', default_environment)
+if default_environment == 'tunnel':
+    inject_cred('tunnel')
+else:
+    inject_cred(system_environment)
 
 # retrieve system configurations
 bot_config = ingest_environ('models/envvar/bot.json')
@@ -61,7 +66,7 @@ class flaskTunnel(object):
     
 class flaskProd(object):
     ASSETS_DEBUG = False
-    LAB_SYSTEM_ENVIRONMENT = 'prod'
+    LAB_SYSTEM_ENVIRONMENT = system_environment
     LAB_SECRET_KEY = bot_config['bot_secret_key']
     LAB_SERVER_PROTOCOL = 'https'
     LAB_SERVER_DOMAIN = bot_config['bot_domain_name']

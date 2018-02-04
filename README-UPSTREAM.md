@@ -8,8 +8,7 @@ TBD
 ## Features
 - Flask in a Container
 - Local Device Deployment
-- OAuth2 Handled through Proxy Hosts
-- API Service Monitors
+- Webhooks 
 - Local Credential Controls
 - Lean Footprint
 - Secret Sauce
@@ -21,11 +20,11 @@ TBD
 ## Components
 - Alpine Edge (OS)
 - Python 3.6.3 (Environment)
-- Gunicorn 19.4.5 (Server)
-- Flask 0.11.1 (Framework)
-- APScheduler 3.2.0 (Scheduler)
-- Gevent 1.2.1 (Thread Manager)
-- Bootstrap 3 (CSS Template)
+- Gunicorn 19.7.1 (Server)
+- Flask 0.12.2 (Framework)
+- APScheduler 3.5.0 (Scheduler)
+- Gevent 1.2.2 (Thread Manager)
+- Bootstrap 3.3.6 (CSS Template)
 - jQuery 3.1.1 (Framework)
 
 ## Dev Env
@@ -38,56 +37,44 @@ TBD
 - Python 3.6
 
 ## Setup DevEnv
-1. Install Docker Toolbox on Local Device
+1. Install Docker on Local Device
 2. Install Git on Local Device
-3. Clone/Fork Repository from Version Control service
-4. Create a /cred Folder in Root to Store Tokens
-5. **[Optional]** Create a New Private Remote Repository
+3. Clone/Fork Repository
+4. Install pocketlab: `pip install pocketlab`
+5. Run `lab init` in root folder 
+6. Update Placeholder Credentials in /cred folder
+7. **[Optional]** Install heroku-cli
 
 ## Server Sub-Folders
 -- _assets/_ (sub-folder for non-python code and project resources)   
+-- _jobs/_ (sub-folder for apscheduler jobs)  
 -- _methods/_ (sub-folder for application specific python classes)  
 -- _models/_ (sub-folder for data object model declarations)  
 -- _public/_ (sub-folder for public accessible application content)  
 -- _views/_ (sub-folder for html templates)
 
 ## Launch Commands
-**start.sh**  
-_Creates container with required volumes and starts flask on a gunicorn server_  
-Requires:  
-
-- Container Alias
-- Container Ports
-- Mapped Volumes
-- Initial Command
-- Container Root Folder Name (if AWS EC2 deployment with awsDocker module)
-- Virtualbox Name (if Windows or Mac localhost)
-
-**rebuild.sh**  
-_Initiates an automated build command on Docker to update base image_  
-Requires:  
-
-- Container Alias
-- Token from Docker Build Settings
-- Environment Variable File (in cred/docker.yaml)
-
-**tunnel.sh**  
-_Initiates a secure tunnel from local device to endpoint on localtunnel.me_  
-Requires:  
-
-- Container Alias
-
-Git Merging
------------
-When pushing content to public fork, first commit the changes on master, then use the public branch to push content to the fork.
+**Test with Localtunnel:**
+```sh
+# set default_environment='tunnel' in init.py 
+# ... or ...
+# set SYSTEM_ENVIRONMENT=tunnel in IDE
+python server/launch.py
+lt --port 5001 --subdomain [SUBDOMAIN]
 ```
-git checkout public
-git merge --no-commit --no-ff master
-git reset -- server/pocketbot/*
-git commit -m 'master into public'
-git push fork public
-git checkout -f master
+
+**Deploy to Heroku:**  
+```sh
+# create heroku account
+heroku login
+heroku auth:token
+lab init --heroku
+# update credentials in heroku.yaml
+lab deploy heroku
 ```
+
+**Deploy to EC2:**  
+TODO
 
 Collaboration Notes
 -------------------

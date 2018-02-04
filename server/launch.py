@@ -91,6 +91,8 @@ from labpack.compilers.objects import retrieve_function
 from labpack.platforms.apscheduler import apschedulerClient
 job_list = compile_jobs()
 job_list.extend(compile_jobs('jobs/%s' % bot_config['bot_folder_name']))
+if flask_app.config['LAB_SYSTEM_ENVIRONMENT'] == 'dev':
+    job_list.extend(compile_jobs('job/dev'))
 scheduler_url = 'http://localhost:%s' % flask_app.config['LAB_SERVER_PORT']
 scheduler_client = apschedulerClient(scheduler_url)
 for job in job_list:
@@ -106,7 +108,10 @@ for job in job_list:
     flask_scheduler.add_job(**job_fields)
 
 # register webhooks
-if flask_app.config['LAB_SYSTEM_ENVIRONMENT'] == 'prod':
+if flask_app.config['LAB_SYSTEM_ENVIRONMENT'] == 'dev':
+    from server.init import telegram_client
+    telegram_client.delete_webhook()
+else:
     from server.init import telegram_webhook
     if telegram_webhook:
         from server.init import telegram_client
