@@ -123,7 +123,7 @@ if __name__ == '__main__':
 
     if flask_app.config['LAB_SYSTEM_ENVIRONMENT'] == 'tunnel':
         from server.init import tunnel_url
-        flask_app.logger.info('Tunnel endpoint: %s' % tunnel_url)
+        flask_app.logger.info('Tunnel url: %s' % tunnel_url)
 
     # for multiple workers with scheduler:
     # spawn each worker to check first if a scheduler worker is already active
