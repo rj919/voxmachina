@@ -92,7 +92,7 @@ from labpack.platforms.apscheduler import apschedulerClient
 job_list = compile_jobs()
 job_list.extend(compile_jobs('jobs/%s' % bot_config['bot_folder_name']))
 if flask_app.config['LAB_SYSTEM_ENVIRONMENT'] == 'dev':
-    job_list.extend(compile_jobs('job/dev'))
+    job_list.extend(compile_jobs('jobs/dev'))
 scheduler_url = 'http://localhost:%s' % flask_app.config['LAB_SERVER_PORT']
 scheduler_client = apschedulerClient(scheduler_url)
 for job in job_list:

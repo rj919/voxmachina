@@ -9,7 +9,7 @@ from os import environ
 from server.utils import inject_cred, retrieve_port, ingest_environ
 system_environment = environ.get('SYSTEM_ENVIRONMENT', default_environment)
 if default_environment == 'tunnel':
-    inject_cred('tunnel')
+    inject_cred('dev')
 else:
     inject_cred(system_environment)
 
@@ -21,7 +21,7 @@ tunnel_url = '%s.%s' % (tunnel_config['tunnel_server_subdomain'], tunnel_config[
 postgres_config = ingest_environ('models/envvar/aws-postgres.json')
 postgres_url = ''
 if postgres_config['aws_postgres_username']:
-    postgres_url = '%s:%s@%s:%s/%s' % (
+    postgres_url = 'postgres://%s:%s@%s:%s/%s' % (
     postgres_config['aws_postgres_username'],
     postgres_config['aws_postgres_password'],
     postgres_config['aws_postgres_hostname'],
@@ -42,7 +42,7 @@ flask_app = Flask(**flask_kwargs)
 from datetime import timedelta
 class flaskDev(object):
     ASSETS_DEBUG = False
-    LAB_SYSTEM_ENVIRONMENT = 'dev'
+    LAB_SYSTEM_ENVIRONMENT = system_environment
     LAB_SECRET_KEY = bot_config['bot_secret_key']
     LAB_SERVER_PROTOCOL = 'http'
     LAB_SERVER_DOMAIN = 'localhost'
@@ -54,7 +54,7 @@ class flaskDev(object):
 
 class flaskTunnel(object):
     ASSETS_DEBUG = False
-    LAB_SYSTEM_ENVIRONMENT = 'tunnel'
+    LAB_SYSTEM_ENVIRONMENT = system_environment
     LAB_SECRET_KEY = bot_config['bot_secret_key']
     LAB_SERVER_PROTOCOL = 'https'
     LAB_SERVER_DOMAIN = tunnel_url
