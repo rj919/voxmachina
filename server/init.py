@@ -147,7 +147,7 @@ if telegram_cred['telegram_webhook_token']:
         webhook_token
     )
     webhook_map[webhook_token] = {
-        'method': 'bot_client.monitor_telegram'
+        'service_name': 'telegram'
     }
 
 # construct speech client
@@ -166,7 +166,11 @@ if __name__ == '__main__':
     
     print(bot_config)
     print(request_models.keys())
-    
+
+# reset update
+#     for record in sql_tables['telegram'].list():
+#         sql_tables['telegram'].delete(record['id'])
+        
 # set webhook for tunnel
 #     telegram_client.delete_webhook()
 #     telegram_client.set_webhook(telegram_webhook)

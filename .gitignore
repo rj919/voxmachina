@@ -63,3 +63,4 @@ coverage.xml
 .hgignore
 .hg/
 fitzroy/
+imports/

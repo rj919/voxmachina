@@ -9,6 +9,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 # initialize flask and configuration objects
 import json
+from time import time
 from server.init import flask_app, bot_config, webhook_map
 from flask import request, jsonify, url_for, Response, render_template
 
@@ -25,8 +26,8 @@ flask_scheduler = GeventScheduler(**scheduler_kwargs)
 flask_scheduler.start()
 
 # initialize bot client
-from server.bot import bot_client
-launch_scope = globals()
+from server.bot import flaskBot
+bot_client = flaskBot(globals(), 'methods')
 
 # define landing kwargs
 from server.utils import construct_response
@@ -58,12 +59,19 @@ def webhook_route(webhook_token=''):
 # send webhook content to bot
     if not response_details['error']:
         if request_details['json']:
-            callable_method = webhook_map[webhook_token]['method']
-            def webhook_callable():
-                from labpack.compilers.objects import retrieve_function
-                callable_object = retrieve_function(callable_method, launch_scope)
-                callable_object(request_details['json'])
-            call_on_close = webhook_callable
+            observation_details = {
+                'callback': False,
+                'gateway': 'webhook',
+                'details': request_details
+            }
+            for key, value in webhook_map[webhook_token].items():
+                observation_details[key] = value
+            if observation_details['callback']:
+                response_details = bot_client.analyze_observation(**observation_details)
+            else:
+                def webhook_callable():
+                    bot_client.analyze_observation(**observation_details)
+                call_on_close = webhook_callable
 
 # response to request
     if call_on_close:

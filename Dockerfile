@@ -35,13 +35,18 @@ RUN pip3 install SQLAlchemy
 RUN pip3 install psycopg2
 RUN pip3 install paho-mqtt
 
-# Copy server files
+# Install PocketBot Module
+COPY imports/pocketbot-0.1.tar.gz /pocketbot-0.1.tar.gz
+RUN tar -xvf pocketbot-0.1.tar.gz
+RUN rm pocketbot-0.1.tar.gz
+RUN cd pocketbot-0.1; python3 setup.py install; cd /
+
+# Copy Server Files
 ADD ./cred /opt/cred/
 ADD ./server /opt/server/
-RUN mkdir /opt/data
 WORKDIR /opt/server
 
-# Set environmental variables
+# Set Environmental Variables
 ENV SYSTEM_ENVIRONMENT=heroku
 
 # Run Command
