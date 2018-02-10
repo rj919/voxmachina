@@ -42,15 +42,17 @@ RUN rm pocketbot-0.1.tar.gz
 RUN cd pocketbot-0.1; python3 setup.py install; cd /
 
 # Copy Server Files
-ADD ./cred /opt/cred/
-ADD ./server /opt/server/
-WORKDIR /opt/server
+#ADD ./cred /opt/cred/
+#ADD ./server /opt/server/
+#RUN mkdir /opt
+#RUN mkdir /opt/server
+#WORKDIR /opt/server
 
 # Set Environmental Variables
-ENV SYSTEM_ENVIRONMENT=heroku
+#ENV SYSTEM_ENVIRONMENT=heroku
 
 # Run Command
-CMD gunicorn -k gevent -w 1 launch:flask_app -b 0.0.0.0:$PORT
+CMD gunicorn -k gevent -w 1 --chdir /opt/server launch:flask_app -b 0.0.0.0:$PORT
 
 # Clean APK cache
 RUN rm -rf /var/cache/apk/*

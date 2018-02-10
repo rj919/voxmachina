@@ -35,6 +35,7 @@ plugins/
 hooks/
 
 ###############   IDE files   ##################
+.~lock.*
 .DS_STORE
 .netbeans
 nbproject
