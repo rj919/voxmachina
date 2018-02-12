@@ -10,7 +10,7 @@ services:
     ports:
       - 5001:5001
     environment:
-      SYSTEM_ENVIRONMENT: dev
+      PORT: '5001'
     volumes:
       - {'type': 'bind', 'source': './cred', 'target': '/opt/cred'}
       - {'type': 'bind', 'source': './data', 'target': '/opt/data'}

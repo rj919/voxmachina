@@ -1,6 +1,6 @@
 # Credentials to AWS Postgres Micro RDS Instance
 # https://us-east-2.console.aws.amazon.com/rds/home
-aws_postgres_username: labadmin
+aws_postgres_username: labdbadmin
 aws_postgres_identifier: labdb
 aws_postgres_dbname: labdb
 aws_postgres_password: ABC-DEF1234ghijkl-567MNOPQRST890uvwxyz

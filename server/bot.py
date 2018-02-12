@@ -39,17 +39,20 @@ class flaskBot(botClient):
     # get updates from telegram
         updates_details = telegram_client.get_updates(last_update)
 
-    # construct update list
-        if updates_details['json']['result']:
-            update_list = sorted(updates_details['json']['result'], key=lambda k: k['update_id'])
+    # TODO add request handler to telegramClient and handle connectivity problems
 
-        # update last update value in db
-            offset_details = {
-                'id': record_id,
-                'dt': time(),
-                'last_update': int(update_list[-1]['update_id'])
-            }
-            sql_tables['telegram'].update(offset_details)
+    # construct update list
+        if updates_details['json']:
+            if updates_details['json']['result']:
+                update_list = sorted(updates_details['json']['result'], key=lambda k: k['update_id'])
+    
+            # update last update value in db
+                offset_details = {
+                    'id': record_id,
+                    'dt': time(),
+                    'last_update': int(update_list[-1]['update_id'])
+                }
+                sql_tables['telegram'].update(offset_details)
     
     # process updates
         for update in update_list:
@@ -65,4 +68,6 @@ class flaskBot(botClient):
         # send features to bot client
             self.analyze_observation(**observation_details)
 
+            telegram_client.send_message(update['message']['chat']['id'], message_text='Gotcha. Working on it...')
+            
         return True
