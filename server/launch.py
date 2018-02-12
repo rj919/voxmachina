@@ -71,6 +71,9 @@ def webhook_route(webhook_token=''):
             else:
                 def webhook_callable():
                     bot_client.analyze_observation(**observation_details)
+                # add placeholder for telegram
+                    if observation_details['service'] == 'telegram':
+                        telegram_client.send_message(request_details['json']['message']['chat']['id'], message_text='Gotcha. Working on it...')
                 call_on_close = webhook_callable
 
 # response to request

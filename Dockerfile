@@ -36,13 +36,14 @@ RUN pip3 install psycopg2
 RUN pip3 install paho-mqtt
 
 # Install PocketBot Module
-COPY imports/pocketbot-0.1.tar.gz /pocketbot-0.1.tar.gz
-RUN tar -xvf pocketbot-0.1.tar.gz
-RUN rm pocketbot-0.1.tar.gz
+#COPY imports/pocketbot-0.1.tar.gz /pocketbot-0.1.tar.gz
+#RUN tar -xvf pocketbot-0.1.tar.gz
+#RUN rm pocketbot-0.1.tar.gz
+ADD imports/pocketbot-0.1 /pocketbot-0.1
 RUN cd pocketbot-0.1; python3 setup.py install; cd /
 
-# Run Command
-CMD gunicorn -k gevent -w 1 --chdir /opt/server launch:flask_app -b 0.0.0.0:$PORT
+## Run Command
+CMD gunicorn -k gevent -w 1 -t 60 --chdir /opt/server launch:flask_app -b 0.0.0.0:$PORT
 
-# Clean APK cache
+## Clean APK cache
 RUN rm -rf /var/cache/apk/*

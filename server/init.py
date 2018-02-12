@@ -147,7 +147,7 @@ if telegram_cred['telegram_webhook_token']:
         webhook_token
     )
     webhook_map[webhook_token] = {
-        'service_name': 'telegram'
+        'service': 'telegram'
     }
 
 # construct speech client
