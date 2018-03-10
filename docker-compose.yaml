@@ -2,8 +2,8 @@
 # https://docs.docker.com/compose/compose-file/
 version: '3.2'
 services:
-  bot: # name of container alias and lab service
-    image: bot # replace with preferred pre-built image name
+  vox: # name of container alias and lab service
+    image: vox # replace with preferred pre-built image name
     build: # remove if using pre-built image
       context: .
       dockerfile: Dockerfile
@@ -18,5 +18,5 @@ services:
     # command: crond -f
     command: gunicorn -k gevent -w 1 --chdir /opt/server launch:flask_app -b 0.0.0.0:5001 # eg.
     networks: # select from 'none', 'host', 'bridge' and '<custom network>'
-      - host
+      - bridge
     
