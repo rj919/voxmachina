@@ -1,0 +1,33 @@
+{
+  "schema": {
+    "devices": [ "" ],
+    "location": "",
+    "tags": [ "" ],
+    "facility_id": "",
+    "manufacturer_id": "",
+    "floor_id": "",
+    "serial_id": "",
+    "model_id": "",
+    "specs": {
+      "temp_high": 0.0,
+      "temp_low": 0.0,
+      "temp_units": "",
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "pressure_units": "",
+      "amps_high": 0.0,
+      "amps_low": 0.0,
+      "amps_units": "",
+      "vibration_high": 0.0,
+      "vibration_low": 0.0,
+      "vibration_units": ""
+    },
+    "lat": 0.0,
+    "lon": 0.0
+  },
+  "components": {
+    ".tags": {
+      "required_field": false
+    }
+  }
+}

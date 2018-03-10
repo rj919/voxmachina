@@ -1,0 +1,11 @@
+{
+  "schema": {
+    "tags": [ "" ],
+    "facility": ""
+  },
+  "components": {
+    ".tags": {
+      "required_field": false
+    }
+  }
+}

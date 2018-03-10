@@ -1,6 +1,6 @@
 {
   "schema": {
-    "device_id": "",
+    "id": "",
     "token": "",
     "dt": 0.0,
     "active": false,
