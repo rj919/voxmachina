@@ -27,7 +27,7 @@ flask_scheduler.start()
 
 # initialize bot client
 from server.bot import flaskBot
-bot_client = flaskBot(globals(), 'methods')
+bot_client = flaskBot(globals())
 
 # define landing kwargs
 from server.utils import construct_response
@@ -119,15 +119,15 @@ for job in job_list:
     flask_scheduler.add_job(**job_fields)
 
 # register webhooks
-if flask_app.config['LAB_SYSTEM_ENVIRONMENT'] == 'dev':
-    from server.init import telegram_client
-    telegram_client.delete_webhook()
-else:
-    from server.init import telegram_webhook
-    if telegram_webhook:
-        from server.init import telegram_client
-        telegram_client.delete_webhook()
-        telegram_client.set_webhook(telegram_webhook)
+# if flask_app.config['LAB_SYSTEM_ENVIRONMENT'] == 'dev':
+#     from server.init import telegram_client
+#     telegram_client.delete_webhook()
+# else:
+#     from server.init import telegram_webhook
+#     if telegram_webhook:
+#         from server.init import telegram_client
+#         telegram_client.delete_webhook()
+#         telegram_client.set_webhook(telegram_webhook)
 
 # initialize the test wsgi localhost server
 if __name__ == '__main__':

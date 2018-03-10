@@ -1,0 +1,10 @@
+{
+  "schema": {
+    "device_id": "",
+    "token": "",
+    "dt": 0.0,
+    "active": false,
+    "name": "",
+    "description": ""
+  }
+}

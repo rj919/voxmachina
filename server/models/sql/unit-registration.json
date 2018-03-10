@@ -1,0 +1,11 @@
+{
+  "schema": {
+    "unit_id": "",
+    "dt": "",
+    "status": "",
+    "devices": [ "" ],
+    "location": "",
+    "lat": 0.0,
+    "lon": 0.0
+  }
+}
