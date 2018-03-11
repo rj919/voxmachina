@@ -13,6 +13,10 @@ from time import time
 from server.init import flask_app, bot_config, webhook_map
 from flask import request, jsonify, url_for, Response, render_template
 
+# add cross origin support
+from flask_cors import CORS, cross_origin
+CORS(flask_app)
+
 # initialize job scheduling
 from pytz import utc
 from server.utils import config_scheduler
@@ -247,12 +251,29 @@ def telemetry_route(device_id):
                 record_list, record_updates = list_records(**list_kwargs)
                 response_details['details'] = record_list
                 response_details['updated'] = record_updates
-    
+
     # create new record
         if request_details['method'] == 'PUT':
 
             response_details = construct_response(request_details, request_models['telemetry-put'])
             if not response_details['error']:
+
+            # TODO analyze telemetry
+                asset_status = 'normal'
+                filter_criteria = { '.device_id': { 'equal_to': device_id } }
+                sort_criteria = [ { '.dt': 'descend' } ]
+                for telemetry in sql_tables['device_telemetry'].list(filter_criteria, sort_criteria):
+                    if telemetry['fft'][0] < request_details['json']['fft'][0]:
+                        asset_status = 'anomalous'
+                    break
+
+            # update asset status
+                device_details = sql_tables['device_registration'].read(device_id)
+                asset_details = sql_tables['asset_registration'].read(device_details['asset_id'])
+                asset_details['status'] = asset_status
+                sql_tables['asset_registration'].update(asset_details)
+
+            # add new telemetry record
                 telemetry_details = {
                     'dt': time(),
                     'device_id': device_id
@@ -262,7 +283,7 @@ def telemetry_route(device_id):
                         telemetry_details[key] = value
                 telemetry_id = sql_tables['device_telemetry'].create(telemetry_details)
                 response_details['details'] = { 'telemetry_id': telemetry_id }
-    
+            
     return jsonify(response_details), response_details['code']
             
 @flask_app.route('/assets', methods=['GET', 'POST'])

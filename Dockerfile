@@ -34,6 +34,7 @@ RUN pip3 install apscheduler
 RUN pip3 install SQLAlchemy
 RUN pip3 install psycopg2
 RUN pip3 install paho-mqtt
+RUN pip3 install flask-cors
 
 # Install PocketBot Module
 #COPY imports/pocketbot-0.1.tar.gz /pocketbot-0.1.tar.gz

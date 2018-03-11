@@ -30,6 +30,9 @@
     "lon": 0.0
   },
   "components": {
+    ".devices": {
+      "required_field": false
+    },
     ".tags": {
       "required_field": false
     },
