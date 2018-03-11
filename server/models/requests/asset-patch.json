@@ -3,6 +3,8 @@
     "devices": [ "" ],
     "location": "",
     "tags": [ "" ],
+    "name": "",
+    "description": "",
     "facility_id": "",
     "manufacturer_id": "",
     "floor_id": "",

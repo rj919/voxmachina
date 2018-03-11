@@ -2,7 +2,7 @@
   "schema": {
     "dt": 0.0,
     "tags": [ "" ],
-    "facility": ""
+    "facility_id": ""
   },
   "components": {
     ".tags": {

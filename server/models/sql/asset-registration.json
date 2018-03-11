@@ -6,6 +6,8 @@
     "active": false,
     "devices": [ "" ],
     "location": "",
+    "name": "",
+    "description": "",
     "tags": [ "" ],
     "facility_id": "",
     "manufacturer_id": "",

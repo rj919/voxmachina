@@ -147,8 +147,7 @@ def devices_route():
                         'active': True
                     }
                     for key, value in request_details['json'].items():
-                        if key != 'asset_id':
-                            device_details[key] = value
+                        device_details[key] = value
                     device_id = sql_tables['device_registration'].create(device_details)
                     asset_details['devices'].append(device_id)
                     sql_tables['asset_registration'].update(asset_details)

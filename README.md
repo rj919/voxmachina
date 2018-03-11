@@ -22,11 +22,10 @@ Telemetry API
 Devices:    
 <table>
 <thead><td>Asset</td><td>Device ID</td></thead>
-<tr><td>Blow Dryer</td><td></td></tr>
-<tr><td>Blender</td><td></td></tr>
+<tr><td><b>Blow Dryer</b></td><td>sDuYkEJ4-RpjEDqLLMpJUkyV</td></tr>
+<tr><td><b>Blender</b></td><td>NR2ZJOI0iq5E95bYPd35KlHn</td></tr>
 <tr><td></td><td></td></tr>
-</table>   
-Blender: 
+</table>
 
 Methods:  
 **GET**  
@@ -36,12 +35,12 @@ https://voxmachina.herokuapp.com/telemetry/<device_id>
 https://voxmachina.herokuapp.com/telemetry/<device_id>  
 <table>
 <thead><td>Field</td><td>Datatype</td><td>Required</td></thead>  
-<tr><td>"fft":</td><td>[ 0.0 ]</td><td>yes</td></tr>
-<tr><td>"temp":</td><td>0.0</td><td>yes</td></tr>  
-<tr><td>"dt":</td><td>d0.0</td><td></td></tr>  
-<tr><td>"location":</td><td>""</td><td></td></tr>  
-<tr><td>"lat":</td><td>0.0</td><td></td></tr>  
-<tr><td>"lon":</td><td>0.0</td><td></td></tr>   
+<tr><td><b>fft</b></td><td>[ 0.0 ]</td><td>yes</td></tr>
+<tr><td><b>temp</b></td><td>0.0</td><td>yes</td></tr>  
+<tr><td><b>dt</b></td><td>d0.0</td><td></td></tr>  
+<tr><td><b>location</b></td><td>""</td><td></td></tr>  
+<tr><td><b>lat</b></td><td>0.0</td><td></td></tr>  
+<tr><td><b>lon</b></td><td>0.0</td><td></td></tr>   
 </table>
 
  
