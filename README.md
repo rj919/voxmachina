@@ -36,7 +36,7 @@ https://voxmachina.herokuapp.com/telemetry/<device_id>
 <table>
 <thead><td>Field</td><td>Datatype</td><td>Required</td></thead>  
 <tr><td><b>fft</b></td><td>[ 0.0 ]</td><td>yes</td></tr>
-<tr><td><b>temp</b></td><td>0.0</td><td>yes</td></tr>  
+<tr><td><b>temp</b></td><td>0.0</td><td></td></tr>  
 <tr><td><b>dt</b></td><td>d0.0</td><td></td></tr>  
 <tr><td><b>location</b></td><td>""</td><td></td></tr>  
 <tr><td><b>lat</b></td><td>0.0</td><td></td></tr>  
