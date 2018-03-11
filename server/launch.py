@@ -93,48 +93,47 @@ def webhook_route(webhook_token=''):
         # flask_app.logger.debug(response_details)
         return jsonify(response_details), response_details['code']
 
-@flask_app.route('/device/<device_id>', methods=['GET', 'POST', 'PUT', 'DELETE'])
-def device_route(device_id=''):
-
+@flask_app.route('/devices', methods=['GET', 'POST'])
+def devices_route():
+    
     # ingest request
     request_details = extract_request_details(request)
     flask_app.logger.debug(request_details)
     response_details = construct_response(request_details)
     if not response_details['error']:
 
-        # get telemetry associated with device
-        if request_details['methods'] == 'GET':
+        if request_details['method'] == 'GET':
             list_kwargs = {}
-            params, error, code = ingest_query('device-get', request_details, request_models)
+            params, error, code = ingest_query('devices-get', request_details, request_models)
             if error:
                 response_details['error'] = error
                 response_details['code'] = code
             else:
                 list_kwargs = {
-                    'sql_table': sql_tables['device_telemetry'],
-                    'record_id': device_id
+                    'sql_table': sql_tables['device_registration'],
+                    'record_id': ''
                 }
                 if 'query' in params.keys():
                     list_kwargs['query_criteria'] = params['query']
                 if 'results' in params.keys():
                     list_kwargs['max_results'] = params['results']
-
+    
             if not response_details['error']:
-
+    
                 record_list, record_updates = list_records(**list_kwargs)
                 response_details['details'] = record_list
                 response_details['updated'] = record_updates
-
+        
         # create a new device
-        if request_details['method'] == 'POST':
+        elif request_details['method'] == 'POST':
 
-            response_details = construct_response(request_details, request_models['device-post'])
+            response_details = construct_response(request_details, request_models['devices-post'])
             if not response_details['error']:
 
             # retrieve asset associated with device
                 asset_id = request_details['json']['asset_id']
                 asset_details = {}
-                for asset in sql_tables['asset_registration'].list({'id': {'equal_to': asset_id}}):
+                for asset in sql_tables['asset_registration'].list({'.id': {'equal_to': asset_id}}):
                     asset_details = asset
 
                 if not asset_details:
@@ -155,39 +154,10 @@ def device_route(device_id=''):
                     sql_tables['asset_registration'].update(asset_details)
                     response_details['details'] = { 'device_id': device_id }
 
-        # create new telemetry or delete device
-        if request_details['method'] in ('PUT', 'DELETE'):
+    return jsonify(response_details), response_details['code']
 
-        # validate device id exists
-            if not response_details['error']:
-                if not device_id:
-                    response_details['error'] = 'Method requires a device_id on endpoint.'
-                    response_details['code'] = 400
-                elif not sql_tables['device_registration'].exists(device_id):
-                    response_details['error'] = 'Device ID does not exist.'
-                    response_details['code'] = 400
-
-            # create new record
-                if request_details['method'] == 'PUT':
-
-                    response_details = construct_response(request_details, request_models['device-put'])
-                    if not response_details['error']:
-                        telemetry_details = {
-                            'dt': time(),
-                            'device_id': device_id
-                        }
-                        for key, value in request_details['json'].items():
-                            telemetry_details[key] = value
-                        telemetry_id = sql_tables['device_telemetry'].create(telemetry_details)
-                        response_details['details'] = { 'telemetry_id': telemetry_id }
-
-            # delete device
-                if request_details['method'] == 'DELETE':
-                    sql_tables['device_registration'].delete(device_id)
-                    response_details['details'] = { 'status': 'ok' }
- 
-@flask_app.route('/asset/<asset_id>', methods=['GET', 'POST', 'PUT'])
-def asset_route(asset_id=''):
+@flask_app.route('/device/<device_id>', methods=['GET', 'PATCH', 'DELETE'])
+def device_route(device_id=''):
 
     # ingest request
     request_details = extract_request_details(request)
@@ -195,17 +165,127 @@ def asset_route(asset_id=''):
     response_details = construct_response(request_details)
     if not response_details['error']:
 
-        # get list of assets
-        if request_details['methods'] == 'GET':
+    # validate device id exists
+        if not response_details['error']:
+            if not device_id:
+                response_details['error'] = 'Method requires a device_id on endpoint.'
+                response_details['code'] = 400
+            elif not sql_tables['device_registration'].exists(device_id):
+                response_details['error'] = 'Device ID does not exist.'
+                response_details['code'] = 400
+
+        # retrieve current record
+            if request_details['method'] == 'GET':
+                device_details = sql_tables['device_registration'].read(device_id)
+                response_details['details'] = device_details
+
+        # update record
+            elif request_details['method'] == 'PATCH':
+
+                response_details = construct_response(request_details, request_models['device-patch'])
+                if not response_details['error']:
+                    device_details = sql_tables['device_registration'].read(device_id)
+                    device_details['dt'] = time()
+                    for key, value in request_details['json'].items():
+                        device_details[key] = value
+                    sql_tables['device_registration'].update(device_details)
+                    response_details['details'] = { 'device_id': device_id }
+                    response_details['updated'] = device_details['dt']
+
+        # delete device
+            if request_details['method'] == 'DELETE':
+            
+            # remove device from asset
+                device_details = sql_tables['device_registration'].read(device_id)
+                if 'asset_id' in device_details.keys():
+                    if device_details['asset_id']:
+                        if sql_tables['asset_registration'].exists(device_details['asset_id']):
+                            asset_details = sql_tables['asset_registration'].read(device_details['asset_id'])
+                            device_index = asset_details['devices'].index(device_id)
+                            if device_index > -1:
+                                asset_details['devices'].pop(device_index)
+                                sql_tables['asset_registration'].update(asset_details)
+    
+            # remove device
+                sql_tables['device_registration'].delete(device_id)
+                response_details['details'] = { 'status': 'ok' }
+                
+ 
+    return jsonify(response_details), response_details['code']
+
+@flask_app.route('/telemetry/<device_id>', methods=['GET', 'PUT'])
+def telemetry_route(device_id):
+    
+    # ingest request
+    request_details = extract_request_details(request)
+    flask_app.logger.debug(request_details)
+    response_details = construct_response(request_details)
+    if not response_details['error']:
+        
+    # retrieve telemetry from device
+        if request_details['method'] == 'GET':
+
             list_kwargs = {}
-            params, error, code = ingest_query('asset-get', request_details, request_models)
+            params, error, code = ingest_query('telemetry-get', request_details, request_models)
+            if error:
+                response_details['error'] = error
+                response_details['code'] = code
+            else:
+                list_kwargs = {
+                    'sql_table': sql_tables['device_telemetry'],
+                    'record_id': '',
+                    'query_criteria': {
+                        '.device_id': { 'equal_to': device_id }
+                    }
+                }
+                if 'query' in params.keys():
+                    list_kwargs['query_criteria'].update(**params['query'])
+                if 'results' in params.keys():
+                    list_kwargs['max_results'] = params['results']
+    
+            if not response_details['error']:
+    
+                record_list, record_updates = list_records(**list_kwargs)
+                response_details['details'] = record_list
+                response_details['updated'] = record_updates
+    
+    # create new record
+        if request_details['method'] == 'PUT':
+
+            response_details = construct_response(request_details, request_models['telemetry-put'])
+            if not response_details['error']:
+                telemetry_details = {
+                    'dt': time(),
+                    'device_id': device_id
+                }
+                for key, value in request_details['json'].items():
+                    if key not in telemetry_details.keys():
+                        telemetry_details[key] = value
+                telemetry_id = sql_tables['device_telemetry'].create(telemetry_details)
+                response_details['details'] = { 'telemetry_id': telemetry_id }
+    
+    return jsonify(response_details), response_details['code']
+            
+@flask_app.route('/assets', methods=['GET', 'POST'])
+def assets_route():
+    
+    # ingest request
+    request_details = extract_request_details(request)
+    flask_app.logger.debug(request_details)
+    response_details = construct_response(request_details)
+    if not response_details['error']:
+    
+    # get list of assets
+        if request_details['method'] == 'GET':
+            list_kwargs = {}
+            params, error, code = ingest_query('assets-get', request_details, request_models)
             if error:
                 response_details['error'] = error
                 response_details['code'] = code
             else:
                 list_kwargs = {
                     'sql_table': sql_tables['asset_registration'],
-                    'record_id': asset_id
+                    'record_id': ''
                 }
                 if 'query' in params.keys():
                     list_kwargs['query_criteria'] = params['query']
@@ -217,11 +297,11 @@ def asset_route(asset_id=''):
                 record_list, record_updates = list_records(**list_kwargs)
                 response_details['details'] = record_list
                 response_details['updated'] = record_updates
+    
+    # create a new asset
+        elif request_details['method'] == 'POST':
 
-        # create a new asset
-        if request_details['method'] == 'POST':
-
-            response_details = construct_response(request_details, request_models['asset-post'])
+            response_details = construct_response(request_details, request_models['asset-patch'])
             if not response_details['error']:
 
             # create new record for device and associate with asset
@@ -234,39 +314,54 @@ def asset_route(asset_id=''):
                 asset_details = sql_tables['asset_registration'].model.ingest(**asset_details)
                 sql_tables['asset_registration'].create(asset_details)
                 response_details['details'] = { 'asset_id': record_id }
+    
+    return jsonify(response_details), response_details['code']
+    
+@flask_app.route('/asset/<asset_id>', methods=['GET', 'PATCH', 'DELETE'])
+def asset_route(asset_id=''):
 
-        # create new telemetry or delete device
-        if request_details['method'] in ('PUT', 'DELETE'):
+    # ingest request
+    request_details = extract_request_details(request)
+    flask_app.logger.debug(request_details)
+    response_details = construct_response(request_details)
+    if not response_details['error']:
 
-        # validate device id exists
-            if not response_details['error']:
-                if not asset_id:
-                    response_details['error'] = 'Method requires an asset_id on endpoint.'
-                    response_details['code'] = 400
-                elif not sql_tables['asset_registration'].exists(asset_id):
-                    response_details['error'] = 'Asset ID does not exist.'
-                    response_details['code'] = 400
+    # validate device id exists
+        if not response_details['error']:
+            if not asset_id:
+                response_details['error'] = 'Method requires an asset_id on endpoint.'
+                response_details['code'] = 400
+            elif not sql_tables['asset_registration'].exists(asset_id):
+                response_details['error'] = 'Asset ID does not exist.'
+                response_details['code'] = 400
 
-            # create new record
-                if request_details['method'] == 'PUT':
+        # retrieve current record
+            if request_details['method'] == 'GET':
+                asset_details = sql_tables['asset_registration'].read(asset_id)
+                response_details['details'] = asset_details
+                
+        # update record
+            elif request_details['method'] == 'PATCH':
 
-                    response_details = construct_response(request_details, request_models['asset-post'])
-                    if not response_details['error']:
-                        asset_details = sql_tables['asset_registration'].read(asset_id)
-                        asset_details['dt'] = time()
-                        for key, value in request_details['json'].items():
-                            asset_details[key] = value
-                        sql_tables['asset_registration'].update(asset_details)
-                        response_details['details'] = { 'asset_id': asset_id }
-                        response_details['updated'] = asset_details['dt']
+                response_details = construct_response(request_details, request_models['asset-patch'])
+                if not response_details['error']:
+                    asset_details = sql_tables['asset_registration'].read(asset_id)
+                    asset_details['dt'] = time()
+                    for key, value in request_details['json'].items():
+                        asset_details[key] = value
+                    sql_tables['asset_registration'].update(asset_details)
+                    response_details['details'] = { 'asset_id': asset_id }
+                    response_details['updated'] = asset_details['dt']
 
-            # delete device
-                if request_details['method'] == 'DELETE':
-                    sql_tables['asset_registration'].delete(asset_id)
-                    response_details['details'] = { 'status': 'ok' }
+        # delete device
+            elif request_details['method'] == 'DELETE':
+                sql_tables['asset_registration'].delete(asset_id)
+                response_details['details'] = { 'status': 'ok' }
 
-@flask_app.route('/work/<work_id', method=['GET', 'POST', 'PUT'])
-def work_route(work_id=''):
+    return jsonify(response_details), response_details['code']
+
+@flask_app.route('/works', methods=['GET', 'POST'])
+def works_route():
     
     # ingest request
     request_details = extract_request_details(request)
@@ -275,7 +370,7 @@ def work_route(work_id=''):
     if not response_details['error']:
 
         # get list of work requests
-        if request_details['methods'] == 'GET':
+        if request_details['method'] == 'GET':
             list_kwargs = {}
             params, error, code = ingest_query('work-get', request_details, request_models)
             if error:
@@ -284,7 +379,7 @@ def work_route(work_id=''):
             else:
                 list_kwargs = {
                     'sql_table': sql_tables['work_request'],
-                    'record_id': work_id
+                    'record_id': ''
                 }
                 if 'query' in params.keys():
                     list_kwargs['query_criteria'] = params['query']
@@ -296,11 +391,11 @@ def work_route(work_id=''):
                 record_list, record_updates = list_records(**list_kwargs)
                 response_details['details'] = record_list
                 response_details['updated'] = record_updates
-
+        
         # create a new asset
-        if request_details['method'] == 'POST':
+        elif request_details['method'] == 'POST':
 
-            response_details = construct_response(request_details, request_models['work-post'])
+            response_details = construct_response(request_details, request_models['work-patch'])
             if not response_details['error']:
 
             # create new record for device and associate with asset
@@ -313,37 +408,52 @@ def work_route(work_id=''):
                 work_details = sql_tables['work_request'].model.ingest(**work_details)
                 sql_tables['work_request'].create(work_details)
                 response_details['details'] = { 'work_id': record_id }
-
-        # create new telemetry or delete device
-        if request_details['method'] in ('PUT', 'DELETE'):
-
-        # validate device id exists
-            if not response_details['error']:
-                if not work_id:
-                    response_details['error'] = 'Method requires an work_id on endpoint.'
-                    response_details['code'] = 400
-                elif not sql_tables['work_request'].exists(work_id):
-                    response_details['error'] = 'Work ID does not exist.'
-                    response_details['code'] = 400
-
-            # create new record
-                if request_details['method'] == 'PUT':
-
-                    response_details = construct_response(request_details, request_models['work-post'])
-                    if not response_details['error']:
-                        work_details = sql_tables['work_request'].read(work_id)
-                        work_details['dt'] = time()
-                        for key, value in request_details['json'].items():
-                            work_details[key] = value
-                        sql_tables['work_request'].update(work_details)
-                        response_details['details'] = { 'work_id': work_id }
-                        response_details['updated'] = work_details['dt']
-
-            # delete device
-                if request_details['method'] == 'DELETE':
-                    sql_tables['work_request'].delete(work_id)
-                    response_details['details'] = { 'status': 'ok' }
     
+    return jsonify(response_details), response_details['code']
+
+@flask_app.route('/work/<work_id>', methods=['GET', 'PATCH', 'DELETE'])
+def work_route(work_id=''):
+    
+    # ingest request
+    request_details = extract_request_details(request)
+    flask_app.logger.debug(request_details)
+    response_details = construct_response(request_details)
+    if not response_details['error']:
+
+    # validate device id exists
+        if not response_details['error']:
+            if not work_id:
+                response_details['error'] = 'Method requires an work_id on endpoint.'
+                response_details['code'] = 400
+            elif not sql_tables['work_request'].exists(work_id):
+                response_details['error'] = 'Work ID does not exist.'
+                response_details['code'] = 400
+
+        # retrieve current record
+            if request_details['method'] == 'GET':
+                work_details = sql_tables['work_request'].read(work_id)
+                response_details['details'] = work_details
+
+        # create new record
+            elif request_details['method'] == 'PATCH':
+
+                response_details = construct_response(request_details, request_models['work-patch'])
+                if not response_details['error']:
+                    work_details = sql_tables['work_request'].read(work_id)
+                    work_details['dt'] = time()
+                    for key, value in request_details['json'].items():
+                        work_details[key] = value
+                    sql_tables['work_request'].update(work_details)
+                    response_details['details'] = { 'work_id': work_id }
+                    response_details['updated'] = work_details['dt']
+
+        # delete device
+            elif request_details['method'] == 'DELETE':
+                sql_tables['work_request'].delete(work_id)
+                response_details['details'] = { 'status': 'ok' }
+    
+    return jsonify(response_details), response_details['code']
+
 @flask_app.errorhandler(404)
 def page_not_found(error):
     ''' a method to catch flask 404 request errors '''

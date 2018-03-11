@@ -6,6 +6,7 @@
     "active": false,
     "status": "",
     "name": "",
-    "description": ""
+    "description": "",
+    "asset_id": ""
   }
 }

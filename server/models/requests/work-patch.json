@@ -12,7 +12,10 @@
   },
   "components": {
     ".assignments": {
-      "required_fields": false
+      "required_field": false
+    },
+    ".priority": {
+      "integer_data": true
     }
   }
 }

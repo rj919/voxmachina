@@ -1,7 +1,7 @@
 {
   "schema": {
     "id": "",
-    "dt": "",
+    "dt": 0.0,
     "status": "",
     "active": false,
     "devices": [ "" ],

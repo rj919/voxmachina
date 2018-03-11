@@ -1,7 +1,7 @@
 {
   "schema": {
     "id": "",
-    "dt": "",
+    "dt": 0.0,
     "asset_id": "",
     "request": "",
     "description": "",
@@ -15,7 +15,10 @@
   },
   "components": {
     ".assignments": {
-      "required_fields": false
+      "required_field": false
+    },
+    ".priority": {
+      "integer_data": true
     }
   }
 }

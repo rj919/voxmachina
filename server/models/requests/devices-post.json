@@ -1,6 +1,6 @@
 {
   "schema": {
-    "asset_id": "unique_asset_id",
+    "asset_id": "asset_associated_with_device",
     "name": "",
     "description": "",
     "status": ""

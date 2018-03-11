@@ -416,7 +416,9 @@ def list_records(sql_table, record_id, query_criteria=None, max_results=20):
     count = 0
 
 # construct query criteria
-    filter_criteria = { '.id': { 'equal_to': record_id } }
+    filter_criteria = {}
+    if record_id:
+        filter_criteria = { '.id': { 'equal_to': record_id } }
     if query_criteria:
         for key in query_criteria.keys():
             filter_criteria[key] = query_criteria[key]
