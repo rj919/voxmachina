@@ -258,18 +258,30 @@ def telemetry_route(device_id):
             response_details = construct_response(request_details, request_models['telemetry-put'])
             if not response_details['error']:
 
-            # TODO analyze telemetry
-                asset_status = 'normal'
-                filter_criteria = { '.device_id': { 'equal_to': device_id } }
-                sort_criteria = [ { '.dt': 'descend' } ]
-                for telemetry in sql_tables['device_telemetry'].list(filter_criteria, sort_criteria):
-                    if telemetry['fft'][0] < request_details['json']['fft'][0]:
-                        asset_status = 'anomalous'
-                    break
+            # TODO analyze acoustic signature
+            
+            # evaluate change in acoustics
+                # filter_criteria = { '.device_id': { 'equal_to': device_id } }
+                # sort_criteria = [ { '.dt': 'descend' } ]
+                # for telemetry in sql_tables['device_telemetry'].list(filter_criteria, sort_criteria):
+                #     if telemetry['fft'][0] < request_details['json']['fft'][0]:
+                #         asset_status = 'anomalous'
+                #     break
 
-            # update asset status
+            # retrieve asset details
                 device_details = sql_tables['device_registration'].read(device_id)
                 asset_details = sql_tables['asset_registration'].read(device_details['asset_id'])
+                
+            # analyze temperature for range in manufacturers specs
+                asset_status = 'normal'
+                if asset_details['status'] == 'anomalous':
+                    asset_status = 'anomalous'
+                elif asset_details['specs']['temp_high'] or asset_details['specs']['temp_low']:
+                    device_temp = request_details['json']['temp']
+                    if device_temp > asset_details['specs']['temp_high'] or device_temp < asset_details['specs']['temp_low']:
+                        asset_status = 'anomalous'
+
+            # update asset details
                 asset_details['status'] = asset_status
                 sql_tables['asset_registration'].update(asset_details)
 
