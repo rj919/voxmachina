@@ -9,6 +9,7 @@
     "serial_id": "",
     "model_id": "",
     "asset_number": "",
+    "status": "",
     "specs": {
       "temp_high": 0.0,
       "temp_low": 0.0,
@@ -28,6 +29,9 @@
   },
   "components": {
     ".tags": {
+      "required_field": false
+    },
+    ".specs": {
       "required_field": false
     }
   }

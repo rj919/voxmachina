@@ -1,5 +1,8 @@
 {
   "schema": {
-    "asset_id": ""
+    "asset_id": "unique_asset_id",
+    "name": "",
+    "description": "",
+    "status": ""
   }
 }

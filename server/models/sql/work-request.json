@@ -10,7 +10,8 @@
     "assignments": [ "" ],
     "priority": 0,
     "request_by_date": 0.0,
-    "status": ""
+    "status": "",
+    "active": false
   },
   "components": {
     ".assignments": {

@@ -3,6 +3,7 @@
     "id": "",
     "dt": "",
     "status": "",
+    "active": false,
     "devices": [ "" ],
     "location": "",
     "tags": [ "" ],
@@ -31,6 +32,9 @@
   },
   "components": {
     ".tags": {
+      "required_field": false
+    },
+     ".specs": {
       "required_field": false
     }
   }

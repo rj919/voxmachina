@@ -310,6 +310,130 @@ def construct_response(request_details, request_model=None, endpoint_list=None, 
 
     return response_details
 
+def validate_params(params_details, params_model=None, query_model=None):
+
+    '''
+        a method to validate query field value in a request
+        
+    :param params_details: dictionary with query params from request
+    :param params_model: [optional] jsonmodel object with valid params scope
+    :param query_criteria: [optional] jsonmodel object to validate query field in query
+    :return: dictionary with params fields, string with error message, integer with status code
+    '''
+
+# construct default output
+    status = {
+        'error': '',
+        'code': 200,
+        'params': {}
+    }
+
+# construct copy of params
+    from copy import deepcopy
+    params_copy = deepcopy(params_details)
+    
+# test params as query criteria
+    if query_model and 'query' in params_copy.keys():
+        import json
+        from jsonmodel.exceptions import QueryValidationError
+        try:
+            filter_criteria = json.loads(params_copy['query'])
+        except:
+            status['error'] = 'value for "query" field must be passed as json serialized object'
+            status['code'] = 400
+            return status['params'], status['error'], status['code']
+        try:
+            query_model.query(filter_criteria)
+            status['params']['query'] = filter_criteria
+            del params_copy['query']
+        except QueryValidationError as err:
+            status['error'] = err.error['message']
+            status['code'] = 400
+            return status['params'], status['error'], status['code']
+
+# test params as normal record
+    if params_copy and params_model:
+    
+    # undo stringification of url fild data
+        typed_dict = {}
+        for key, value in params_copy.items():
+            if value.lower() == 'true':
+                typed_dict[key] = True
+            elif value.lower() == 'false':
+                typed_dict[key] = False
+            elif value.lower() == 'null':
+                typed_dict[key] = None
+            elif value.lower() == 'none':
+                typed_dict[key] = None
+            else:
+                try:
+                    try:
+                        typed_dict[key] = int(value)
+                    except:
+                        typed_dict[key] = float(value)
+                except:
+                    typed_dict[key] = value
+    
+    # validate params against model
+        from labpack.parsing.flask import validate_request_content
+        valid_details = validate_request_content(typed_dict, params_model, request_component='query')
+        if valid_details['error']:
+            status['error'] = valid_details['error']
+            status['code'] = valid_details['code']
+        else:
+            for key, value in typed_dict.items():
+                status['params'][key] = value
+
+    return status['params'], status['error'], status['code']
+
+def ingest_query(request_endpoint, request_details, request_models):
+    
+    params = {}
+    error = ''
+    code = 200
+    
+    if request_details['params']:
+        params_kwargs = {
+            'params_details': request_details['params']
+        }
+        query_key = request_endpoint
+        if query_key in request_models.keys():
+            params_kwargs['query_model'] = request_models[query_key]
+        params_key = query_key + '-metadata'
+        if params_key in request_models.keys():
+            params_kwargs['params_model'] = request_models[params_key]
+        params, error, code = validate_params(**params_kwargs)
+    
+    return params, error, code
+
+def list_records(sql_table, record_id, query_criteria=None, max_results=20):
+
+    from labpack.records.time import labDT
+
+# construct default response
+    record_list = []
+    record_updates = {}
+    count = 0
+
+# construct query criteria
+    filter_criteria = { '.id': { 'equal_to': record_id } }
+    if query_criteria:
+        for key in query_criteria.keys():
+            filter_criteria[key] = query_criteria[key]
+    order_criteria = [ { '.dt': 'descend' } ]
+    
+# search access table for records
+    for record in sql_table.list(filter_criteria, order_criteria):
+        record_list.append(record)
+        
+    # determine last update time and results list size
+        record_dt = record['dt']
+        record_updates[record_dt] = record_dt
+        if count >= max_results:
+            break
+    
+    return record_list, record_updates
+
 if __name__ == '__main__':
     
     print(compile_jobs())
