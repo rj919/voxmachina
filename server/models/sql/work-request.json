@@ -1,0 +1,20 @@
+{
+  "schema": {
+    "id": "",
+    "dt": "",
+    "asset_id": "",
+    "request": "",
+    "description": "",
+    "agent_id": "",
+    "department": "",
+    "assignments": [ "" ],
+    "priority": 0,
+    "request_by_date": 0.0,
+    "status": ""
+  },
+  "components": {
+    ".assignments": {
+      "required_fields": false
+    }
+  }
+}

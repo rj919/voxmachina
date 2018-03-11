@@ -91,6 +91,21 @@ def webhook_route(webhook_token=''):
         # flask_app.logger.debug(response_details)
         return jsonify(response_details), response_details['code']
 
+@flask_app.route('/device/<device_id>', methods=['GET', 'POST', 'PUT', 'DELETE'])
+def device_route(device_id=''):
+    
+    pass
+
+@flask_app.route('/asset/<asset_id>', methods=['GET', 'POST', 'PUT'])
+def asset_route(asset_id=''):
+    
+    pass
+
+@flask_app.route('/work/<work_id', method=['GET', 'POST', 'PUT'])
+def work_route(work_id=''):
+    
+    pass
+    
 @flask_app.errorhandler(404)
 def page_not_found(error):
     ''' a method to catch flask 404 request errors '''
