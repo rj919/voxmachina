@@ -35,8 +35,3 @@ https://voxmachina.herokuapp.com/telemetry/<device_id>
 
 **Note**: [ 0.0 ] means an array of numbers
  
-
-
-Flask Bot References
---------------------
-[README-UPSTREAM.md](https://bitbucket.org/collectiveacuity/flaskbotfork/src/master/README-UPSTREAM.md)  
