@@ -73,7 +73,7 @@ class flaskProd(object):
     LAB_SERVER_PORT = retrieve_port()
     LAB_SERVER_LOGGING = 'INFO'
     LAB_TOKEN_EXPIRATION = timedelta(hours=24).total_seconds()
-    LAB_SQL_URL = postgres_url
+    LAB_SQL_URL = 'sqlite:///../data/records.db'
     MAX_CONTENT_LENGTH = 8192
 
 if system_environment == 'dev':

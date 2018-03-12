@@ -5,17 +5,9 @@ _An IoT platform for monitoring machine noise_
 - Brian Worthington
 - Richard J
 
-Benefits
---------
-To be edited by fork
+Architecture
+------------
 
-Features
---------
-To be edited by fork
-
-Components
-----------
-To be edited by fork
 
 Telemetry API
 -------------
