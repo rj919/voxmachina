@@ -5,6 +5,11 @@ _An IoT platform for monitoring machine noise_
 - Brian Worthington
 - Richard J
 
+[BattleBorn 2018](https://www.eventbrite.com.au/e/battleborn-2018-hackathon-tickets-42189839947)
+---------------
+Challenge #4  
+[Identify Me!](https://portal.unearthed.solutions/challenge/identify-me-can-you-locate-and-identify-malfunctioning-equipment-within-mine-site) Can you locate and identify malfunctioning equipment within a mine site?
+
 ![Architecture](https://github.com/rj919/voxmachina/raw/master/VoxMachinaDiagram.png)
 
 Telemetry API
