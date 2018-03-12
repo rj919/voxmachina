@@ -1,5 +1,20 @@
 {
   "schema": {
     "dt": 0.0
+  },
+  "metadata": {
+    "schema": {
+      "results": 0
+    },
+    "components": {
+      ".": {
+        "extra_fields": true
+      },
+      ".results": {
+        "integer_data": true,
+        "max_value": 20,
+        "min_value": 1
+      }
+    }
   }
 }

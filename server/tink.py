@@ -65,66 +65,86 @@ iot_device = {
 if __name__ == '__main__':
     
     from time import sleep
-    
+
     vox_endpoint = 'https://voxmachina.herokuapp.com'
     blow_dryer_iot = 'sDuYkEJ4-RpjEDqLLMpJUkyV'
     blender_iot = 'NR2ZJOI0iq5E95bYPd35KlHn'
     blow_dryer_id = '2tZEXmNrD3GH_FReAdStKHyk'
     blender_id = 'Bjc_M7-P2U_bwQ_Txnx03ipl'
+    
+    count = 0
+    new_count = 0
+    while True:
 
-    telemetry = {
-        "fft": [ 8.8, 9.9, 1.1, 10.4 ],
-        "temp": 30.5,
-        "dt": 0.0,
-        "location": "",
-        "lat": 0.0,
-        "lon": 0.0
-    }
-    response = requests.put(vox_endpoint + '/telemetry/' + blender_iot, json=telemetry)
-    response = requests.get(vox_endpoint + '/asset/' + blender_id)
-    print(response.json())
-    telemetry['fft'][0] = telemetry['fft'][0] + 0.2
-    telemetry['fft'][1] = telemetry['fft'][1] - 0.4
-    telemetry['fft'][2] = telemetry['fft'][2] + 0.3
-    telemetry['fft'][3] = telemetry['fft'][3] - 0.5
-    response = requests.put(vox_endpoint + '/telemetry/' + blender_iot, json=telemetry)
-    print(response.json())
-    response = requests.get(vox_endpoint + '/asset/' + blender_id)
-    print(response.json())
-    response = requests.get(vox_endpoint + '/telemetry/' + blender_iot)
-    telemetry_details = response.json()
-    print(telemetry_details['details'])
+        telemetry = {
+            "fft": [ 8.8, 9.9, 1.1, 10.4 ],
+            "temp": 12.2,
+            "dt": 0.0,
+            "location": "",
+            "lat": 0.0,
+            "lon": 0.0
+        }
+        response = requests.get(vox_endpoint + '/telemetry/' + blender_iot, params={'results': 1})
+        telemetry_details = response.json()
+        if telemetry_details['details']:
+            telemetry_record = telemetry_details['details'][0]
+            telemetry['temp'] = telemetry_record['temp'] + 0.3
+            if count:
+                telemetry['fft'][0] = telemetry['fft'][0] + 0.2
+                telemetry['fft'][1] = telemetry['fft'][1] - 0.4
+                telemetry['fft'][2] = telemetry['fft'][2] + 0.3
+                telemetry['fft'][3] = telemetry['fft'][3] - 0.5
+                count -= 1
+            else:
+                count += 1
+        response = requests.put(vox_endpoint + '/telemetry/' + blender_iot, json=telemetry)
 
-    sleep(3)
+        response = requests.get(vox_endpoint + '/telemetry/' + blender_iot, params={'results': 1})
+        telemetry_details = response.json()
+        response = requests.get(vox_endpoint + '/asset/' + blender_id)
+        asset_details = response.json()
+        print(asset_details['details']['id'], asset_details['details']['status'], telemetry_details['details'][0]['temp'])
 
-    telemetry = {
-        "fft": [ 7.8, 5.9, 10.1, 9.4 ],
-        "temp": 41.2,
-        "dt": 0.0,
-        "location": "",
-        "lat": 0.0,
-        "lon": 0.0
-    }
+        sleep(3)
+
+
+        telemetry = {
+            "fft": [ 6.5, 9.0, 10.3, 6.4 ],
+            "temp": 25.5,
+            "dt": 0.0,
+            "location": "",
+            "lat": 0.0,
+            "lon": 0.0
+        }
+        response = requests.get(vox_endpoint + '/telemetry/' + blow_dryer_iot, params={'results': 1})
+        telemetry_details = response.json()
+        if telemetry_details['details']:
+            telemetry_record = telemetry_details['details'][0]
+            telemetry['temp'] = telemetry_record['temp'] + 0.6
+            if new_count:
+                telemetry['fft'][0] = telemetry['fft'][0] + 0.5
+                telemetry['fft'][1] = telemetry['fft'][1] - 0.2
+                telemetry['fft'][2] = telemetry['fft'][2] + 0.8
+                telemetry['fft'][3] = telemetry['fft'][3] - 0.9
+                new_count -= 1
+            else:
+                new_count += 1
+        response = requests.put(vox_endpoint + '/telemetry/' + blow_dryer_iot, json=telemetry)
+
+        response = requests.get(vox_endpoint + '/telemetry/' + blow_dryer_iot, params={'results': 1})
+        telemetry_details = response.json()
+        response = requests.get(vox_endpoint + '/asset/' + blow_dryer_id)
+        asset_details = response.json()
+        print(asset_details['details']['id'], asset_details['details']['status'], telemetry_details['details'][0]['temp'])
+
+        sleep(3)
+
     
-    response = requests.put(vox_endpoint + '/telemetry/' + blow_dryer_iot, json=telemetry)
-    response = requests.get(vox_endpoint + '/asset/' + blow_dryer_id)
-    print(response.json())
-    telemetry['fft'][0] = telemetry['fft'][0] - 0.4
-    telemetry['fft'][1] = telemetry['fft'][1] + 0.5
-    telemetry['fft'][2] = telemetry['fft'][2] - 0.2
-    telemetry['fft'][3] = telemetry['fft'][3] + 0.6
-    response = requests.put(vox_endpoint + '/telemetry/' + blow_dryer_iot, json=telemetry)
-    print(response.json())
-    response = requests.get(vox_endpoint + '/asset/' + blow_dryer_id)
-    print(response.json())
-    response = requests.get(vox_endpoint + '/telemetry/' + blow_dryer_iot)
-    telemetry_details = response.json()
-    print(telemetry_details['details'])
-    
-    sleep(3)
-    
-    
-    # requests.patch('https://voxmachina.herokuapp.com/asset/%s' % blow_dryer_id, json={'devices':[blow_dryer_iot], 'status': 'normal'})
-    # response = requests.get('https://voxmachina.herokuapp.com/assets')
+    # asset_update = {
+    #     'devices':[blender_iot], 
+    #     'status': 'normal',
+    # }
+    # requests.patch(vox_endpoint + '/asset/%s' % blender_id, json=asset_update)
+    # response = requests.get(vox_endpoint + '/assets')
     # from pprint import pprint
     # pprint(response.json())

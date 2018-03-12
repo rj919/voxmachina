@@ -271,12 +271,12 @@ def telemetry_route(device_id):
             # retrieve asset details
                 device_details = sql_tables['device_registration'].read(device_id)
                 asset_details = sql_tables['asset_registration'].read(device_details['asset_id'])
-                
+
             # analyze temperature for range in manufacturers specs
                 asset_status = 'normal'
                 if asset_details['status'] == 'anomalous':
                     asset_status = 'anomalous'
-                elif asset_details['specs']['temp_high'] or asset_details['specs']['temp_low']:
+                if asset_details['specs']['temp_high'] or asset_details['specs']['temp_low']:
                     device_temp = request_details['json']['temp']
                     if device_temp > asset_details['specs']['temp_high'] or device_temp < asset_details['specs']['temp_low']:
                         asset_status = 'anomalous'

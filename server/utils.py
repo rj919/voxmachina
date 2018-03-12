@@ -427,6 +427,7 @@ def list_records(sql_table, record_id, query_criteria=None, max_results=20):
 # search access table for records
     for record in sql_table.list(filter_criteria, order_criteria):
         record_list.append(record)
+        count += 1
         
     # determine last update time and results list size
         record_dt = record['dt']
