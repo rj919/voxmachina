@@ -5,9 +5,7 @@ _An IoT platform for monitoring machine noise_
 - Brian Worthington
 - Richard J
 
-Architecture
-------------
-
+![Architecture](https://github.com/rj919/voxmachina/raw/master/VoxMachinaDiagram.png)
 
 Telemetry API
 -------------
